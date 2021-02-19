@@ -54,12 +54,6 @@ class ResetCommand extends SystemCommand
         $text = trim($this->getMessage()->getText(true)) ?? '';
         $database = Database::getInstance()->getConnection();
         $trainingRepository = new TrainingRepository($database);
-        $wordRepository = new WordRepository($database);
-        $e = $wordRepository->getWords();
-        foreach ($e as $i) {
-            echo $i->getWord();
-            echo "\t";
-        }
         if ($text === 'my progress') {
             $trainingRepository->resetTrainings($userId);
         }
