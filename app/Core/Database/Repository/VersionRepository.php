@@ -27,6 +27,9 @@ class VersionRepository extends BaseRepository
         return new Version($params);
     }
 
+    /**
+     * @return Version
+     */
     public function getNewLatestVersion(): Version
     {
         $selectStatement = $this->

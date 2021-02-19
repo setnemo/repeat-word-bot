@@ -17,7 +17,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-
 --
 -- Table structure for table `callback_query`
 --
@@ -337,7 +336,7 @@ create table version
     used int(1) default 0 null,
     created_at timestamp default CURRENT_TIMESTAMP null
 )
-    charset=utf8;
+    charset=utf8mb4;
 
 create table version_notification
 (
@@ -347,7 +346,54 @@ create table version_notification
     constraint version_notification_user_id_version_id_uindex
         unique (chat_id, version_id)
 )
-    charset=utf8;
+    charset=utf8mb4;
+
+CREATE TABLE `collection` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) NOT NULL,
+    `language` varchar(255) NOT NULL,
+    `user_id` int(11) NOT NULL,
+    `created_at` timestamp NULL DEFAULT NOW(),
+    `public` int(1) default 0 null,
+    PRIMARY KEY (`id`),
+    KEY (`name`),
+    UNIQUE KEY `collection_name_language_uindex` (`name`, `language`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `word` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `word` varchar(255) NOT NULL,
+    `collection_id` int(11) DEFAULT NULL,
+    `translate` longtext,
+    `created_at` timestamp NULL DEFAULT NOW(),
+    PRIMARY KEY (`id`),
+    KEY (`collection_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `training` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `word_id` int(11) NOT NULL,
+    `user_id` int(11) NOT NULL,
+    `collection_id` int(11) NOT NULL,
+    `type` varchar(255) NOT NULL,
+    `word` varchar(255) NOT NULL,
+    `translate` longtext,
+    `status` enum('first','second','third','fourth','fifth','sixth','never') DEFAULT 'first',
+    `repeat` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `training_word_id_user_id_type_uindex` (`word_id`,`user_id`,`type`),
+    KEY `user_id` (`user_id`),
+    KEY `repeat` (`repeat`),
+    KEY `updated_at` (`updated_at`)
+) ENGINE=InnoDB AUTO_INCREMENT=715 DEFAULT CHARSET=utf8mb4;
+
+
+
+
+
+
 
 
 --

@@ -20,4 +20,9 @@ return [
         'admin_id' => getenv('TG_ADMIN_ID'),
         'command_path' => '/app/app/Bot/Commands',
     ],
+    'redis' => [
+        'host' => getenv('REDIS_HOST'),
+        'port' => (string) getenv('REDIS_PORT'),
+        'database' => getenv('REDIS_DB'),
+    ],
 ];

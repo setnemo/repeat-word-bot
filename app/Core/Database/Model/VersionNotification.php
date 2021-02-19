@@ -6,6 +6,10 @@ namespace RepeatBot\Core\Database\Model;
 
 use RepeatBot\Core\Database\BaseModel;
 
+/**
+ * Class VersionNotification
+ * @package RepeatBot\Core\Database\Model
+ */
 class VersionNotification extends BaseModel
 {
     /**

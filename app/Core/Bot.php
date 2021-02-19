@@ -13,6 +13,7 @@ use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
 use Psr\Log\LoggerInterface;
+use RepeatBot\Bot\BotHelper;
 use RepeatBot\Common\Config;
 use RepeatBot\Common\Singleton;
 use RepeatBot\Core\Database\Database;
@@ -102,7 +103,8 @@ final class Bot extends Singleton
         $repositoryVersion = new VersionRepository($this->db);
         $version = $repositoryVersion->getNewLatestVersion();
         if (!$version->isEmpty()) {
-            $keyboard = new Keyboard(['1','2']);
+            /** @psalm-suppress TooManyArguments */
+            $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
             $keyboard->setResizeKeyboard(true);
 
             $results = Request::sendToActiveChats(

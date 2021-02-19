@@ -25,7 +25,10 @@ class VersionNotificationRepository extends BaseRepository
         return new VersionNotification($params);
     }
 
-    public function saveVersionNotification(VersionNotification $model)
+    /**
+     * @param VersionNotification $model
+     */
+    public function saveVersionNotification(VersionNotification $model): void
     {
         $insertStatement = $this->getConnection()->insert(
             [
