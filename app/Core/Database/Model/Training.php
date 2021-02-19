@@ -41,22 +41,22 @@ class Training extends BaseModel
      * @var string
      */
     protected string $type;
-    
+
     /**
      * @var string
      */
     protected string $word;
-    
+
     /**
      * @var string
      */
     protected string $translate;
-    
+
     /**
      * @var string
      */
     protected string $voice;
-    
+
     /**
      * @var string
      */
@@ -127,7 +127,7 @@ class Training extends BaseModel
     {
         return $this->word;
     }
-    
+
     /**
      * @return string
      */
@@ -135,7 +135,7 @@ class Training extends BaseModel
     {
         return $this->translate;
     }
-    
+
     /**
      * @return string
      */

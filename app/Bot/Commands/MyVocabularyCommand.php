@@ -58,7 +58,7 @@ class MyVocabularyCommand extends SystemCommand
         $text = '';
         $flag = false;
         foreach ($records as $type => $items) {
-            foreach ($items as $item)  {
+            foreach ($items as $item) {
                 $flag = true;
                 $status = ucfirst($item['status']);
                 $text .= "\[{$type}] {$status} iteration: {$item['counter']} words\n";
@@ -73,7 +73,7 @@ class MyVocabularyCommand extends SystemCommand
         $info .= "Never iteration: repeat after 1 year\n\n";
         $info .= "`Reset progress:`\nFor reset your progress use command `/reset my progress`\n";
         $info .= "Be careful - this will delete all your progress\n\n";
-        $info .="`Your stats:\n`";
+        $info .= "`Your stats:\n`";
         /** @psalm-suppress TooManyArguments */
         $data = [
             'chat_id' => $chat_id,

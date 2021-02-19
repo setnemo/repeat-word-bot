@@ -81,7 +81,7 @@ class Word extends BaseModel
     {
         return $this->created_at;
     }
-    
+
     /**
      * @return string
      */

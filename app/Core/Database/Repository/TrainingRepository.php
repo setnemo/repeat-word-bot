@@ -70,7 +70,7 @@ class TrainingRepository extends BaseRepository
             }
         }
     }
-    
+
     /**
      * @param int    $wordId
      * @param int    $userId
@@ -118,7 +118,7 @@ class TrainingRepository extends BaseRepository
             ->where(
                 new Grouping(
                     "AND",
-                    new Conditional("$this->tableName.repeat", '<', Carbon::now()->rawFormat('Y-m-d h:i:s')),
+                    new Conditional("$this->tableName.repeat", '<', Carbon::now('UTC')->rawFormat('Y-m-d H:i:s')),
                     new Grouping(
                         "AND",
                         new Conditional("$this->tableName.user_id", '=', $userId),
@@ -211,7 +211,7 @@ class TrainingRepository extends BaseRepository
              default => 'first',
              };
     }
-    
+
     /**
      * @param int $userId
      *
@@ -240,7 +240,7 @@ class TrainingRepository extends BaseRepository
 
         return $result;
     }
-    
+
     /**
      * @param int $userId
      */
@@ -249,7 +249,7 @@ class TrainingRepository extends BaseRepository
         $deleteStatement = $this->getConnection()->delete()
             ->from($this->tableName)
             ->where(new Conditional("user_id", "=", $userId));
-    
+
         $affectedRows = $deleteStatement->execute();
     }
 }

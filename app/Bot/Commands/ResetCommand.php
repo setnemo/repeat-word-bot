@@ -54,6 +54,11 @@ class ResetCommand extends SystemCommand
         $text = trim($this->getMessage()->getText(true)) ?? '';
         $database = Database::getInstance()->getConnection();
         $trainingRepository = new TrainingRepository($database);
+        $wordRepository = new WordRepository($database);
+        $e = $wordRepository->getWords();
+        foreach ($e as $i) {
+            echo $i->getWord() . PHP_EOL;
+        }
         if ($text === 'my progress') {
             $trainingRepository->resetTrainings($userId);
         }
@@ -64,7 +69,7 @@ class ResetCommand extends SystemCommand
             'chat_id' => $chat_id,
             'text' => $text === 'my progress' ?
                 'You progress is removed' :
-                'For reset use command `/reset my progress`',
+                'For reset use command `/reset my progress`. Be careful - this will delete all your progress',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,

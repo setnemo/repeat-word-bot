@@ -348,27 +348,17 @@ create table version_notification
 )
     charset=utf8mb4;
 
-CREATE TABLE `collection` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `name` varchar(255) NOT NULL,
-    `language` varchar(255) NOT NULL,
-    `user_id` int(11) NOT NULL,
-    `created_at` timestamp NULL DEFAULT NOW(),
-    `public` int(1) default 0 null,
-    PRIMARY KEY (`id`),
-    KEY (`name`),
-    UNIQUE KEY `collection_name_language_uindex` (`name`, `language`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 CREATE TABLE `word` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `word` varchar(255) NOT NULL,
-    `collection_id` int(11) DEFAULT NULL,
     `translate` longtext,
-    `created_at` timestamp NULL DEFAULT NOW(),
+    `voice` text NOT NULL,
+    `collection_id` int(11) DEFAULT NULL,
+    `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    KEY (`collection_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    KEY `collection_id` (`collection_id`),
+    KEY `word_word_index` (`word`)
+) ENGINE=InnoDB AUTO_INCREMENT=1034 DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `training` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -378,17 +368,29 @@ CREATE TABLE `training` (
     `type` varchar(255) NOT NULL,
     `word` varchar(255) NOT NULL,
     `translate` longtext,
+    `voice` text NOT NULL,
     `status` enum('first','second','third','fourth','fifth','sixth','never') DEFAULT 'first',
-    `repeat` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `repeat` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
     `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `training_word_id_user_id_type_uindex` (`word_id`,`user_id`,`type`),
     KEY `user_id` (`user_id`),
     KEY `repeat` (`repeat`),
-    KEY `updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=715 DEFAULT CHARSET=utf8mb4;
+    KEY `training_type_index` (`type`),
+    KEY `training_word_id_index` (`word_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9897 DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `collection` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) NOT NULL,
+    `language` varchar(255) NOT NULL,
+    `user_id` int(11) NOT NULL,
+    `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    `public` int(1) DEFAULT '0',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `collection_name_language_uindex` (`name`,`language`),
+    KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 
 
 

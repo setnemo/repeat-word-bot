@@ -6,6 +6,7 @@ namespace RepeatBot\Core\Database\Repository;
 
 use FaaPz\PDO\Clause\Conditional;
 use FaaPz\PDO\Clause\Limit;
+use JetBrains\PhpStorm\Pure;
 use RepeatBot\Core\Database\BaseRepository;
 use RepeatBot\Core\Database\Model\Word;
 
@@ -22,7 +23,7 @@ class WordRepository extends BaseRepository
      *
      * @return Word
      */
-    public function getNewModel(array $params): Word
+    #[Pure] public function getNewModel(array $params): Word
     {
         return new Word($params);
     }
@@ -48,7 +49,10 @@ class WordRepository extends BaseRepository
         return $ret;
     }
     
-    public function getWords()
+    /**
+     * @return array
+     */
+    public function getWords(): array
     {
         $selectStatement = $this->getConnection()->select(['*'])
             ->from($this->tableName)->limit(new Limit(20000));
