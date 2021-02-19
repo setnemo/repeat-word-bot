@@ -8,6 +8,7 @@ use Longman\TelegramBot\Entities\ServerResponse;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
+use RepeatBot\Core\Metric;
 
 class GenericmessageCommand extends SystemCommand
 {
@@ -33,6 +34,8 @@ class GenericmessageCommand extends SystemCommand
     {
         $text = $this->getMessage()->getText(false) ?? '';
         $config = App::getInstance()->getConfig();
+        $metric = Metric::getInstance()->init($config);
+        $metric->increaseMetric('usage');
         $cache = Cache::getInstance()->init($config);
         $command = $cache->checkTrainings($this->getMessage()->getFrom()->getId());
         if (in_array($text, ['From English', 'To English'])) {

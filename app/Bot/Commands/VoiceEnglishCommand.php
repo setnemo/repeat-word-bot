@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Longman\TelegramBot\Commands\SystemCommand;
 
-use JetBrains\PhpStorm\Pure;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
@@ -103,7 +102,7 @@ class VoiceEnglishCommand extends SystemCommand
             'ToEnglish' =>  $training->getTranslate(),
             'FromEnglish' => $training->getWord(),
         };
-        
+
         $cache->setTrainingStatusId($userId, $type, $training->getId());
         /** @psalm-suppress TooManyArguments */
         $keyboard = new Keyboard(...BotHelper::getInTrainingKeyboard());
@@ -115,10 +114,8 @@ class VoiceEnglishCommand extends SystemCommand
             'voice' => Request::encodeFile($uri),
             'caption' => trim($question),
             'reply_markup' => $keyboard,
-//            'parse_mode' => 'markdown',
-//            'disable_web_page_preview' => true,
         ];
-        Return Request::sendVoice($data);
+        return Request::sendVoice($data);
     }
 
     /**
@@ -127,7 +124,7 @@ class VoiceEnglishCommand extends SystemCommand
      *
      * @return bool
      */
-    #[Pure] private function getToEnglishResult(Training $training, string $text): bool
+    private function getToEnglishResult(Training $training, string $text): bool
     {
         $result = false;
         foreach (explode('; ', $training->getTranslate()) as $translate) {

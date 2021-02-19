@@ -17,7 +17,8 @@
     "longman/telegram-bot": "^0.70.1",
     "adbario/php-dot-notation": "^2.2",
     "nesbot/carbon": "^2.45",
-    "carbon-cli/carbon-cli": "^1.2"
+    "carbon-cli/carbon-cli": "^1.2",
+    "promphp/prometheus_client_php": "^2.2"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.5",
