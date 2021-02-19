@@ -61,23 +61,23 @@ class MyVocabularyCommand extends SystemCommand
             foreach ($items as $item) {
                 $flag = true;
                 $status = ucfirst($item['status']);
-                $text .= "\[{$type}] {$status} iteration: {$item['counter']} words\n";
+                $text .= "\[{$type}] {$status} итерация: {$item['counter']} слов\n";
             }
         }
-        $info = "`Hint:`\nFirst iteration: repeat after 24 hours\n";
-        $info .= "Second iteration: repeat after 3 days\n";
-        $info .= "Third iteration: repeat after 7 days\n";
-        $info .= "Fourth iteration: repeat after 1 month\n";
-        $info .= "Fifth iteration: repeat after 3 months\n";
-        $info .= "Sixth iteration: repeat after 6 months\n";
-        $info .= "Never iteration: repeat after 1 year\n\n";
-        $info .= "`Reset progress:`\nFor reset your progress use command `/reset my progress`\n";
-        $info .= "Be careful - this will delete all your progress\n\n";
-        $info .= "`Your stats:\n`";
+        $info = "`Подсказка:`\nFirst итерация: повтор слова через 24 часа\n";
+        $info .= "Second итерация: повтор слова через 3 дня\n";
+        $info .= "Third итерация: повтор слова через 7 дней\n";
+        $info .= "Fourth итерация: повтор слова через 1 месяц\n";
+        $info .= "Fifth итерация: повтор слова через 3 месяца\n";
+        $info .= "Sixth итерация: повтор слова через 6 месяца\n";
+        $info .= "Never итерация: повтор слова через 1 год\n\n";
+        $info .= "`Сброс прогресса:`\nИспользуйте команду `/reset my progress`\n";
+        $info .= "Будьте осторожны, сброс не обратим и вам придется начать итерации с начала\n\n";
+        $info .= "`Ваша статистика:\n`";
         /** @psalm-suppress TooManyArguments */
         $data = [
             'chat_id' => $chat_id,
-            'text' => $flag ? $info . $text : 'You vocabulary is empty. Please choose Collection and start training',
+            'text' => $flag ? $info . $text : 'Ваш словарь пуст. Пожалуйста добавьте коллекцию!',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
         ];

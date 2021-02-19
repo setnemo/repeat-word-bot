@@ -35,7 +35,7 @@ class GenericmessageCommand extends SystemCommand
         $config = App::getInstance()->getConfig();
         $cache = Cache::getInstance()->init($config);
         $command = $cache->checkTrainings($this->getMessage()->getFrom()->getId());
-        if (in_array($text, ['From English', 'To English', 'Voice From English', 'Voice To English'])) {
+        if (in_array($text, ['From English', 'To English'])) {
             $cache->setTrainingStatus(
                 $this->getMessage()->getFrom()->getId(),
                 str_replace(' ', '', $text)
@@ -48,18 +48,15 @@ class GenericmessageCommand extends SystemCommand
                 }
             }
         }
-        if ($text === 'Stop Training') {
+        if ($text === 'Остановить') {
             $cache->removeTrainings($this->getMessage()->getFrom()->getId(), $command);
             $cache->removeTrainingsStatus($this->getMessage()->getFrom()->getId(), $command);
             return $this->telegram->executeCommand('StartTraining');
         }
-        if ($text === 'Don\'t know this word') {
+        if ($text === 'Я не знаю') {
             $cache->skipTrainings($this->getMessage()->getFrom()->getId(), $command);
         }
         if ($command === 'FromEnglish' || $command === 'ToEnglish') {
-            $command = 'TextEnglish';
-        }
-        if ($command === 'VoiceFromEnglish' || $command === 'VoiceToEnglish') {
             $command = 'VoiceEnglish';
         }
 

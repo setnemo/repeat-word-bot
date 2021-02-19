@@ -54,11 +54,11 @@ class CallbackqueryCommand extends SystemCommand
             )
         ) {
             $trainingRepository->addNewWords($words, $this->getCallbackQuery()->getFrom()->getId());
-            $text = 'Added! You can start new training!';
+            $text = 'Добавлено! Можете начать тренировку!';
         }
         return Request::answerCallbackQuery([
             'callback_query_id' => $callback_query_id,
-            'text'              => empty($text) ? 'Collection already added before' : $text,
+            'text'              => empty($text) ? 'Коллекция уже добавлена' : $text,
             'show_alert'        => true,
             'cache_time'        => 3,
         ]);

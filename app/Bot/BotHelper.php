@@ -14,7 +14,7 @@ class BotHelper
     public static function getDefaultKeyboard(): array
     {
         return [
-            ['My Vocabulary', 'Collections', 'Start Training',],
+            ['Мой прогресс', 'Коллекции слов', 'Тренировка',],
         ];
     }
     /**
@@ -23,7 +23,7 @@ class BotHelper
     public static function getInTrainingKeyboard(): array
     {
         return [
-            ['Stop Training', 'Don\'t know this word'],
+            ['Остановить', 'Я не знаю'],
         ];
     }
 
@@ -33,8 +33,7 @@ class BotHelper
     public static function getTrainingKeyboard(): array
     {
         return [
-            ['My Vocabulary', 'Voice To English', 'To English'],
-            ['Main Menu', 'Voice From English', 'From English'],
+            ['Назад', 'To English', 'From English'],
         ];
     }
 
@@ -44,18 +43,14 @@ class BotHelper
     public static function getCommands(): array
     {
         return [
-            'Collections' => 'Collections',
-            'My Vocabulary' => 'MyVocabulary',
-            'From English' => 'TextEnglish',
-            'Voice From English' => 'VoiceEnglish',
-            'VoiceFromEnglish' => 'VoiceEnglish',
-            'FromEnglish' => 'TextEnglish',
-            'To English' => 'TextEnglish',
-            'ToEnglish' => 'TextEnglish',
-            'Voice To English' => 'VoiceEnglish',
-            'VoiceToEnglish' => 'VoiceEnglish',
-            'Start Training' => 'StartTraining',
-            'Main Menu' => 'Start'
+            'Коллекции слов' => 'Collections',
+            'Мой прогресс' => 'MyVocabulary',
+            'From English' => 'VoiceEnglish',
+            'FromEnglish' => 'VoiceEnglish',
+            'To English' => 'VoiceEnglish',
+            'ToEnglish' => 'VoiceEnglish',
+            'Тренировка' => 'StartTraining',
+            'Назад' => 'Start'
         ];
     }
 
@@ -76,12 +71,12 @@ class BotHelper
                 }
                 $tmp = [];
                 $tmp[] = [
-                    'text' => "{$record->getName()} ({$record->getLanguage()})",
+                    'text' => "{$record->getName()}",
                     'callback_data' => "collection_{$record->getId()}"
                 ];
             } else {
                 $tmp[] = [
-                    'text' => "{$record->getName()} ({$record->getLanguage()})",
+                    'text' => "{$record->getName()}",
                     'callback_data' => "collection_{$record->getId()}"
                 ];
             }
@@ -101,8 +96,6 @@ class BotHelper
         return [
             'FromEnglish',
             'ToEnglish',
-            'VoiceFromEnglish',
-            'VoiceToEnglish',
         ];
     }
 }

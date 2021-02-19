@@ -57,7 +57,8 @@ class ResetCommand extends SystemCommand
         $wordRepository = new WordRepository($database);
         $e = $wordRepository->getWords();
         foreach ($e as $i) {
-            echo $i->getWord() . PHP_EOL;
+            echo $i->getWord();
+            echo "\t";
         }
         if ($text === 'my progress') {
             $trainingRepository->resetTrainings($userId);
@@ -68,8 +69,8 @@ class ResetCommand extends SystemCommand
         $data = [
             'chat_id' => $chat_id,
             'text' => $text === 'my progress' ?
-                'You progress is removed' :
-                'For reset use command `/reset my progress`. Be careful - this will delete all your progress',
+                'Ваш прогресс был удалён' :
+                "`Сброс прогресса:`\nИспользуйте команду `/reset my progress` Будьте осторожны, сброс не обратим и вам придется начать итерации с начала",
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,

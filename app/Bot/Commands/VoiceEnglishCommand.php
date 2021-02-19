@@ -67,24 +67,31 @@ class VoiceEnglishCommand extends SystemCommand
                 $training = $trainingRepository->getTraining($trainingId);
                 $text = mb_strtolower($this->getMessage()->getText(false));
                 $correct = match($type) {
-                    'VoiceToEnglish' => $training->getWord(),
-                    'VoiceFromEnglish' => $training->getTranslate(),
+                    'ToEnglish' => $training->getWord(),
+                    'FromEnglish' => $training->getTranslate(),
+                };
+                $oldQuestion = match($type) {
+                    'ToEnglish' => $training->getTranslate(),
+                    'FromEnglish' => $training->getWord(),
                 };
                 $result = match($type) {
-                    'VoiceToEnglish' => $training->getWord() === $text,
-                    'VoiceFromEnglish' => $this->getToEnglishResult($training, $text),
+                    'ToEnglish' => $text === $training->getWord(),
+                    'FromEnglish' => $this->getToEnglishResult($training, $text),
                 };
                 if ($cache->checkSkipTrainings($userId, $type)) {
                     $cache->removeSkipTrainings($userId, $type);
-                    $question = "Skip word! Correct: {$correct}\n\n";
+                    $question = "Слово пропущено! Ответ на {$oldQuestion}: {$correct}\n\n";
                 } else {
                     if ($result) {
                         $trainingRepository->upStatusTraining($training);
                     }
-                    $question = $result ? "*Correct!*\n\n" : "Incorrect! Correct: *{$correct}*\n\n";
+                    $question = $result ? "Правильно!\n\n" : "Не правильно! Ответ: {$correct}\n\n";
                 }
             }
-            $question .= "Next word:\n";
+            $question .= match($type) {
+                'ToEnglish' => "Пожалуйста напишите ответ на английском!\n\nСлово: ",
+                'FromEnglish' => "Пожалуйста напишите ответ на русском!\n\nСлово: ",
+            };
         }
         try {
             $training = $trainingRepository->getRandomTraining($userId, $type);
@@ -93,26 +100,23 @@ class VoiceEnglishCommand extends SystemCommand
             return $this->telegram->executeCommand('Collections');
         }
         $question .= match($type) {
-            'VoiceToEnglish' => '```' . $training->getTranslate() . '```',
-            'VoiceFromEnglish' => '```' . $training->getWord() . '```',
+            'ToEnglish' =>  $training->getTranslate(),
+            'FromEnglish' => $training->getWord(),
         };
         
         $cache->setTrainingStatusId($userId, $type, $training->getId());
         /** @psalm-suppress TooManyArguments */
         $keyboard = new Keyboard(...BotHelper::getInTrainingKeyboard());
         $keyboard->setResizeKeyboard(true);
-        $data = [
-            'chat_id' => $chat_id,
-            'text' => trim($question),
-            'parse_mode' => 'markdown',
-            'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-        ];
-        Request::sendMessage($data);
-        $uri = '/app/words' . $training->getVoice();
+
+        $uri = './words/' . $training->getVoice();
         $data = [
             'chat_id' => $chat_id,
             'voice' => Request::encodeFile($uri),
+            'caption' => trim($question),
+            'reply_markup' => $keyboard,
+//            'parse_mode' => 'markdown',
+//            'disable_web_page_preview' => true,
         ];
         Return Request::sendVoice($data);
     }

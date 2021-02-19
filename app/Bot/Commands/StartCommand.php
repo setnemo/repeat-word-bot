@@ -50,9 +50,15 @@ class StartCommand extends SystemCommand
         /** @psalm-suppress TooManyArguments */
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
+        $text = 'Привет! Я помогаю учить английские слова по методике повторения.';
+        $text .= ' Как только вы правильно отвечаете, слово переходит на следующую итерацию для повторения.';
+        $text .= ' Всего итераций 7. Первая через сутки, вторая через три дня, потом через семь, потом через месяц, три, полгода и год.';
+        $text .= "\n\nТак же пользуйтесь кнопкой 'Я не знаю'. Она поможет Вам разобраться с новыми для Вас словами. ";
+        $text .= ' А также не добавляйте сразу слишком много, сначала отправьте на долгие итерации небольшие коллекции. Удачи!';
+        $text .= "\n\nP.S. Если вдруг слово не воспроизводиться - отправляйте это сообщение форвардом @omentes в личку.";
         $data = [
             'chat_id' => $chat_id,
-            'text' => 'Hello! I am made to improve you English vocabulary',
+            'text' => $text,
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,

@@ -25,16 +25,6 @@ class Collection extends BaseModel
     /**
      * @var string
      */
-    protected string $language;
-
-    /**
-     * @var int
-     */
-    protected int $user_id;
-
-    /**
-     * @var string
-     */
     protected string $created_at;
 
     /**
@@ -56,22 +46,6 @@ class Collection extends BaseModel
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLanguage(): string
-    {
-        return $this->language;
-    }
-
-    /**
-     * @return int
-     */
-    public function getUserid(): int
-    {
-        return $this->user_id;
     }
 
     /**

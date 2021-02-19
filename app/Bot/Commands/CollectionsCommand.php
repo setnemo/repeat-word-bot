@@ -56,9 +56,15 @@ class CollectionsCommand extends SystemCommand
         $keyboard = new InlineKeyboard(...BotHelper::convertCollectionToButton(
             $collections
         ));
+        $text = "Выбирайте коллекцию для добавления в свой словарь. Слова с коллекции будут доступны в тренировке.\n\n";
+        $text .= "Не добавляйте сразу слишком много, сначала отправьте на долгие итерации небольшие коллекции.\n";
+        $text .= "Так же есть команда /reset для сброса.\n\n";
+        $text .= "Каждая коллекция уникальна! Слова НЕ ПОВТОРЯЮТСЯ. Вас ждет приключение на 17814 слов! ";
+        $text .= "Рекомендую пройти маленькие коллекции, а потом браться за большие.\n\n";
+        $text .= "При добавлении Мега Коллекций не спешите, дождитесь ответа сервера. Удачи!\n";
         $data = [
             'chat_id' => $chat_id,
-            'text' => 'Select and add collection to you vocabulary:',
+            'text' => $text,
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,

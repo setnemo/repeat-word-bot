@@ -58,15 +58,19 @@ class TrainingRepository extends BaseRepository
         foreach (BotHelper::getTrainingTypes() as $type) {
             /** @var Word $word */
             foreach ($words as $word) {
-                $this->createTraining(
-                    $word->getId(),
-                    $userId,
-                    $word->getCollectionId(),
-                    $type,
-                    $word->getWord(),
-                    $word->getTranslate(),
-                    $word->getVoice()
-                );
+                try {
+                    $this->createTraining(
+                        $word->getId(),
+                        $userId,
+                        $word->getCollectionId(),
+                        $type,
+                        $word->getWord(),
+                        $word->getTranslate(),
+                        $word->getVoice()
+                    );
+                } catch (\Throwable $t) {
+                    // do nothing
+                }
             }
         }
     }

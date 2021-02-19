@@ -52,7 +52,7 @@ class StartTrainingCommand extends SystemCommand
         $keyboard->setResizeKeyboard(true);
         $data = [
             'chat_id' => $chat_id,
-            'text' => 'Please choose learning mode:',
+            'text' => 'Пожалуйста выберете режим тренировки:',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,
