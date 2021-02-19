@@ -33,7 +33,7 @@ final class Metric extends Singleton
             [
                 'host' => $config->getKey('redis.host'),
                 'port' => intval($config->getKey('redis.port')),
-                'database' => $config->getKey('redis.database'),
+                'database' => intval($config->getKey('redis.database')),
                 'password' => null,
                 'timeout' => 0.1, // in seconds
                 'read_timeout' => '10', // in seconds
