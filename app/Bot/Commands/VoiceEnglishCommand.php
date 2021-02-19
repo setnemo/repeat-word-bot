@@ -84,7 +84,7 @@ class VoiceEnglishCommand extends SystemCommand
                     if ($result) {
                         $trainingRepository->upStatusTraining($training);
                     }
-                    $question = $result ? "Правильно!\n\n" : "Не правильно! Ответ: {$correct}\n\n";
+                    $question = $result ? "Правильно!\n\n" : "Неправильно! Ответ: {$correct}\n\n";
                 }
             }
             $question .= match($type) {

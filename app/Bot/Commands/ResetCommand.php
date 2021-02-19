@@ -10,6 +10,8 @@ use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
+use RepeatBot\Core\App;
+use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Database\Repository\TrainingRepository;
 use RepeatBot\Core\Database\Repository\WordRepository;
@@ -55,6 +57,12 @@ class ResetCommand extends SystemCommand
         $database = Database::getInstance()->getConnection();
         $trainingRepository = new TrainingRepository($database);
         if ($text === 'my progress') {
+            $config = App::getInstance()->getConfig();
+            $cache = Cache::getInstance()->init($config);
+            foreach (BotHelper::getTrainingTypes() as $type) {
+                $cache->removeTrainings($this->getMessage()->getFrom()->getId(), $type);
+                $cache->removeTrainingsStatus($this->getMessage()->getFrom()->getId(), $type);
+            }
             $trainingRepository->resetTrainings($userId);
         }
         /** @psalm-suppress TooManyArguments */
