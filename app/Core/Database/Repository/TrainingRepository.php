@@ -55,8 +55,9 @@ class TrainingRepository extends BaseRepository
         return !empty($result);
     }
 
-    public function addNewWords(array $words, int $userId): void
+    public function addNewWords(array $words, int $userId): int
     {
+        $i = 0;
         $config = App::getInstance()->getConfig();
         $logger = Log::getInstance()->init($config)->getLogger();
         foreach (BotHelper::getTrainingTypes() as $type) {
@@ -72,11 +73,14 @@ class TrainingRepository extends BaseRepository
                         $word->getTranslate(),
                         $word->getVoice()
                     );
+                    ++$i;
                 } catch (\Throwable $t) {
                     $logger->error('addNewWords: ' . $t->getMessage(), $t->getTrace());
                 }
             }
         }
+
+        return $i;
     }
 
     /**

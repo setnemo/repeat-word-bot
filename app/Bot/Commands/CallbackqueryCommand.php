@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Longman\TelegramBot\Commands\SystemCommand;
 
 use Longman\TelegramBot\Commands\SystemCommand;
+use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
+use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Database\Repository\TrainingRepository;
 use RepeatBot\Core\Database\Repository\WordRepository;
@@ -53,8 +55,17 @@ class CallbackqueryCommand extends SystemCommand
                 $this->getCallbackQuery()->getFrom()->getId()
             )
         ) {
-            $trainingRepository->addNewWords($words, $this->getCallbackQuery()->getFrom()->getId());
-            $text = 'Добавлено! Можете начать тренировку!';
+            $count = $trainingRepository->addNewWords($words, $this->getCallbackQuery()->getFrom()->getId());
+            $text = "Добавлено {$count} слов! Можете начать тренировку!";
+            $keyboard = new Keyboard(...BotHelper::getTrainingKeyboard());
+            $keyboard->setResizeKeyboard(true);
+            Request::sendMessage([
+                    'chat_id' => $this->getMessage()->getChat()->getId(),
+                    'text' => $text,
+                    'parse_mode' => 'markdown',
+                    'disable_web_page_preview' => true,
+                    'reply_markup' => $keyboard,
+            ]);
         }
         return Request::answerCallbackQuery([
             'callback_query_id' => $callback_query_id,
