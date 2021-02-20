@@ -14,9 +14,11 @@ class BotHelper
     public static function getDefaultKeyboard(): array
     {
         return [
-            ['Мой прогресс', 'Коллекции слов', 'Тренировка',],
+            ['Настройки', 'Коллекции слов'],
+            ['Мой прогресс', 'Тренировка',],
         ];
     }
+
     /**
      * @return array
      */
@@ -49,6 +51,7 @@ class BotHelper
             'FromEnglish' => 'VoiceEnglish',
             'To English' => 'VoiceEnglish',
             'ToEnglish' => 'VoiceEnglish',
+            'Настройки' => 'Settings',
             'Тренировка' => 'StartTraining',
             'Назад' => 'Start'
         ];
@@ -96,6 +99,19 @@ class BotHelper
         return [
             'FromEnglish',
             'ToEnglish',
+        ];
+    }
+
+    /**
+     * @param string $text
+     * @param int    $switch
+     *
+     * @return array
+     */
+    public static function getSettingsKeyboard(string $text, int $switch): array
+    {
+        return [
+            ['text' => $text, 'callback_data' => "settings_silent_{$switch}"],
         ];
     }
 }

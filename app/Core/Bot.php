@@ -17,6 +17,10 @@ use RepeatBot\Bot\BotHelper;
 use RepeatBot\Common\Config;
 use RepeatBot\Common\Singleton;
 use RepeatBot\Core\Database\Database;
+use RepeatBot\Core\Database\Model\LearnNotification;
+use RepeatBot\Core\Database\Repository\LearnNotificationRepository;
+use RepeatBot\Core\Database\Repository\TrainingRepository;
+use RepeatBot\Core\Database\Repository\UserNotificationRepository;
 use RepeatBot\Core\Database\Repository\VersionNotificationRepository;
 use RepeatBot\Core\Database\Repository\VersionRepository;
 
@@ -67,6 +71,7 @@ final class Bot extends Singleton
                 ]
             );
             $this->checkVersion();
+            $this->handleNotifications();
         } catch (TelegramException $e) {
             $logger->error($e->getMessage(), $e->getTrace());
         }
@@ -93,7 +98,6 @@ final class Bot extends Singleton
     {
         return $this->logger;
     }
-
 
     /**
      * @throws TelegramException
@@ -144,6 +148,35 @@ final class Bot extends Singleton
                 }
             }
             $repositoryVersion->applyVersion($version);
+        }
+    }
+
+    /**
+     * @throws TelegramException
+     */
+    private function handleNotifications(): void
+    {
+        $database = Database::getInstance()->getConnection();
+        $learnNotificationRepository = new LearnNotificationRepository($database);
+        $trainingRepository = new TrainingRepository($database);
+        $userNotificationRepository = new UserNotificationRepository($database);
+        $userNotifications = $userNotificationRepository->getUserNotifications();
+        $inactiveUser = $trainingRepository->getInactiveUsers($userNotifications);
+        $newNotifications = $learnNotificationRepository->filterNotifications($inactiveUser);
+        $learnNotificationRepository->saveNotifications($newNotifications);
+        $notifications = $learnNotificationRepository->getUnsentNotifications();
+        /** @var LearnNotification $notification */
+        foreach ($notifications as $notification) {
+            $result = Request::sendMessage([
+                'chat_id' => $notification->getUserId(),
+                'text' => $notification->getMessage(),
+                'disable_notification' => $notification->getSilent()
+            ]);
+            if ($result->isOk()) {
+                $learnNotificationRepository->updateNotification($notification);
+            } else {
+                $userNotificationRepository->deleteUserNotification($notification);
+            }
         }
     }
 }

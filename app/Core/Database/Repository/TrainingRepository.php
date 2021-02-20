@@ -10,6 +10,7 @@ use FaaPz\PDO\Clause\Grouping;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Database\BaseRepository;
+use RepeatBot\Core\Database\Model\InactiveUser;
 use RepeatBot\Core\Database\Model\Training;
 use RepeatBot\Core\Database\Model\Word;
 use RepeatBot\Core\Exception\EmptyVocabularyException;
@@ -21,6 +22,8 @@ use RepeatBot\Core\Log;
  */
 class TrainingRepository extends BaseRepository
 {
+    const ALWAYS_SILENT_MESSAGE = 1;
+
     protected string $tableName = 'training';
 
     /**
@@ -263,5 +266,71 @@ class TrainingRepository extends BaseRepository
             ->where(new Conditional("user_id", "=", $userId));
 
         $affectedRows = $deleteStatement->execute();
+    }
+
+    /**
+     * @param array $userNotifications
+     *
+     * @return array
+     */
+    public function getInactiveUsers(array $userNotifications): array
+    {
+        $selectStatement = $this->getConnection()
+            ->select([
+                "$this->tableName.user_id",
+                "MAX($this->tableName.updated_at) as max"
+            ])
+            ->from($this->tableName)
+            ->groupBy("$this->tableName.user_id");
+        $stmt = $selectStatement->execute();
+        $result = $stmt->fetchAll();
+        $ret = [];
+        foreach ($result as $record) {
+            if (strtotime($record['max']) < strtotime('-1 day')) {
+                if (isset($userNotifications[$record['user_id']])) {
+                    if ($userNotifications[$record['user_id']]->getDeleted() == 1) {
+                        continue ;
+                    }
+                }
+                $ret[$record['user_id']] = $this->getInactiveUser([
+                    'user_id' => $record['user_id'],
+                    'silent' => isset($userNotifications[$record['user_id']]) ?
+                        $userNotifications[$record['user_id']]->getSilent() :
+                        self::ALWAYS_SILENT_MESSAGE,
+                    'message' => $this->getMessageForInactiveUser($record['user_id'])
+                ]);
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return InactiveUser
+     */
+    private function getInactiveUser(array $params): InactiveUser
+    {
+        return new InactiveUser($params);
+    }
+
+    /**
+     * @param int $userId
+     *
+     * @return string
+     */
+    private function getMessageForInactiveUser(int $userId): string
+    {
+        $records = $this->getMyStats($userId);
+        $text = "У тебя внушительная стастика:\n";
+        foreach ($records as $type => $items) {
+            foreach ($items as $item) {
+                $status = ucfirst($item['status']);
+                $text .= "[{$type}] {$status} итерация: {$item['counter']} слов\n";
+            }
+        }
+        $text .= "\n Не останавливайся! Продолжи свою тренировку прямо сейчас!";
+
+        return $text;
     }
 }

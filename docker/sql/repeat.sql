@@ -695,3 +695,15 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2021-02-19 22:17:36
+CREATE TABLE `learn_notification` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `user_id` int(11) NOT NULL,
+    `message` text NOT NULL,
+    `silent` int(1) DEFAULT '0',
+    `used` int(1) DEFAULT '0',
+    `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `event_created_index` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
