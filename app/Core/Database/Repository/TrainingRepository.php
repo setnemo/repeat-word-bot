@@ -8,10 +8,12 @@ use Carbon\Carbon;
 use FaaPz\PDO\Clause\Conditional;
 use FaaPz\PDO\Clause\Grouping;
 use RepeatBot\Bot\BotHelper;
+use RepeatBot\Core\App;
 use RepeatBot\Core\Database\BaseRepository;
 use RepeatBot\Core\Database\Model\Training;
 use RepeatBot\Core\Database\Model\Word;
 use RepeatBot\Core\Exception\EmptyVocabularyException;
+use RepeatBot\Core\Log;
 
 /**
  * Class TrainingRepository
@@ -55,6 +57,8 @@ class TrainingRepository extends BaseRepository
 
     public function addNewWords(array $words, int $userId): void
     {
+        $config = App::getInstance()->init()->getConfig();
+        $logger = Log::getInstance()->init($config)->getLogger();
         foreach (BotHelper::getTrainingTypes() as $type) {
             /** @var Word $word */
             foreach ($words as $word) {
@@ -69,7 +73,7 @@ class TrainingRepository extends BaseRepository
                         $word->getVoice()
                     );
                 } catch (\Throwable $t) {
-                    // do nothing
+                    $logger->error('addNewWords: ' . $t->getMessage(), $t->getTrace());
                 }
             }
         }
