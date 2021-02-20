@@ -57,7 +57,7 @@ class TrainingRepository extends BaseRepository
 
     public function addNewWords(array $words, int $userId): void
     {
-        $config = App::getInstance()->init()->getConfig();
+        $config = App::getInstance()->getConfig();
         $logger = Log::getInstance()->init($config)->getLogger();
         foreach (BotHelper::getTrainingTypes() as $type) {
             /** @var Word $word */
