@@ -80,6 +80,7 @@ class MyVocabularyCommand extends SystemCommand
             'text' => $flag ? $info . $text : 'Ваш словарь пуст. Пожалуйста добавьте коллекцию!',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
+            'disable_notification' => 1,
         ];
         return Request::sendMessage($data);
     }

@@ -58,34 +58,6 @@ class TrainingRepository extends BaseRepository
         return !empty($result);
     }
 
-    public function addNewWords(array $words, int $userId): int
-    {
-        $i = 0;
-        $config = App::getInstance()->getConfig();
-        $logger = Log::getInstance()->init($config)->getLogger();
-        foreach (BotHelper::getTrainingTypes() as $type) {
-            /** @var Word $word */
-            foreach ($words as $word) {
-                try {
-                    $this->createTraining(
-                        $word->getId(),
-                        $userId,
-                        $word->getCollectionId(),
-                        $type,
-                        $word->getWord(),
-                        $word->getTranslate(),
-                        $word->getVoice()
-                    );
-                    ++$i;
-                } catch (\Throwable $t) {
-                    $logger->error('addNewWords: ' . $t->getMessage(), $t->getTrace());
-                }
-            }
-        }
-
-        return $i;
-    }
-
     /**
      * @param int    $wordId
      * @param int    $userId
@@ -332,5 +304,28 @@ class TrainingRepository extends BaseRepository
         $text .= "\n Не останавливайся! Продолжи свою тренировку прямо сейчас!";
 
         return $text;
+    }
+
+    /**
+     * @param int $userId
+     *
+     * @return array
+     */
+    public function getMyCollectionIds(int $userId): array
+    {
+        $selectStatement = $this->getConnection()
+            ->select([
+                "$this->tableName.collection_id"
+            ])
+            ->from($this->tableName)
+            ->where(new Conditional("$this->tableName.user_id", '=', $userId))
+            ->groupBy("$this->tableName.collection_id");
+        $stmt = $selectStatement->execute();
+        $result = $stmt->fetchAll();
+        $ret = [];
+        foreach ($result as $item) {
+            $ret[] = $item['collection_id'];
+        }
+        return $ret;
     }
 }

@@ -65,6 +65,7 @@ class StartCommand extends SystemCommand
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,
+            'disable_notification' => 1,
         ];
         return Request::sendMessage($data);
     }

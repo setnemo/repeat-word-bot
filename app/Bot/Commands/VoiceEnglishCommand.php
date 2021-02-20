@@ -114,6 +114,7 @@ class VoiceEnglishCommand extends SystemCommand
             'voice' => Request::encodeFile($uri),
             'caption' => trim($question),
             'reply_markup' => $keyboard,
+            'disable_notification' => 1,
         ];
         return Request::sendVoice($data);
     }

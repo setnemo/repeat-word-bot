@@ -40,7 +40,7 @@ class CollectionRepository extends BaseRepository
         $result = $stmt->fetchAll();
         $ret = [];
         foreach ($result as $record) {
-            $ret[] = $this->getNewModel($record);
+            $ret[$record['id']] = $this->getNewModel($record);
         }
         return $ret;
     }

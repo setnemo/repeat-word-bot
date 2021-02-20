@@ -11,7 +11,9 @@ use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\Database\Database;
+use RepeatBot\Core\Database\Model\Collection;
 use RepeatBot\Core\Database\Repository\CollectionRepository;
+use RepeatBot\Core\Database\Repository\TrainingRepository;
 
 /**
  * Class CollectionsCommand
@@ -51,24 +53,34 @@ class CollectionsCommand extends SystemCommand
         $chat_id = $this->getMessage()->getChat()->getId();
         $database = Database::getInstance()->getConnection();
         $collectionRepository = new CollectionRepository($database);
-        $collections = $collectionRepository->getAllPublicCollection();
+        $trainingRepository = new TrainingRepository($database);
+        $allCollections = $collectionRepository->getAllPublicCollection();
+        $collections = [];
+        $ids = $trainingRepository->getMyCollectionIds($chat_id);
+        /**
+         * @var int $id
+         * @var Collection $collection */
+        foreach ($allCollections as $id => $collection) {
+            if (!in_array(intval($id), $ids)) {
+                $collections[] = $collection;
+            }
+        }
+        $array = [[['text' => 'Все коллекции добавлены!']]];
+
+        if (!empty($collections)) {
+            $array = BotHelper::convertCollectionToButton(
+                $collections
+            );
+        }
         /** @psalm-suppress TooManyArguments */
-        $keyboard = new InlineKeyboard(...BotHelper::convertCollectionToButton(
-            $collections
-        ));
-        $text = "Выбирайте коллекцию для добавления в свой словарь. Слова с коллекции будут доступны в тренировке.\n\n";
-        $text .= "Не добавляйте сразу слишком много, сначала отправьте на долгие итерации небольшие коллекции.\n";
-        $text .= "При добавлении Коллекции слова добавляются в оба типа тренировок (From English + To English)\n";
-        $text .= "Также есть команда /reset для сброса, если вы по ошибке добавили слишком много или хотите начать сначала\n\n";
-        $text .= "Каждая коллекция уникальна! Слова НЕ ПОВТОРЯЮТСЯ. Вас ждет приключение на 17814 слов! ";
-        $text .= "Рекомендую пройти маленькие коллекции, а потом браться за большие.\n\n";
-        $text .= "При добавлении Мега Коллекций не спешите, дождитесь ответа сервера, это 'тяжелая' операция Удачи!\n";
+        $keyboard = new InlineKeyboard(...$array);
         $data = [
             'chat_id' => $chat_id,
-            'text' => $text,
+            'text' => BotHelper::getCollectionText(),
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,
+            'disable_notification' => 1,
         ];
         return Request::sendMessage($data);
     }
