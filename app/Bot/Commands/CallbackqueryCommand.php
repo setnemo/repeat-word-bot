@@ -60,7 +60,7 @@ class CallbackqueryCommand extends SystemCommand
             $keyboard = new Keyboard(...BotHelper::getTrainingKeyboard());
             $keyboard->setResizeKeyboard(true);
             Request::sendMessage([
-                    'chat_id' => $this->getMessage()->getChat()->getId(),
+                    'chat_id' => $this->getCallbackQuery()->getFrom()->getId(),
                     'text' => $text,
                     'parse_mode' => 'markdown',
                     'disable_web_page_preview' => true,
