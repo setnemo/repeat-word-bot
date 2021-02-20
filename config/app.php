@@ -10,7 +10,7 @@ return [
     ],
     'logger' => [
         'name' => '',
-        'path' =>  getenv('LOG_PATH'),
+        'path' =>  getenv('LOG_PATH') ?? '/app/logs/app/',
         'filename' => 'bot.log',
         'level' => '100',
     ],
