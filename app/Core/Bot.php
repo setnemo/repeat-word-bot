@@ -174,7 +174,7 @@ final class Bot extends Singleton
             ]);
             $learnNotificationRepository->updateNotification($notification);
             if (!$result->isOk()) {
-                $userNotificationRepository->deleteUserNotification($notification);
+                $userNotificationRepository->deleteUserNotification($notification->getUserId());
             }
         }
     }

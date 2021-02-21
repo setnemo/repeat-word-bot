@@ -48,17 +48,17 @@ class UserNotificationRepository extends BaseRepository
     }
 
     /**
-     * @param LearnNotification $userNotification
+     * @param int $id
      */
-    public function deleteUserNotification(LearnNotification $userNotification): void
+    public function deleteUserNotification(int $id): void
     {
-        $this->getOrCreateUserNotification($userNotification->getUserId());
+        $this->getOrCreateUserNotification($id);
         $updateStatement = $this->getConnection()->update([
             'deleted' => 1,
             'deleted_at' => Carbon::now()->rawFormat('Y-m-d H:i:s'),
         ])
             ->table($this->tableName)
-            ->where(new Conditional('user_id', '=', $userNotification->getUserId()));
+            ->where(new Conditional('user_id', '=', $id));
         $affectedRows = $updateStatement->execute();
     }
 

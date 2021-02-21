@@ -8,13 +8,10 @@ use Carbon\Carbon;
 use FaaPz\PDO\Clause\Conditional;
 use FaaPz\PDO\Clause\Grouping;
 use RepeatBot\Bot\BotHelper;
-use RepeatBot\Core\App;
 use RepeatBot\Core\Database\BaseRepository;
 use RepeatBot\Core\Database\Model\InactiveUser;
 use RepeatBot\Core\Database\Model\Training;
-use RepeatBot\Core\Database\Model\Word;
 use RepeatBot\Core\Exception\EmptyVocabularyException;
-use RepeatBot\Core\Log;
 
 /**
  * Class TrainingRepository
