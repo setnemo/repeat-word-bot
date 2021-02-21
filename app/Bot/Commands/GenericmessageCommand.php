@@ -56,7 +56,7 @@ class GenericmessageCommand extends SystemCommand
             $cache->removeTrainingsStatus($this->getMessage()->getFrom()->getId(), $command);
             return $this->telegram->executeCommand('StartTraining');
         }
-        if ($text === 'Я не знаю') {
+        if ($this->isDontKnow($text)) {
             $cache->skipTrainings($this->getMessage()->getFrom()->getId(), $command);
         }
         if ($command === 'FromEnglish' || $command === 'ToEnglish') {
@@ -64,5 +64,26 @@ class GenericmessageCommand extends SystemCommand
         }
 
         return $this->telegram->executeCommand((string)$command);
+    }
+    
+    /**
+     * @param string $text
+     *
+     * @return bool
+     */
+    private function isDontKnow(string $text): bool
+    {
+        return in_array(mb_strtolower($text), [
+            'я не знаю',
+            'не знаю',
+            'i don’t know',
+            'i don\'t know',
+            'don’t know',
+            'don\'t know',
+            'dont know',
+            '.',
+            'p',
+            'х',
+        ]);
     }
 }
