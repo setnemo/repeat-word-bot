@@ -65,6 +65,7 @@ class VoiceEnglishCommand extends SystemCommand
             if ($trainingId) {
                 $training = $trainingRepository->getTraining($trainingId);
                 $text = mb_strtolower($this->getMessage()->getText(false));
+                $text = preg_replace('/(ё)/i','е',$text);
                 $correct = match($type) {
                     'ToEnglish' => $training->getWord(),
                     'FromEnglish' => $training->getTranslate(),

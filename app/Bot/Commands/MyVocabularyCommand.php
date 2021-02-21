@@ -5,13 +5,9 @@ declare(strict_types=1);
 namespace Longman\TelegramBot\Commands\SystemCommand;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
-use RepeatBot\Bot\BotHelper;
-use RepeatBot\Core\App;
-use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Database\Repository\TrainingRepository;
 

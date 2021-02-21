@@ -14,7 +14,6 @@ use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Database\Repository\TrainingRepository;
-use RepeatBot\Core\Database\Repository\WordRepository;
 
 /**
  * Class ResetCommand
