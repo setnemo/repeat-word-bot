@@ -52,6 +52,7 @@ class UserNotificationRepository extends BaseRepository
      */
     public function deleteUserNotification(LearnNotification $userNotification): void
     {
+        $this->getOrCreateUserNotification($userNotification->getUserId());
         $updateStatement = $this->getConnection()->update([
             'deleted' => 1,
             'deleted_at' => Carbon::now()->rawFormat('Y-m-d H:i:s'),
