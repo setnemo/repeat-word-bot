@@ -81,6 +81,7 @@ class GenericmessageCommand extends SystemCommand
             'don’t know',
             'don\'t know',
             'dont know',
+            'i dont know',
             '.',
             'p',
             'х',
