@@ -172,9 +172,8 @@ final class Bot extends Singleton
                 'text' => $notification->getMessage(),
                 'disable_notification' => $notification->getSilent()
             ]);
-            if ($result->isOk()) {
-                $learnNotificationRepository->updateNotification($notification);
-            } else {
+            $learnNotificationRepository->updateNotification($notification);
+            if (!$result->isOk()) {
                 $userNotificationRepository->deleteUserNotification($notification);
             }
         }
