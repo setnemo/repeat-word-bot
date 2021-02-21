@@ -65,7 +65,7 @@ class GenericmessageCommand extends SystemCommand
 
         return $this->telegram->executeCommand((string)$command);
     }
-    
+
     /**
      * @param string $text
      *
