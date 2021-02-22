@@ -138,9 +138,9 @@ class TrainingRepository extends BaseRepository
         return $this->getNewModel($result[0]);
     }
 
-    public function upStatusTraining(Training $training): void
+    public function upStatusTraining(Training $training, bool $never = false): void
     {
-        $newStatus = $this->getNewStatus($training);
+        $newStatus = $this->getNewStatus($training, $never);
         $updateStatement = $this->getConnection()->update([
             'status' => $newStatus['status'],
             '`repeat`' => Carbon::now()->addMinutes($newStatus['repeat'])->rawFormat('Y-m-d H:i:s'),
@@ -158,17 +158,15 @@ class TrainingRepository extends BaseRepository
 
     /**
      * @param Training $training
+     * @param bool     $never
      *
      * @return array
      */
-    private function getNewStatus(Training $training): array
+    private function getNewStatus(Training $training, bool $never = false): array
     {
-        return match($training->getStatus()) {
-             'first' => [
-                    'status' => 'second',
-                    'repeat' => 24 * 60
-             ],
-             'second' => [
+        $status = $never === false ? $training->getStatus() : 'never';
+        return match($status) {
+            'second' => [
                     'status' => 'third',
                     'repeat' => 3 * 24 * 60
              ],
@@ -192,7 +190,10 @@ class TrainingRepository extends BaseRepository
                     'status' => 'never',
                     'repeat' => 360 * 24 * 60
              ],
-             default => 'first',
+            default => [
+                 'status' => 'second',
+                 'repeat' => 24 * 60
+             ],
              };
     }
 

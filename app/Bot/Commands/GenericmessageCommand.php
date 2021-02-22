@@ -6,8 +6,11 @@ use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Entities\ServerResponse;
 use RepeatBot\Bot\BotHelper;
+use RepeatBot\Bot\Service\OneYearService;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
+use RepeatBot\Core\Database\Database;
+use RepeatBot\Core\Database\Repository\TrainingRepository;
 use RepeatBot\Core\Metric;
 
 class GenericmessageCommand extends SystemCommand
@@ -37,10 +40,11 @@ class GenericmessageCommand extends SystemCommand
         $metric = Metric::getInstance()->init($config);
         $metric->increaseMetric('usage');
         $cache = Cache::getInstance()->init($config);
-        $command = $cache->checkTrainings($this->getMessage()->getFrom()->getId());
+        $userId = $this->getMessage()->getFrom()->getId();
+        $command = $cache->checkTrainings($userId);
         if (in_array($text, ['From English', 'To English'])) {
             $cache->setTrainingStatus(
-                $this->getMessage()->getFrom()->getId(),
+                $userId,
                 str_replace(' ', '', $text)
             );
         }
@@ -52,12 +56,18 @@ class GenericmessageCommand extends SystemCommand
             }
         }
         if ($text === 'Остановить') {
-            $cache->removeTrainings($this->getMessage()->getFrom()->getId(), $command);
-            $cache->removeTrainingsStatus($this->getMessage()->getFrom()->getId(), $command);
+            $cache->removeTrainings($userId, $command);
+            $cache->removeTrainingsStatus($userId, $command);
             return $this->telegram->executeCommand('StartTraining');
         }
         if ($this->isDontKnow($text)) {
-            $cache->skipTrainings($this->getMessage()->getFrom()->getId(), $command);
+            $cache->skipTrainings($userId, $command);
+        }
+        if ($this->isOneYear($text)) {
+            $cache->saveOneYear($userId, $command);
+            $database = Database::getInstance()->getConnection();
+            $trainingRepository = new TrainingRepository($database);
+            (new OneYearService($trainingRepository))->execute($cache->getTrainings($userId, $command));
         }
         if ($command === 'FromEnglish' || $command === 'ToEnglish') {
             $command = 'VoiceEnglish';
@@ -86,5 +96,10 @@ class GenericmessageCommand extends SystemCommand
             'p',
             'х',
         ]);
+    }
+
+    private function isOneYear(string $text): bool
+    {
+        return '1' === $text;
     }
 }

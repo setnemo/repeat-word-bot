@@ -97,6 +97,30 @@ class Cache extends Singleton
      *
      * @return int
      */
+    public function saveOneYear(int $userId, string $type): void
+    {
+        $redis = $this->getRedis();
+        $slug = $this->getCacheOneYear($userId, $type);
+        $redis->set($slug, 1, 'EX', 3600);
+    }
+
+    /**
+     * @param int    $userId
+     * @param string $type
+     *
+     * @return int
+     */
+    public function checkOneYear(int $userId, string $type): int
+    {
+        return $this->getRedis()->exists($this->getCacheOneYear($userId, $type));
+    }
+
+    /**
+     * @param int    $userId
+     * @param string $type
+     *
+     * @return int
+     */
     public function checkSkipTrainings(int $userId, string $type): int
     {
         return $this->getRedis()->exists($this->getCacheSlugSkip($userId, $type));
@@ -109,6 +133,15 @@ class Cache extends Singleton
     public function removeSkipTrainings(int $userId, string $type): void
     {
         $this->getRedis()->del($this->getCacheSlugSkip($userId, $type));
+    }
+
+    /**
+     * @param int    $userId
+     * @param string $type
+     */
+    public function removeOneYear(int $userId, string $type): void
+    {
+        $this->getRedis()->del($this->getCacheOneYear($userId, $type));
     }
 
     /**
@@ -197,11 +230,28 @@ class Cache extends Singleton
      *
      * @return string
      */
+    #[Pure] private function getCacheOneYear(int $userId, string $type): string
+    {
+        return $this->getCacheSlug("{$userId}_{$type}_one_year");
+    }
+
+    /**
+     * @param int    $userId
+     * @param string $type
+     *
+     * @return string
+     */
     #[Pure] private function getCacheSlugSkip(int $userId, string $type): string
     {
         return $this->getCacheSlug("{$userId}_{$type}_skip");
     }
 
+    /**
+     * @param int    $userId
+     * @param string $type
+     *
+     * @return string
+     */
     #[Pure] private function getSlugTraining(int $userId, string $type): string
     {
         return $this->getCacheSlug("{$userId}_{$type}");

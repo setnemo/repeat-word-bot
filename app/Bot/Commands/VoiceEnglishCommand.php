@@ -81,6 +81,9 @@ class VoiceEnglishCommand extends SystemCommand
                 if ($cache->checkSkipTrainings($userId, $type)) {
                     $cache->removeSkipTrainings($userId, $type);
                     $question = "Слово пропущено! Ответ на {$oldQuestion}: {$correct}\n\n";
+                } elseif ($cache->checkOneYear($userId, $type)) {
+                    $cache->removeOneYear($userId, $type);
+                    $question = "Слово пропущено на 1 год! Ответ на {$oldQuestion}: {$correct}\n\n";
                 } else {
                     if ($result) {
                         $trainingRepository->upStatusTraining($training);

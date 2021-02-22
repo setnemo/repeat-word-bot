@@ -27,24 +27,24 @@ logs:
 test: up
 	docker-compose exec worker vendor/bin/phpunit tests
 
-.PHONY: worker
-worker: up
+.PHONY: bash
+bash: up
 	docker-compose exec worker sh
 
-.PHONY: worker-stop
-worker-stop: up
+.PHONY: bot-stop
+bot-stop: up
 	docker-compose exec worker supervisorctl stop all
 
-.PHONY: worker-start
-worker-start: up
+.PHONY: bot-start
+bot-start: up
 	docker-compose exec worker supervisorctl start all
 
-.PHONY: worker-sctl
-worker-sctl: up
+.PHONY: bot-sup
+bot-sup: up
 	docker-compose exec worker supervisorctl ${ARGS}
 
-.PHONY: worker-status
-worker-status: up
+.PHONY: status
+status: up
 	docker-compose exec worker supervisorctl status
 
 .PHONY: stop
@@ -74,10 +74,10 @@ help: .title
 	echo '  install:          Install dependency from composer.lock'
 	echo '  network:          Create external docker network'
 	echo '  build:            Build or rebuild services'
-	echo '  worker-stop:      Stop worker supervisorctl'
-	echo '  worker-start:     Run all worker jobs'
-	echo '  worker-sctl:      Run worker supervisorctl with {args}'
-	echo '  worker-status:    Show worker supervisorctl status'
+	echo '  bot-stop:         Stop worker supervisorctl'
+	echo '  bot-start:        Run all worker jobs'
+	echo '  bot-sup:          Run worker supervisorctl with {args}'
+	echo '  bot-status:       Show worker supervisorctl status'
 	echo '  worker:           Run worker bash'
 	echo ''
 

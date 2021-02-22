@@ -14,7 +14,7 @@ class BotHelper
     public static function getDefaultKeyboard(): array
     {
         return [
-            ['Настройки', 'Коллекции слов'],
+            ['Настройки', 'Справка'],
             ['Мой прогресс', 'Тренировка',],
         ];
     }
@@ -35,7 +35,8 @@ class BotHelper
     public static function getTrainingKeyboard(): array
     {
         return [
-            ['Назад', 'To English', 'From English'],
+            ['Коллекции слов', 'To English', ],
+            ['Назад', 'From English'],
         ];
     }
 
@@ -53,7 +54,8 @@ class BotHelper
             'ToEnglish' => 'VoiceEnglish',
             'Настройки' => 'Settings',
             'Тренировка' => 'StartTraining',
-            'Назад' => 'Start'
+            'Справка' => 'Help',
+            'Назад' => 'Start',
         ];
     }
 
