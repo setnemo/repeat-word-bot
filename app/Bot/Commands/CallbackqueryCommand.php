@@ -170,31 +170,13 @@ class CallbackqueryCommand extends SystemCommand
     }
 
     /**
-     * @param float|int $count
-     *
-     * @return string
-     */
-    private function getAnswer(float | int $count): string
-    {
-        $module = $count > 10 && $count < 15 ? ($count + 5) % 10 : $count % 10;
-        $word = match($module) {
-            1 => 'слово',
-            2, 3, 4, => 'слова',
-            5, 6, 7, 8, 9, 0 => 'слов',
-        };
-        $text = "Добавлено {$count} {$word}!";
-
-        return $text;
-    }
-
-    /**
      * @param int $count
      *
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     private function progressNotify(int $count): void
     {
-        $text = $this->getAnswer($count);
+        $text = BotHelper::getAnswer('Добавлено', $count) . '!';
         $keyboard = new Keyboard(...BotHelper::getTrainingKeyboard());
         $keyboard->setResizeKeyboard(true);
         Request::sendMessage([

@@ -132,4 +132,25 @@ class BotHelper
 
         return $text;
     }
+
+
+
+    /**
+     * @param string $text
+     * @param int    $count
+     *
+     * @return string
+     */
+    public static function getAnswer(string $text, int $count): string
+    {
+        $module = $count > 10 && $count < 15 ? ($count + 5) % 10 : $count % 10;
+        $word = match($module) {
+            1 => 'слово',
+            2, 3, 4, => 'слова',
+            5, 6, 7, 8, 9, 0 => 'слов',
+        };
+        $text .= "{$count} {$word}";
+
+        return $text;
+    }
 }
