@@ -64,6 +64,15 @@ class ResetCommand extends SystemCommand
             }
             $trainingRepository->resetTrainings($userId);
         }
+        if ($text === 'my progress') {
+            $config = App::getInstance()->getConfig();
+            $cache = Cache::getInstance()->init($config);
+            foreach (BotHelper::getTrainingTypes() as $type) {
+                $cache->removeTrainings($this->getMessage()->getFrom()->getId(), $type);
+                $cache->removeTrainingsStatus($this->getMessage()->getFrom()->getId(), $type);
+            }
+            $trainingRepository->resetTrainings($userId);
+        }
         /** @psalm-suppress TooManyArguments */
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);

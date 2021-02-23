@@ -34,19 +34,19 @@ class TrainingRepository extends BaseRepository
     }
 
     /**
-     * @param int $collection_id
+     * @param int $rating_id
      * @param int $user_id
      *
      * @return bool
      */
-    public function userHaveCollectionId(int $collection_id, int $user_id): bool
+    public function userHaveRating(int $rating_id, int $user_id): bool
     {
         $selectStatement = $this->getConnection()->select(['*'])
             ->from($this->tableName)
             ->where(
                 new Grouping(
                     "AND",
-                    new Conditional("$this->tableName.collection_id", '=', $collection_id),
+                    new Conditional("$this->tableName.rating", '=', $rating_id),
                     new Conditional("$this->tableName.user_id", '=', $user_id)
                 )
             );
@@ -56,35 +56,41 @@ class TrainingRepository extends BaseRepository
     }
 
     /**
-     * @param int    $wordId
-     * @param int    $userId
-     * @param int    $collectionId
-     * @param string $type
-     * @param string $word
-     * @param string $translate
-     * @param string $voice
+     * @param int         $wordId
+     * @param int         $userId
+     * @param int         $rating
+     * @param string      $type
+     * @param string      $word
+     * @param string      $translate
+     * @param string      $voice
+     * @param string|null $status
+     * @param string|null $repeat
      */
     public function createTraining(
         int $wordId,
         int $userId,
-        int $collectionId,
+        int $rating,
         string $type,
         string $word,
         string $translate,
-        string $voice
+        string $voice,
+        string $status = null,
+        string $repeat = null
     ): void {
         $insertStatement = $this->getConnection()->insert(
             [
                 'word_id'       => $wordId,
                 'user_id'       => $userId,
                 'type'          => $type,
-                'collection_id' => $collectionId,
+                'rating'        => $rating,
                 'word'          => $word,
                 'translate'     => $translate,
                 'voice'         => $voice,
+                'status'        => $status ?? 'first',
+                '`repeat`'      => $repeat ?? Carbon::now()->rawFormat('Y-m-d H:i:s'),
             ]
         )->into($this->tableName);
-        $insertStatement->execute();
+        $r = $insertStatement->execute();
     }
 
     /**

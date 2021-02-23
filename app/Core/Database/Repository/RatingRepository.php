@@ -14,7 +14,7 @@ use RepeatBot\Core\Database\Model\Rating;
  */
 class RatingRepository extends BaseRepository
 {
-    protected string $tableName = 'collection';
+    protected string $tableName = 'rating';
 
     /**
      * @param array $params
@@ -43,5 +43,22 @@ class RatingRepository extends BaseRepository
             $ret[$record['id']] = $this->getNewModel($record);
         }
         return $ret;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Rating
+     */
+    public function getCollection(int $id): Rating
+    {
+        $selectStatement = $this->getConnection()->select(['*'])
+            ->from($this->tableName)
+            ->where(
+                new Conditional('id', '=', $id)
+            );
+        $stmt = $selectStatement->execute();
+        $result = $stmt->fetchAll();
+        return $this->getNewModel($result[0]);
     }
 }

@@ -18567,31 +18567,3 @@ ALTER TABLE `user_notification`
     ADD PRIMARY KEY (`user_id`),
     ADD UNIQUE KEY `table_name_user_id_uindex` (`user_id`);
 
-alter table training
-    add rating int null after collection_id;
-alter table word
-    add rating int null after collection_id;
-
-
-CREATE TABLE `training_save` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `user_id` bigint(20) NOT NULL,
-    `word` varchar(255) NOT NULL,
-    `repeat` timestamp NOT NULL,
-    `used` int(1) DEFAULT '0',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `save_training_user_id_word_uindex` (`user_id`,`word`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-INSERT INTO training_save (user_id, word, `repeat`) select user_id, word, `repeat` from training where status != 'first';
-
-
-CREATE TABLE `rating` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `name` varchar(255) NOT NULL,
-    `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-    `public` int(1) DEFAULT '0',
-    PRIMARY KEY (`id`),
-    KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4
-

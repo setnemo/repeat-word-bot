@@ -13,9 +13,12 @@ use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Database\Model\Collection;
+use RepeatBot\Core\Database\Model\TrainingSave;
 use RepeatBot\Core\Database\Model\Word;
 use RepeatBot\Core\Database\Repository\CollectionRepository;
+use RepeatBot\Core\Database\Repository\RatingRepository;
 use RepeatBot\Core\Database\Repository\TrainingRepository;
+use RepeatBot\Core\Database\Repository\TrainingSaveRepository;
 use RepeatBot\Core\Database\Repository\UserNotificationRepository;
 use RepeatBot\Core\Database\Repository\WordRepository;
 use RepeatBot\Core\Log;
@@ -74,52 +77,60 @@ class CallbackqueryCommand extends SystemCommand
             ];
             Request::editMessageText($data);
         }
-        if ($array[0] === 'collection') {
+        if ($array[0] === 'ratings' && $array[1] === 'add') {
             $wordRepository = new WordRepository($database);
-            $words = $wordRepository->getWordsByCollectionId(intval($array[1]));
+            $words = $wordRepository->getWordsByRatingId(intval($array[2]));
             $trainingRepository = new TrainingRepository($database);
-            if (
-                !$trainingRepository->userHaveCollectionId(
-                    intval($array[1]),
-                    $this->getCallbackQuery()->getFrom()->getId()
-                )
-            ) {
-                $collectionRepository = new CollectionRepository($database);
-                $trainingRepository = new TrainingRepository($database);
-                $allCollections = $collectionRepository->getAllPublicCollection();
-                $collections = [];
-                $ids = $trainingRepository->getMyCollectionIds($user_id);
-                $ids[] = intval($array[1]);
-                /**
-                 * @var int $id
-                 * @var Collection $collection */
-                foreach ($allCollections as $id => $collection) {
-                    if (!in_array(intval($id), $ids)) {
-                        $collections[] = $collection;
-                    }
-                }
-                $array = [[['text' => 'Все коллекции добавлены!']]];
-
-                if (!empty($collections)) {
-                    $array = BotHelper::convertCollectionToButton(
-                        $collections
-                    );
-                }
-                /** @psalm-suppress TooManyArguments */
-                $keyboard = new InlineKeyboard(...$array);
-                $data = [
-                    'chat_id'      => $user_id,
-                    'text'         => BotHelper::getCollectionText(),
-                    'reply_markup' => $keyboard,
-                    'message_id'   => $message_id,
-                ];
-                Request::editMessageText($data);
-
-                $count = ($this->addNewWords($trainingRepository, $words, $user_id)) / 2;
-                $this->progressNotify($count);
-                $text = 'Коллекция добавлена.';
+            $trainingSaveRepository = new TrainingSaveRepository($database);
+            $count = ($this->addNewWords($trainingRepository, $trainingSaveRepository, $words, $user_id)) / 2;
+            if ($count > 0) {
+                $this->progressNotify(intval($count));
             }
-            $text = empty($text) ? 'Коллекция уже добавлена' : $text;
+            $text = 'Слова добавлены';
+        }
+        if ($array[0] === 'ratings' && $array[1] === 'del') {
+            Request::sendMessage([
+                'chat_id' => $this->getCallbackQuery()->getFrom()->getId(),
+                'text' => 'Для удаления воспользуйтесь командой `/del collection ' . intval($array[2]) . '`',
+                'parse_mode' => 'markdown',
+                'disable_web_page_preview' => true,
+                'disable_notification' => 1,
+            ]);
+        }
+        if ($array[0] === 'ratings' && $array[1] === 'reset') {
+            Request::sendMessage([
+                'chat_id' => $this->getCallbackQuery()->getFrom()->getId(),
+                'text' => 'Для сброса прогресса по словам с этой коллекции воспользуйтесь командой `/reset collection ' .
+                    intval($array[2]) .
+                    '`',
+                'parse_mode' => 'markdown',
+                'disable_web_page_preview' => true,
+                'disable_notification' => 1,
+            ]);
+        }
+        if ($array[0] === 'rating') {
+            $answer = "Коллекция `:name` содержит такие слова, как:\n\n`:words`";
+            $id = intval($array[1]);
+            $ratingRepository = new RatingRepository($database);
+            $wordRepository = new WordRepository($database);
+            $trainingRepository = new TrainingRepository($database);
+            $rating = $ratingRepository->getCollection(intval($id));
+            $haveRatingWords = $trainingRepository->userHaveRating(intval($id), $user_id);
+            /** @psalm-suppress TooManyArguments */
+            $keyboard = new InlineKeyboard(...BotHelper::getCollectionPagination($id, $haveRatingWords));
+            $data = [
+                'chat_id' => $user_id,
+                'message_id'   => $message_id,
+                'text' => strtr($answer, [
+                    ':name' => $rating->getName(),
+                    ':words' => implode(', ', $wordRepository->getExampleWords($rating->getId())),
+                ]),
+                'parse_mode' => 'markdown',
+                'disable_web_page_preview' => true,
+                'reply_markup' => $keyboard,
+                'disable_notification' => 1,
+            ];
+            return Request::editMessageText($data);
         }
 
         return Request::answerCallbackQuery([
@@ -131,30 +142,56 @@ class CallbackqueryCommand extends SystemCommand
     }
 
     /**
-     * @param TrainingRepository $trainingRepository
-     * @param array              $words
-     * @param int                $userId
+     * @param TrainingRepository     $trainingRepository
+     * @param TrainingSaveRepository $trainingSaveRepository
+     * @param array                  $words
+     * @param int                    $userId
      *
      * @return int
      */
-    public function addNewWords(TrainingRepository $trainingRepository, array $words, int $userId): int
-    {
+    public function addNewWords(
+        TrainingRepository $trainingRepository,
+        TrainingSaveRepository $trainingSaveRepository,
+        array $words,
+        int $userId
+    ): int {
         $i = 0;
         $config = App::getInstance()->getConfig();
         $logger = Log::getInstance()->init($config)->getLogger();
+        $saves = $trainingSaveRepository->getTrainingSave($userId);
         foreach (BotHelper::getTrainingTypes() as $type) {
             /** @var Word $word */
             foreach ($words as $word) {
                 try {
+                    $wordId = $word->getId();
+                    $rating = $word->getRating();
+                    $wordW = $word->getWord();
+                    $translate = $word->getTranslate();
+                    $voice = $word->getVoice();
+                    $repeat = null;
+                    $status = null;
+                    if (isset($saves[$type][$word->getWord()])) {
+                        /** @var TrainingSave $save */
+                        $save = $saves[$type][$word->getWord()];
+                        $repeat = $save->getRepeat();
+                        $status = $save->getStatus();
+                    }
                     $trainingRepository->createTraining(
-                        $word->getId(),
+                        $wordId,
                         $userId,
-                        $word->getCollectionId(),
+                        $rating,
                         $type,
-                        $word->getWord(),
-                        $word->getTranslate(),
-                        $word->getVoice()
+                        $wordW,
+                        $translate,
+                        $voice,
+                        $status,
+                        $repeat
                     );
+                    if (isset($saves[$type][$word->getWord()])) {
+                        /** @var TrainingSave $save */
+                        $save = $saves[$type][$word->getWord()];
+                        $trainingSaveRepository->setUsed($save);
+                    }
                     ++$i;
                     if ($i % 1000 == 0) {
                         $this->progressNotify($i / 2);
@@ -176,15 +213,12 @@ class CallbackqueryCommand extends SystemCommand
      */
     private function progressNotify(int $count): void
     {
-        $text = BotHelper::getAnswer('Добавлено', $count) . '!';
-        $keyboard = new Keyboard(...BotHelper::getTrainingKeyboard());
-        $keyboard->setResizeKeyboard(true);
+        $text = BotHelper::getAnswer('Добавлено ', $count) . '!';
         Request::sendMessage([
             'chat_id' => $this->getCallbackQuery()->getFrom()->getId(),
             'text' => $text,
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
             'disable_notification' => 1,
         ]);
     }
