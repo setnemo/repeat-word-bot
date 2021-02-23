@@ -72,11 +72,35 @@ class CollectionsCommand extends SystemCommand
                 $collections
             );
         }
-        /** @psalm-suppress TooManyArguments */
-        $keyboard = new InlineKeyboard(...$array);
         $data = [
             'chat_id' => $chat_id,
             'text' => BotHelper::getCollectionText(),
+            'parse_mode' => 'markdown',
+            'disable_web_page_preview' => true,
+            'disable_notification' => 1,
+        ];
+        Request::sendMessage($data);
+        /** @psalm-suppress TooManyArguments */
+        $keyboard = new InlineKeyboard(
+            [
+                ['text' => '(1)', 'callback_data' => 'rating_1001',],
+                ['text' => 2, 'callback_data' => 'rating_1002',],
+                ['text' => 3, 'callback_data' => 'rating_1003',],
+                ['text' => 4, 'callback_data' => 'rating_1004',],
+                ['text' => 5, 'callback_data' => 'rating_1005',],
+                ['text' => 6, 'callback_data' => 'rating_1006',],
+            ], [
+                ['text' => 7, 'callback_data' => 'rating_1007',],
+                ['text' => 8, 'callback_data' => 'rating_1008',],
+                ['text' => 9, 'callback_data' => 'rating_1009',],
+                ['text' => 10, 'callback_data' => 'rating_1010',],
+                ['text' => 11, 'callback_data' => 'rating_1011',],
+                ['text' => 12, 'callback_data' => 'rating_1012',],
+            ]
+        );
+        $data = [
+            'chat_id' => $chat_id,
+            'text' => 'Коллекция Lorem ipsum',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,
