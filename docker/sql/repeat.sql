@@ -126,7 +126,7 @@ DROP TABLE IF EXISTS `collection`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `collection` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `public` int(1) DEFAULT '0',
@@ -519,10 +519,10 @@ DROP TABLE IF EXISTS `training`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `training` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `word_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `collection_id` int(11) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `word_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `collection_id` bigint(20) NOT NULL,
   `type` varchar(255) NOT NULL,
   `word` varchar(255) NOT NULL,
   `translate` longtext,
@@ -611,7 +611,7 @@ DROP TABLE IF EXISTS `version`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `version` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `version` varchar(12) NOT NULL,
   `description` longtext,
   `used` int(1) DEFAULT '0',
@@ -639,8 +639,8 @@ DROP TABLE IF EXISTS `version_notification`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `version_notification` (
-  `chat_id` int(11) DEFAULT NULL,
-  `version_id` int(11) DEFAULT NULL,
+  `chat_id` bigint(20) DEFAULT NULL,
+  `version_id` bigint(20) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY `version_notification_user_id_version_id_uindex` (`chat_id`,`version_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -663,11 +663,11 @@ DROP TABLE IF EXISTS `word`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `word` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `word` varchar(255) NOT NULL,
   `translate` longtext,
   `voice` text NOT NULL,
-  `collection_id` int(11) DEFAULT NULL,
+  `collection_id` bigint(20) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `word_word_uindex` (`word`)
@@ -18543,8 +18543,8 @@ UNLOCK TABLES;
 -- Dump completed on 2021-02-19 22:17:36
 DROP TABLE IF EXISTS `learn_notification`;
 CREATE TABLE `learn_notification` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `user_id` int(11) NOT NULL,
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `user_id` bigint(20) NOT NULL,
     `message` text NOT NULL,
     `silent` int(1) DEFAULT '0',
     `used` int(1) DEFAULT '0',
@@ -18566,3 +18566,14 @@ CREATE TABLE `user_notification` (
 ALTER TABLE `user_notification`
     ADD PRIMARY KEY (`user_id`),
     ADD UNIQUE KEY `table_name_user_id_uindex` (`user_id`);
+
+CREATE TABLE `learn_notification_personal` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `user_id` bigint(20) NOT NULL,
+    `alarm` time NOT NULL,
+    `description` text NOT NULL,
+    `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `learn_notification_personal_user_id_index` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+

@@ -12,23 +12,23 @@ use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
 
 /**
- * Class StartTrainingCommand
+ * Class TimeCommand
  * @package Longman\TelegramBot\Commands\SystemCommand
  */
-class StartTrainingCommand extends SystemCommand
+class TimeCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'StartTraining';
+    protected $name = 'time';
     /**
      * @var string
      */
-    protected $description = 'StartTraining command';
+    protected $description = 'Time command';
     /**
      * @var string
      */
-    protected $usage = '/training';
+    protected $usage = '/time';
     /**
      * @var string
      */
@@ -48,11 +48,20 @@ class StartTrainingCommand extends SystemCommand
     {
         $chat_id = $this->getMessage()->getChat()->getId();
         /** @psalm-suppress TooManyArguments */
-        $keyboard = new Keyboard(...BotHelper::getTrainingKeyboard());
+        $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
+        $text = "Список поддерживаемых аббривиатур для выбора часового пояса в персональных напоминаниях:\n\n";
+        $timezones = BotHelper::getTimeZones();
+        foreach ($timezones as $timezone) {
+            $text .= strtr("`:abbr:` :text\n", [
+                ':abbr' => $timezone['abbr'],
+                ':text' => $timezone['text'],
+            ]);
+        }
+        $text .= "\nДля напоминаний используйте буквенный код, например MSK (Moscow), тогда команда будет /alarm MSK 9:00";
         $data = [
             'chat_id' => $chat_id,
-            'text' => 'Пожалуйста выберете режим тренировки:',
+            'text' => $text,
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,

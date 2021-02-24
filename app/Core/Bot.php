@@ -18,6 +18,8 @@ use RepeatBot\Common\Config;
 use RepeatBot\Common\Singleton;
 use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Database\Model\LearnNotification;
+use RepeatBot\Core\Database\Model\LearnNotificationPersonal;
+use RepeatBot\Core\Database\Repository\LearnNotificationPersonalRepository;
 use RepeatBot\Core\Database\Repository\LearnNotificationRepository;
 use RepeatBot\Core\Database\Repository\TrainingRepository;
 use RepeatBot\Core\Database\Repository\UserNotificationRepository;
@@ -86,6 +88,7 @@ final class Bot extends Singleton
     {
         try {
             $this->telegram->handleGetUpdates();
+            $this->handleNotificationsPersonal();
         } catch (TelegramException $e) {
             $this->getLogger()->error($e->getMessage(), $e->getTrace());
         }
@@ -156,7 +159,7 @@ final class Bot extends Singleton
      */
     private function handleNotifications(): void
     {
-        $database = Database::getInstance()->getConnection();
+        $database = $this->db;
         $learnNotificationRepository = new LearnNotificationRepository($database);
         $trainingRepository = new TrainingRepository($database);
         $userNotificationRepository = new UserNotificationRepository($database);
@@ -175,6 +178,38 @@ final class Bot extends Singleton
             $learnNotificationRepository->updateNotification($notification);
             if (!$result->isOk()) {
                 $userNotificationRepository->deleteUserNotification($notification->getUserId());
+            }
+        }
+    }
+
+    private function handleNotificationsPersonal(): void
+    {
+        $database = $this->db;
+        $learnNotificationRepository = new LearnNotificationPersonalRepository($database);
+        $notifications = $learnNotificationRepository->getNotifications();
+        $userNotificationRepository = new UserNotificationRepository($database);
+        $tzs = BotHelper::getTimeZones();
+        /** @var LearnNotificationPersonal $notification */
+        foreach ($notifications as $notification) {
+            $currentTz = $notification->getTimezone();
+            $tmp = array_filter($tzs, function (array $item) use ($currentTz) {
+                return $currentTz === $item['abbr'];
+            });
+            $new = [];
+            foreach ($tmp as $item) {
+                $new = $item;
+            }
+            date_default_timezone_set($new['utc'][0]);
+            if (strtotime($notification->getAlarm()) < time()) {
+                $silent = $userNotificationRepository->getOrCreateUserNotification(
+                    $notification->getUserId()
+                )->getSilent();
+                Request::sendMessage([
+                    'chat_id' => $notification->getUserId(),
+                    'text' => $notification->getMessage(),
+                    'disable_notification' => $silent
+                ]);
+                $learnNotificationRepository->updateNotification($notification);
             }
         }
     }

@@ -13,7 +13,9 @@ use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Database\Model\Collection;
 use RepeatBot\Core\Database\Repository\CollectionRepository;
+use RepeatBot\Core\Database\Repository\RatingRepository;
 use RepeatBot\Core\Database\Repository\TrainingRepository;
+use RepeatBot\Core\Database\Repository\WordRepository;
 
 /**
  * Class CollectionsCommand
@@ -51,32 +53,31 @@ class CollectionsCommand extends SystemCommand
     public function execute(): ServerResponse
     {
         $chat_id = $this->getMessage()->getChat()->getId();
-        $database = Database::getInstance()->getConnection();
-        $collectionRepository = new CollectionRepository($database);
-        $trainingRepository = new TrainingRepository($database);
-        $allCollections = $collectionRepository->getAllPublicCollection();
-        $collections = [];
-        $ids = $trainingRepository->getMyCollectionIds($chat_id);
-        /**
-         * @var int $id
-         * @var Collection $collection */
-        foreach ($allCollections as $id => $collection) {
-            if (!in_array(intval($id), $ids)) {
-                $collections[] = $collection;
-            }
-        }
-        $array = [[['text' => 'Все коллекции добавлены!']]];
-
-        if (!empty($collections)) {
-            $array = BotHelper::convertCollectionToButton(
-                $collections
-            );
-        }
-        /** @psalm-suppress TooManyArguments */
-        $keyboard = new InlineKeyboard(...$array);
         $data = [
             'chat_id' => $chat_id,
             'text' => BotHelper::getCollectionText(),
+            'parse_mode' => 'markdown',
+            'disable_web_page_preview' => true,
+            'disable_notification' => 1,
+        ];
+        Request::sendMessage($data);
+
+        $answer = "Коллекция `:name` содержит такие слова, как:\n\n`:words`";
+        $id = 1;
+        $database = Database::getInstance()->getConnection();
+        $collectionRepository = new CollectionRepository($database);
+        $wordRepository = new WordRepository($database);
+        $trainingRepository = new TrainingRepository($database);
+        $rating = $collectionRepository->getCollection(intval($id));
+        $haveRatingWords = $trainingRepository->userHaveCollection(intval($id), $chat_id);
+        /** @psalm-suppress TooManyArguments */
+        $keyboard = new InlineKeyboard(...BotHelper::getCollectionPagination($id, $haveRatingWords));
+        $data = [
+            'chat_id' => $chat_id,
+            'text' => strtr($answer, [
+                ':name' => $rating->getName(),
+                ':words' => implode(', ', $wordRepository->getExampleWords($rating->getId())),
+            ]),
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,

@@ -49,17 +49,24 @@ class WordRepository extends BaseRepository
     }
 
     /**
+     * @param int $id
+     *
      * @return array
      */
-    public function getWords(): array
+    public function getExampleWords(int $id): array
     {
         $selectStatement = $this->getConnection()->select(['*'])
-            ->from($this->tableName)->limit(new Limit(20000));
+            ->from($this->tableName)
+            ->where(
+                new Conditional('collection_id', '=', $id)
+            );
         $stmt = $selectStatement->execute();
         $result = $stmt->fetchAll();
+        shuffle($result);
+        $randomWords = array_slice($result, 0, 30);
         $ret = [];
-        foreach ($result as $record) {
-            $ret[] = $this->getNewModel($record);
+        foreach ($randomWords as $word) {
+            $ret[] = $word['word'];
         }
         return $ret;
     }
