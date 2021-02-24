@@ -110,7 +110,6 @@ class AlarmCommand extends SystemCommand
             $text .= "Посмотреть все коды часовых поясов можно командой /time\n\n";
             $text .= "Посмотреть свои напоминания /alarm list\n\n";
             $text .= "Удалить свои напоминания /alarm reset\n\n";
-            $text .= "Персональные напоминания работают не чаще, чам 1 в час.\n\n";
         }
         $data = [
             'chat_id' => $chat_id,

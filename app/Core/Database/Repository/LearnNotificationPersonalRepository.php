@@ -39,7 +39,7 @@ class LearnNotificationPersonalRepository extends BaseRepository
                 new Conditional(
                     'updated_at',
                     '<',
-                    Carbon::now('Europe/Kiev')->subMinutes(59)->rawFormat('Y-m-d H:i:s')
+                    Carbon::now('Europe/Kiev')->subDay()->rawFormat('Y-m-d H:i:s')
                 )
             )
             ->orderBy('created_at', 'desc');
