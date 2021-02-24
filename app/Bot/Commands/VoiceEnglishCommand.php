@@ -75,7 +75,7 @@ class VoiceEnglishCommand extends SystemCommand
                     'FromEnglish' => $training->getWord(),
                 };
                 $result = match($type) {
-                    'ToEnglish' => $text === $training->getWord(),
+                    'ToEnglish' => $text === mb_strtolower($training->getWord()),
                     'FromEnglish' => $this->getToEnglishResult($training, $text),
                 };
                 if ($cache->checkSkipTrainings($userId, $type)) {
@@ -133,7 +133,7 @@ class VoiceEnglishCommand extends SystemCommand
     private function getToEnglishResult(Training $training, string $text): bool
     {
         $result = false;
-        foreach (explode('; ', $training->getTranslate()) as $translate) {
+        foreach (explode('; ', mb_strtolower($training->getTranslate())) as $translate) {
             if ($translate === trim($text)) {
                 $result = true;
             }

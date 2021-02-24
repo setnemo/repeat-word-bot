@@ -138,7 +138,7 @@ class TrainingRepository extends BaseRepository
                 $ret[$rule[$item['status']]][] = $item;
             }
             $ret = array_map('array_values', $ret);
-            $ret = $ret[0];
+            $ret = $ret[0] ?? [];
             shuffle($ret);
         }
 
