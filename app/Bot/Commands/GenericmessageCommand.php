@@ -58,7 +58,7 @@ class GenericmessageCommand extends SystemCommand
         if ($text === 'Остановить') {
             $cache->removeTrainings($userId, $command);
             $cache->removeTrainingsStatus($userId, $command);
-            return $this->telegram->executeCommand('StartTraining');
+            return $this->telegram->executeCommand('Training');
         }
         if ($this->isDontKnow($text)) {
             $cache->skipTrainings($userId, $command);

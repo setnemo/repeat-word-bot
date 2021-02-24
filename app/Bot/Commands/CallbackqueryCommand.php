@@ -91,7 +91,9 @@ class CallbackqueryCommand extends SystemCommand
         if ($array[0] === 'ratings' && $array[1] === 'del') {
             Request::sendMessage([
                 'chat_id' => $this->getCallbackQuery()->getFrom()->getId(),
-                'text' => 'Для удаления воспользуйтесь командой `/del collection ' . intval($array[2]) . '`',
+                'text' => 'Для удаления слов этой коллекции из вашего прогресса воспользуйтесь командой `/del collection ' .
+                    intval($array[2]) .
+                    '`',
                 'parse_mode' => 'markdown',
                 'disable_web_page_preview' => true,
                 'disable_notification' => 1,

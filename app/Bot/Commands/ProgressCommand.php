@@ -13,23 +13,23 @@ use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Database\Repository\TrainingRepository;
 
 /**
- * Class MyVocabularyCommand
+ * Class ProgressCommand
  * @package Longman\TelegramBot\Commands\SystemCommand
  */
-class MyVocabularyCommand extends SystemCommand
+class ProgressCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'MyVocabulary';
+    protected $name = 'progress';
     /**
      * @var string
      */
-    protected $description = 'MyVocabulary command';
+    protected $description = 'progress command';
     /**
      * @var string
      */
-    protected $usage = '/MyVocabularyCommand';
+    protected $usage = '/progress';
     /**
      * @var string
      */

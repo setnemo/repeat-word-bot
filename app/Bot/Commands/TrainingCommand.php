@@ -12,19 +12,19 @@ use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
 
 /**
- * Class StartTrainingCommand
+ * Class TrainingCommand
  * @package Longman\TelegramBot\Commands\SystemCommand
  */
-class StartTrainingCommand extends SystemCommand
+class TrainingCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'StartTraining';
+    protected $name = 'Training';
     /**
      * @var string
      */
-    protected $description = 'StartTraining command';
+    protected $description = 'Training command';
     /**
      * @var string
      */

@@ -32,7 +32,7 @@ class ResetCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $usage = '/Reset';
+    protected $usage = '/reset';
     /**
      * @var string
      */

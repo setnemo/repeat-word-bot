@@ -47,13 +47,13 @@ class BotHelper
     {
         return [
             'Коллекции слов' => 'Collections',
-            'Мой прогресс' => 'MyVocabulary',
+            'Мой прогресс' => 'Progress',
             'From English' => 'VoiceEnglish',
             'FromEnglish' => 'VoiceEnglish',
             'To English' => 'VoiceEnglish',
             'ToEnglish' => 'VoiceEnglish',
             'Настройки' => 'Settings',
-            'Тренировка' => 'StartTraining',
+            'Тренировка' => 'Training',
             'Справка' => 'Help',
             'Назад' => 'Start',
         ];
@@ -123,12 +123,15 @@ class BotHelper
     public static function getCollectionText(): string
     {
         $text = "Выбирайте коллекцию для добавления в свой словарь. Слова с коллекции будут доступны в тренировке.\n\n";
-        $text .= "Все слова разделены на коллекции по частоте использования слова в языке. ";
+        $text .= "Все слова разделены на коллекции `по частоте использования` слова в языке. ";
         $text .= "Не добавляйте сразу слишком много, сначала отправьте на долгие итерации коллекции с более популярными словами. ";
-        $text .= "При добавлении Коллекции слова добавляются в оба типа тренировок (From English + To English). ";
+        $text .= "При добавлении Коллекции слова добавляются в оба типа тренировок (`From English` + `To English`). ";
         $text .= "Также есть команда /reset для сброса, если вы по ошибке добавили слишком много или хотите начать сначала\n\n";
-        $text .= "Каждая коллекция уникальна! Слова НЕ ПОВТОРЯЮТСЯ. Вас ждет приключение на 17814 слов! ";
-        $text .= "Первые 11 коллекций по 1500 слов и в последней 1314 слов";
+        $text .= "Каждая коллекция уникальна! Слова `не повторяются`. Вас ждет приключение на 17814 слов! ";
+        $text .= "Первые 11 коллекций по 1500 слов и в последней 1314 слов\n\n";
+        $text .= "Слова добавляются по 500 штук, поэтому после нажатия кнопки `Добавить` дождитесь ответа, что слова добавлены\n\n";
+        $text .= "Листая влево и вправо список слов примеров будет обновляться, это поможет вам более точно выбрать коллекцию для своего уровня владения языком\n\n";
+        $text .= "После добавления будут доступны кнопки `Удалить` и `Сбросить`, которые подскажут команды для удаления коллекции или сброса прогресса по данной коллекции";
 
         return $text;
     }
@@ -143,11 +146,14 @@ class BotHelper
     {
         $module = $count > 10 && $count < 15 ? ($count + 5) % 10 : $count % 10;
         $word = match($module) {
-            1 => 'слово',
-            2, 3, 4, => 'слова',
-            5, 6, 7, 8, 9, 0 => 'слов',
+            5, 6, 7, 8, 9, 0    => 'слов',
+            2, 3, 4,            => 'слова',
+            1                   => 'слово',
         };
-        $text .= "{$count} {$word}";
+        $text .= strtr(':count :word', [
+            ':count' => $count,
+            ':word' => $word,
+        ]);
 
         return $text;
     }
@@ -210,15 +216,21 @@ class BotHelper
         ];
     }
 
-    private static function createEmojiNumber(int $num, string $text = '')
+    /**
+     * @param int    $num
+     * @param string $text
+     *
+     * @return string
+     */
+    private static function createEmojiNumber(int $num, string $text = ''): string
     {
-        $m = $num;
-        if ($m >= 10) {
-            $text .= BotHelper::createEmojiNumber(intval($m / 10));
-            $m -= 10;
+        $tmp = $num;
+        if ($tmp >= 10) {
+            $text .= BotHelper::createEmojiNumber(intval($tmp / 10));
+            $text .= BotHelper::createEmojiNumber(intval($tmp % 10));
         }
-        if ($m < 10) {
-            $text .= match($m) {
+        if ($tmp < 10) {
+            $text .= match($tmp) {
                 0 => '0️⃣',
                 1 => '1️⃣',
                 2 => '2️⃣',
