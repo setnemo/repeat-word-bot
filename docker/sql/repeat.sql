@@ -18571,9 +18571,11 @@ CREATE TABLE `learn_notification_personal` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
     `user_id` bigint(20) NOT NULL,
     `alarm` time NOT NULL,
-    `description` text NOT NULL,
+    `message` text NOT NULL,
+    `timezone` varchar(255) NOT NULL,
     `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `learn_notification_personal_user_id_index` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
 

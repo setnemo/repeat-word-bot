@@ -13,12 +13,11 @@ CREATE TABLE `training_save` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO training_save (user_id, word, `type`, `status`, `repeat`) select user_id, word, `type`, `status`, `repeat` from training where status != 'first';
-
-
-INSERT INTO `repeat`.training_save (id, user_id, word, type, `status`, `repeat`, used) VALUES (15, 281861745, 'grandfather', 'ToEnglish', 'second',  '2022-02-17 19:12:07', 0);
-INSERT INTO `repeat`.training_save (id, user_id, word, type, `status`, `repeat`, used) VALUES (16, 281861745, 'granddaughter', 'ToEnglish', 'second',  '2022-02-17 19:13:29', 0);
-INSERT INTO `repeat`.training_save (id, user_id, word, type, `status`, `repeat`, used) VALUES (17, 281861745, 'grandson', 'ToEnglish', 'never',  '2022-02-17 19:34:49', 0);
-INSERT INTO `repeat`.training_save (id, user_id, word, type, `status`, `repeat`, used) VALUES (18, 281861745, 'marriage', 'FromEnglish', 'never',  '2021-02-23 20:13:28', 0);
+#
+# INSERT INTO `repeat`.training_save (id, user_id, word, type, `status`, `repeat`, used) VALUES (15, 281861745, 'grandfather', 'ToEnglish', 'second',  '2022-02-17 19:12:07', 0);
+# INSERT INTO `repeat`.training_save (id, user_id, word, type, `status`, `repeat`, used) VALUES (16, 281861745, 'granddaughter', 'ToEnglish', 'second',  '2022-02-17 19:13:29', 0);
+# INSERT INTO `repeat`.training_save (id, user_id, word, type, `status`, `repeat`, used) VALUES (17, 281861745, 'grandson', 'ToEnglish', 'never',  '2022-02-17 19:34:49', 0);
+# INSERT INTO `repeat`.training_save (id, user_id, word, type, `status`, `repeat`, used) VALUES (18, 281861745, 'marriage', 'FromEnglish', 'never',  '2021-02-23 20:13:28', 0);
 
 
 delete from `repeat`.collection where 1;
