@@ -19,7 +19,7 @@ use RepeatBot\Core\Exception\EmptyVocabularyException;
  */
 class TrainingRepository extends BaseRepository
 {
-    const ALWAYS_SILENT_MESSAGE = 1;
+    public const ALWAYS_SILENT_MESSAGE = 1;
 
     protected string $tableName = 'training';
 
@@ -52,6 +52,7 @@ class TrainingRepository extends BaseRepository
             );
         $stmt = $selectStatement->execute();
         $result = $stmt->fetchAll();
+
         return !empty($result);
     }
 
@@ -79,15 +80,15 @@ class TrainingRepository extends BaseRepository
     ): void {
         $insertStatement = $this->getConnection()->insert(
             [
-                'word_id'       => $wordId,
-                'user_id'       => $userId,
-                'type'          => $type,
+                'word_id' => $wordId,
+                'user_id' => $userId,
+                'type' => $type,
                 'collection_id' => $collection_id,
-                'word'          => $word,
-                'translate'     => $translate,
-                'voice'         => $voice,
-                'status'        => $status ?? 'first',
-                '`repeat`'      => $repeat ?? Carbon::now()->rawFormat('Y-m-d H:i:s'),
+                'word' => $word,
+                'translate' => $translate,
+                'voice' => $voice,
+                'status' => $status ?? 'first',
+                '`repeat`' => $repeat ?? Carbon::now()->rawFormat('Y-m-d H:i:s'),
             ]
         )->into($this->tableName);
         $r = $insertStatement->execute();
@@ -104,7 +105,7 @@ class TrainingRepository extends BaseRepository
     public function getRandomTraining(int $userId, string $type, bool $priority): Training
     {
         $selectStatement = $this->getConnection()->select([
-            "$this->tableName.*"
+            "$this->tableName.*",
         ])->from($this->tableName)
             ->where(
                 new Grouping(
@@ -116,8 +117,7 @@ class TrainingRepository extends BaseRepository
                         new Conditional("$this->tableName.type", '=', $type)
                     )
                 )
-            )
-        ;
+            );
         $stmt = $selectStatement->execute();
         $result = $stmt->fetchAll();
         if (!$priority) {
@@ -125,19 +125,19 @@ class TrainingRepository extends BaseRepository
             $ret = $result;
         } else {
             $rule = [
-                    'first' => 0,
-                    'second' => 1,
-                    'third' => 2,
-                    'fourth' => 3,
-                    'fifth' => 4,
-                    'sixth' => 5,
-                    'never' => 6,
+                'first' => 0,
+                'second' => 1,
+                'third' => 2,
+                'fourth' => 3,
+                'fifth' => 4,
+                'sixth' => 5,
+                'never' => 6,
             ];
             $ret = [];
             foreach ($result as $item) {
                 $ret[$rule[$item['status']]][] = $item;
             }
-            array_filter($ret);
+            $ret = array_map('array_values', $ret);
             $ret = $ret[0];
             shuffle($ret);
         }
@@ -145,6 +145,7 @@ class TrainingRepository extends BaseRepository
         if (empty($ret)) {
             throw new EmptyVocabularyException();
         }
+
         return $this->getNewModel($ret[0]);
     }
 
@@ -162,6 +163,7 @@ class TrainingRepository extends BaseRepository
             );
         $stmt = $selectStatement->execute();
         $result = $stmt->fetchAll();
+
         return $this->getNewModel($result[0]);
     }
 
@@ -192,36 +194,37 @@ class TrainingRepository extends BaseRepository
     private function getNewStatus(Training $training, bool $never = false): array
     {
         $status = $never === false ? $training->getStatus() : 'never';
+
         return match($status) {
             'second' => [
-                    'status' => 'third',
-                    'repeat' => 3 * 24 * 60
-             ],
-             'third' => [
-                    'status' => 'fourth',
-                    'repeat' => 7 * 24 * 60
-             ],
-             'fourth' => [
-                    'status' => 'fifth',
-                    'repeat' => 30 * 24 * 60
-             ],
-             'fifth' => [
-                    'status' => 'sixth',
-                    'repeat' => 90 * 24 * 60
-             ],
-             'sixth' => [
-                    'status' => 'never',
-                    'repeat' => 180 * 24 * 60
-             ],
-             'never' => [
-                    'status' => 'never',
-                    'repeat' => 360 * 24 * 60
-             ],
+                'status' => 'third',
+                'repeat' => 3 * 24 * 60,
+            ],
+            'third' => [
+                'status' => 'fourth',
+                'repeat' => 7 * 24 * 60,
+            ],
+            'fourth' => [
+                'status' => 'fifth',
+                'repeat' => 30 * 24 * 60,
+            ],
+            'fifth' => [
+                'status' => 'sixth',
+                'repeat' => 90 * 24 * 60,
+            ],
+            'sixth' => [
+                'status' => 'never',
+                'repeat' => 180 * 24 * 60,
+            ],
+            'never' => [
+                'status' => 'never',
+                'repeat' => 360 * 24 * 60,
+            ],
             default => [
-                 'status' => 'second',
-                 'repeat' => 24 * 60
-             ],
-             };
+                'status' => 'second',
+                'repeat' => 24 * 60,
+            ],
+            };
     }
 
     /**
@@ -235,7 +238,7 @@ class TrainingRepository extends BaseRepository
         $types = BotHelper::getTrainingTypes();
         foreach ($types as $type) {
             $selectStatement = $this->getConnection()->select([
-                "COUNT(*) as counter, status"
+                "COUNT(*) as counter, status",
             ])
                 ->from($this->tableName)
                 ->where(
@@ -327,7 +330,7 @@ class TrainingRepository extends BaseRepository
         $selectStatement = $this->getConnection()
             ->select([
                 "$this->tableName.user_id",
-                "MAX($this->tableName.updated_at) as max"
+                "MAX($this->tableName.updated_at) as max",
             ])
             ->from($this->tableName)
             ->groupBy("$this->tableName.user_id");
@@ -338,7 +341,7 @@ class TrainingRepository extends BaseRepository
             if (strtotime($record['max']) < strtotime('-1 day')) {
                 if (isset($userNotifications[$record['user_id']])) {
                     if ($userNotifications[$record['user_id']]->getDeleted() == 1) {
-                        continue ;
+                        continue;
                     }
                 }
                 $ret[$record['user_id']] = $this->getInactiveUser([
@@ -346,10 +349,11 @@ class TrainingRepository extends BaseRepository
                     'silent' => isset($userNotifications[$record['user_id']]) ?
                         $userNotifications[$record['user_id']]->getSilent() :
                         self::ALWAYS_SILENT_MESSAGE,
-                    'message' => $this->getMessageForInactiveUser($record['user_id'])
+                    'message' => $this->getMessageForInactiveUser($record['user_id']),
                 ]);
             }
         }
+
         return $ret;
     }
 
@@ -381,28 +385,5 @@ class TrainingRepository extends BaseRepository
         $text .= "\n Не останавливайся! Продолжи свою тренировку прямо сейчас!";
 
         return $text;
-    }
-
-    /**
-     * @param int $userId
-     *
-     * @return array
-     */
-    public function getMyCollectionIds(int $userId): array
-    {
-        $selectStatement = $this->getConnection()
-            ->select([
-                "$this->tableName.collection_id"
-            ])
-            ->from($this->tableName)
-            ->where(new Conditional("$this->tableName.user_id", '=', $userId))
-            ->groupBy("$this->tableName.collection_id");
-        $stmt = $selectStatement->execute();
-        $result = $stmt->fetchAll();
-        $ret = [];
-        foreach ($result as $item) {
-            $ret[] = $item['collection_id'];
-        }
-        return $ret;
     }
 }

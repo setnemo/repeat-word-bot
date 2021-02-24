@@ -6,18 +6,15 @@ namespace Longman\TelegramBot\Commands\SystemCommand;
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\InlineKeyboard;
-use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Database\Model\Collection;
 use RepeatBot\Core\Database\Model\TrainingSave;
 use RepeatBot\Core\Database\Model\Word;
 use RepeatBot\Core\Database\Repository\CollectionRepository;
-use RepeatBot\Core\Database\Repository\RatingRepository;
 use RepeatBot\Core\Database\Repository\TrainingRepository;
 use RepeatBot\Core\Database\Repository\TrainingSaveRepository;
 use RepeatBot\Core\Database\Repository\UserNotificationRepository;
