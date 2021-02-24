@@ -97,7 +97,8 @@ class VoiceEnglishCommand extends SystemCommand
             };
         }
         try {
-            $training = $trainingRepository->getRandomTraining($userId, $type);
+            $priority = $cache->getPriority($userId);
+            $training = $trainingRepository->getRandomTraining($userId, $type, $priority === 1);
         } catch (EmptyVocabularyException $e) {
             $cache->removeTrainingsStatus($this->getMessage()->getFrom()->getId(), $type);
             return $this->telegram->executeCommand('Collections');

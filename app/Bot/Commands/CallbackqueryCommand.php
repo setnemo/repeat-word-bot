@@ -11,6 +11,7 @@ use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\App;
+use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Database\Model\Collection;
 use RepeatBot\Core\Database\Model\TrainingSave;
@@ -59,19 +60,41 @@ class CallbackqueryCommand extends SystemCommand
         $text = '';
         $array = explode('_', $callback_data);
         if ($array[0] === 'settings') {
-            $silent = intval($array[2]);
-            $userNotificationRepository = new UserNotificationRepository($database);
-            $userNotificationRepository->createOdUpdateNotification(
-                $user_id,
-                $silent
-            );
-            $symbol = $silent === 1 ? '✅' : '❌';
-            $text = "Тихий режим сообщений: {$symbol}";
-            $keyboard = new InlineKeyboard(BotHelper::getSettingsKeyboard($text, $silent === 1 ? 0 : 1));
+            $config = App::getInstance()->getConfig();
+            $cache = Cache::getInstance()->init($config);
 
+            if ($array[1] === 'silent') {
+                $silent = intval($array[2]);
+                $userNotificationRepository = new UserNotificationRepository($database);
+                $userNotificationRepository->createOdUpdateNotification(
+                    $user_id,
+                    $silent
+                );
+            } else {
+                $userNotificationRepository = new UserNotificationRepository($database);
+                $silent = $userNotificationRepository->getOrCreateUserNotification(
+                    $user_id
+                )->getSilent();
+            }
+            if ($array[1] === 'priority') {
+                $priority = intval($array[2]);
+                $cache->setPriority($user_id, $priority);
+            } else {
+                $priority = $cache->getPriority($user_id);
+            }
+            $symbolSilent = $silent === 1 ? '✅' : '❌';
+            $symbolPriority = $priority === 1 ? '✅' : '❌';
+            $textSilent = "Тихий режим сообщений: {$symbolSilent}";
+            $texPriority = "Приоритет меньшей итерации: {$symbolPriority}";
+            $keyboard = new InlineKeyboard(...BotHelper::getSettingsKeyboard(
+                $textSilent,
+                $texPriority,
+                $silent === 1 ? 0 : 1,
+                $priority === 1 ? 0 : 1,
+            ));
             $data = [
                 'chat_id'      => $user_id,
-                'text' => 'В настройках можно отключить тихий режим получения уведомлений. По умолчанию тихий режим включен для всех. Для переключения режима нажмите на кнопку',
+                'text' => BotHelper::getSettingsText(),
                 'reply_markup' => $keyboard,
                 'message_id'   => $message_id,
             ];

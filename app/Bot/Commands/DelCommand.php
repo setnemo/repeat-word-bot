@@ -16,23 +16,23 @@ use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Database\Repository\TrainingRepository;
 
 /**
- * Class ResetCommand
+ * Class DelCommand
  * @package Longman\TelegramBot\Commands\SystemCommand
  */
-class ResetCommand extends SystemCommand
+class DelCommand extends SystemCommand
 {
     /**
      * @var string
      */
-    protected $name = 'Reset';
+    protected $name = 'Del';
     /**
      * @var string
      */
-    protected $description = 'Reset command';
+    protected $description = 'Del command';
     /**
      * @var string
      */
-    protected $usage = '/reset';
+    protected $usage = '/del';
     /**
      * @var string
      */
@@ -63,17 +63,16 @@ class ResetCommand extends SystemCommand
                 $cache->removeTrainings($this->getMessage()->getFrom()->getId(), $type);
                 $cache->removeTrainingsStatus($this->getMessage()->getFrom()->getId(), $type);
             }
-            $trainingRepository->resetAllTrainings($userId);
+            $trainingRepository->removeAllTrainings($userId);
             $flag = true;
         }
         $array = explode(' ', $text);
-        var_export($array);
         if ($array[0] === 'collection' && intval($array[1]) > 0 && intval($array[1]) < 37) {
             foreach (BotHelper::getTrainingTypes() as $type) {
                 $cache->removeTrainings($this->getMessage()->getFrom()->getId(), $type);
                 $cache->removeTrainingsStatus($this->getMessage()->getFrom()->getId(), $type);
             }
-            $trainingRepository->resetTrainings($userId, intval($array[1]));
+            $trainingRepository->removeTrainings($userId, intval($array[1]));
             $flag = true;
         }
         /** @psalm-suppress TooManyArguments */
@@ -83,7 +82,7 @@ class ResetCommand extends SystemCommand
             'chat_id' => $chat_id,
             'text' => $flag ?
                 'Ваш прогресс был удалён' :
-                "`Сброс прогресса:`\nИспользуйте команду `/reset collection <number>` или `/reset collection <number>`. Будьте осторожны, сброс не обратим и вам придется начать итерации с начала",
+                "`Сброс прогресса:`\nИспользуйте команду `/del collection <number>` Будьте осторожны, сброс не обратим и вам придется начать итерации с начала",
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,

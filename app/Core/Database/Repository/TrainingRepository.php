@@ -96,11 +96,12 @@ class TrainingRepository extends BaseRepository
     /**
      * @param int    $userId
      * @param string $type
+     * @param bool   $priority
      *
      * @return Training
      * @throws EmptyVocabularyException
      */
-    public function getRandomTraining(int $userId, string $type): Training
+    public function getRandomTraining(int $userId, string $type, bool $priority): Training
     {
         $selectStatement = $this->getConnection()->select([
             "$this->tableName.*"
@@ -119,12 +120,32 @@ class TrainingRepository extends BaseRepository
         ;
         $stmt = $selectStatement->execute();
         $result = $stmt->fetchAll();
-        shuffle($result);
+        if (!$priority) {
+            shuffle($result);
+            $ret = $result;
+        } else {
+            $rule = [
+                    'first' => 0,
+                    'second' => 1,
+                    'third' => 2,
+                    'fourth' => 3,
+                    'fifth' => 4,
+                    'sixth' => 5,
+                    'never' => 6,
+            ];
+            $ret = [];
+            foreach ($result as $item) {
+                $ret[$rule[$item['status']]][] = $item;
+            }
+            array_filter($ret);
+            $ret = $ret[0];
+            shuffle($ret);
+        }
 
-        if (empty($result)) {
+        if (empty($ret)) {
             throw new EmptyVocabularyException();
         }
-        return $this->getNewModel($result[0]);
+        return $this->getNewModel($ret[0]);
     }
 
     /**
@@ -235,13 +256,65 @@ class TrainingRepository extends BaseRepository
     /**
      * @param int $userId
      */
-    public function resetTrainings(int $userId): void
+    public function removeAllTrainings(int $userId): void
     {
         $deleteStatement = $this->getConnection()->delete()
             ->from($this->tableName)
             ->where(new Conditional("user_id", "=", $userId));
 
         $affectedRows = $deleteStatement->execute();
+    }
+
+    /**
+     * @param int $userId
+     */
+    public function removeTrainings(int $userId, int $collection_id): void
+    {
+        $deleteStatement = $this->getConnection()->delete()
+            ->from($this->tableName)
+            ->where(
+                new Grouping(
+                    'AND',
+                    new Conditional('user_id', '=', $userId),
+                    new Conditional('collection_id', '=', $collection_id),
+                )
+            );
+
+        $affectedRows = $deleteStatement->execute();
+    }
+
+    /**
+     * @param int $userId
+     */
+    public function resetTrainings(int $userId, int $collection_id): void
+    {
+        $updateStatement = $this->getConnection()->update([
+            'status' => 'first',
+            '`repeat`' => Carbon::now()->rawFormat('Y-m-d H:i:s'),
+            '`updated_at`' => Carbon::now()->rawFormat('Y-m-d H:i:s'),
+        ])->table($this->tableName)
+            ->where(
+                new Grouping(
+                    'AND',
+                    new Conditional('user_id', '=', $userId),
+                    new Conditional('collection_id', '=', $collection_id),
+                )
+            );
+        $affectedRows = $updateStatement->execute();
+    }
+
+    /**
+     * @param int $userId
+     */
+    public function resetAllTrainings(int $userId, int $collection_id): void
+    {
+        $updateStatement = $this->getConnection()->update([
+            'status' => 'first',
+            '`repeat`' => Carbon::now()->rawFormat('Y-m-d H:i:s'),
+            '`updated_at`' => Carbon::now()->rawFormat('Y-m-d H:i:s'),
+        ])->table($this->tableName)
+            ->where(new Conditional("user_id", "=", $userId));
+        $affectedRows = $updateStatement->execute();
     }
 
     /**

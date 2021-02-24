@@ -9,19 +9,12 @@ use RepeatBot\Core\Database\Repository\TrainingRepository;
 class OneYearService
 {
     /**
-     * @var TrainingRepository
-     */
-    private TrainingRepository $trainingRepository;
-
-    /**
      * OneYearService constructor.
      *
      * @param TrainingRepository $trainingRepository
      */
-    public function __construct(TrainingRepository $trainingRepository)
+    public function __construct(private TrainingRepository $trainingRepository)
     {
-
-        $this->trainingRepository = $trainingRepository;
     }
 
     /**

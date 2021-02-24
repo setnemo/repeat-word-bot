@@ -10,6 +10,8 @@ use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
+use RepeatBot\Core\App;
+use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Database\Repository\UserNotificationRepository;
 
@@ -48,19 +50,30 @@ class SettingsCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
+        $userId = $this->getMessage()->getFrom()->getId();
         $database = Database::getInstance()->getConnection();
         $userNotificationRepository = new UserNotificationRepository($database);
-        $switcher = $userNotificationRepository->getOrCreateUserNotification(
-            $this->getMessage()->getFrom()->getId()
+        $silent = $userNotificationRepository->getOrCreateUserNotification(
+            $userId
         )->getSilent();
-        $symbol = $switcher === 1 ? '✅' : '❌';
+        $config = App::getInstance()->getConfig();
+        $cache = Cache::getInstance()->init($config);
+        $priority = $cache->getPriority($userId);
+        $symbolSilent = $silent === 1 ? '✅' : '❌';
+        $symbolPriority = $priority === 1 ? '✅' : '❌';
         $chat_id = $this->getMessage()->getChat()->getId();
-        $text = "Тихий режим сообщений: {$symbol}";
+        $textSilent = "Тихий режим сообщений: {$symbolSilent}";
+        $texPriority = "Приоритет меньших итераций: {$symbolPriority}";
         /** @psalm-suppress TooManyArguments */
-        $keyboard = new InlineKeyboard(BotHelper::getSettingsKeyboard($text, $switcher === 1 ? 0 : 1));
+        $keyboard = new InlineKeyboard(...BotHelper::getSettingsKeyboard(
+            $textSilent,
+            $texPriority,
+            $silent === 1 ? 0 : 1,
+            $priority === 1 ? 0 : 1,
+        ));
         $data = [
             'chat_id' => $chat_id,
-            'text' => 'В настройках можно отключить тихий режим получения уведомлений. По умолчанию тихий режим включен для всех. Для переключения режима нажмите на кнопку',
+            'text' => BotHelper::getSettingsText(),
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,

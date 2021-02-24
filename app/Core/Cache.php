@@ -214,6 +214,29 @@ class Cache extends Singleton
     }
 
     /**
+     * @param int $userId
+     *
+     * @return int
+     */
+    public function getPriority(int $userId): int
+    {
+        $slug = $this->getSlugPriority($userId);
+
+        return intval($this->getRedis()->get($slug));
+    }
+
+    /**
+     * @param int $userId
+     * @param int $priority
+     */
+    public function setPriority(int $userId, int $priority): void
+    {
+        $slug = $this->getSlugPriority($userId);
+
+        $this->getRedis()->set($slug, $priority);
+    }
+
+    /**
      * @param int    $userId
      * @param string $type
      *
@@ -255,5 +278,16 @@ class Cache extends Singleton
     #[Pure] private function getSlugTraining(int $userId, string $type): string
     {
         return $this->getCacheSlug("{$userId}_{$type}");
+    }
+
+    /**
+     * @param int    $userId
+     * @param string $type
+     *
+     * @return string
+     */
+    #[Pure] private function getSlugPriority(int $userId): string
+    {
+        return $this->getCacheSlug("{$userId}_priority");
     }
 }

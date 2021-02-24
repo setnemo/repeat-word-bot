@@ -105,16 +105,25 @@ class BotHelper
     }
 
     /**
-     * @param string $text
-     * @param int    $switch
+     * @param string $textSilent
+     * @param string $textPriority
+     * @param int    $silent
+     * @param int    $priority
      *
      * @return array
      */
-    public static function getSettingsKeyboard(string $text, int $switch): array
-    {
+    public static function getSettingsKeyboard(
+        string $textSilent,
+        string $textPriority,
+        int $silent,
+        int $priority
+    ): array {
         return [
-            ['text' => $text, 'callback_data' => "settings_silent_{$switch}"],
-        ];
+            [
+                ['text' => $textSilent, 'callback_data' => "settings_silent_{$silent}"],
+            ],[
+                ['text' => $textPriority, 'callback_data' => "settings_priority_{$priority}"],
+            ]];
     }
 
     /**
@@ -271,5 +280,16 @@ class BotHelper
             };
         }
         return $text;
+    }
+
+    public static function getSettingsText(): string
+    {
+        return "`Тихий режим сообщений`:\n" .
+            "По умолчанию тихий режим включен для всех. Для переключения режима нажмите на кнопку" .
+            " *Тихий режим сообщений*\n\n" .
+            "По умолчанию в тренировках выключен приоритет для слов с разных итераций, и они " .
+            "показываются в случайно порядке. Если вы хотите сначала проходить слова с меньших итераций, то " .
+            "вы можете включить или выключить этот режим нажав на кнопку " .
+            " *Приоритет меньших итераций*\n\n";
     }
 }
