@@ -94,6 +94,8 @@ class CallbackqueryCommand extends SystemCommand
                 'text' => BotHelper::getSettingsText(),
                 'reply_markup' => $keyboard,
                 'message_id'   => $message_id,
+                'parse_mode'   => 'markdown',
+
             ];
             Request::editMessageText($data);
         }
