@@ -78,8 +78,9 @@ class CallbackqueryCommand extends SystemCommand
             Request::editMessageText($data);
         }
         if ($array[0] === 'ratings' && $array[1] === 'add') {
+            $id = intval($array[2]);
             $wordRepository = new WordRepository($database);
-            $words = $wordRepository->getWordsByRatingId(intval($array[2]));
+            $words = $wordRepository->getWordsByCollectionId($id);
             $trainingRepository = new TrainingRepository($database);
             $trainingSaveRepository = new TrainingSaveRepository($database);
             $count = ($this->addNewWords($trainingRepository, $trainingSaveRepository, $words, $user_id)) / 2;
@@ -87,6 +88,27 @@ class CallbackqueryCommand extends SystemCommand
                 $this->progressNotify(intval($count));
             }
             $text = 'Слова добавлены';
+            $answer = "Коллекция `:name` содержит такие слова, как:\n\n`:words`";
+            $collectionRepository = new CollectionRepository($database);
+            $wordRepository = new WordRepository($database);
+            $trainingRepository = new TrainingRepository($database);
+            $rating = $collectionRepository->getCollection(intval($id));
+            $haveRatingWords = $trainingRepository->userHaveCollection(intval($id), $user_id);
+            /** @psalm-suppress TooManyArguments */
+            $keyboard = new InlineKeyboard(...BotHelper::getCollectionPagination($id, $haveRatingWords));
+            $data = [
+                'chat_id' => $user_id,
+                'message_id'   => $message_id,
+                'text' => strtr($answer, [
+                    ':name' => $rating->getName(),
+                    ':words' => implode(', ', $wordRepository->getExampleWords($rating->getId())),
+                ]),
+                'parse_mode' => 'markdown',
+                'disable_web_page_preview' => true,
+                'reply_markup' => $keyboard,
+                'disable_notification' => 1,
+            ];
+            Request::editMessageText($data);
         }
         if ($array[0] === 'ratings' && $array[1] === 'del') {
             Request::sendMessage([
@@ -111,13 +133,13 @@ class CallbackqueryCommand extends SystemCommand
             ]);
         }
         if ($array[0] === 'rating') {
-            $answer = "Коллекция `:name` содержит такие слова, как:\n\n`:words`";
             $id = intval($array[1]);
-            $ratingRepository = new RatingRepository($database);
+            $answer = "Коллекция `:name` содержит такие слова, как:\n\n`:words`";
+            $collectionRepository = new CollectionRepository($database);
             $wordRepository = new WordRepository($database);
             $trainingRepository = new TrainingRepository($database);
-            $rating = $ratingRepository->getCollection(intval($id));
-            $haveRatingWords = $trainingRepository->userHaveRating(intval($id), $user_id);
+            $rating = $collectionRepository->getCollection(intval($id));
+            $haveRatingWords = $trainingRepository->userHaveCollection(intval($id), $user_id);
             /** @psalm-suppress TooManyArguments */
             $keyboard = new InlineKeyboard(...BotHelper::getCollectionPagination($id, $haveRatingWords));
             $data = [
@@ -166,7 +188,7 @@ class CallbackqueryCommand extends SystemCommand
             foreach ($words as $word) {
                 try {
                     $wordId = $word->getId();
-                    $rating = $word->getRating();
+                    $collectionId = $word->getCollectionId();
                     $wordW = $word->getWord();
                     $translate = $word->getTranslate();
                     $voice = $word->getVoice();
@@ -181,7 +203,7 @@ class CallbackqueryCommand extends SystemCommand
                     $trainingRepository->createTraining(
                         $wordId,
                         $userId,
-                        $rating,
+                        $collectionId,
                         $type,
                         $wordW,
                         $translate,

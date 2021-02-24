@@ -32,12 +32,12 @@ class WordRepository extends BaseRepository
      *
      * @return array
      */
-    public function getWordsByRatingId(int $id): array
+    public function getWordsByCollectionId(int $id): array
     {
         $selectStatement = $this->getConnection()->select(['*'])
             ->from($this->tableName)
             ->where(
-                new Conditional('rating', '=', $id)
+                new Conditional('collection_id', '=', $id)
             );
         $stmt = $selectStatement->execute();
         $result = $stmt->fetchAll();
@@ -58,7 +58,7 @@ class WordRepository extends BaseRepository
         $selectStatement = $this->getConnection()->select(['*'])
             ->from($this->tableName)
             ->where(
-                new Conditional('rating', '=', $id)
+                new Conditional('collection_id', '=', $id)
             );
         $stmt = $selectStatement->execute();
         $result = $stmt->fetchAll();

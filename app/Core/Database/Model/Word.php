@@ -30,7 +30,7 @@ class Word extends BaseModel
     /**
      * @var int
      */
-    protected int $rating;
+    protected int $collection_id;
 
     /**
      * @var string
@@ -61,9 +61,9 @@ class Word extends BaseModel
     /**
      * @return int
      */
-    public function getRating(): int
+    public function getCollectionId(): int
     {
-        return $this->rating;
+        return $this->collection_id;
     }
 
     /**

@@ -65,11 +65,11 @@ class CollectionsCommand extends SystemCommand
         $answer = "Коллекция `:name` содержит такие слова, как:\n\n`:words`";
         $id = 1;
         $database = Database::getInstance()->getConnection();
-        $ratingRepository = new RatingRepository($database);
+        $collectionRepository = new CollectionRepository($database);
         $wordRepository = new WordRepository($database);
         $trainingRepository = new TrainingRepository($database);
-        $rating = $ratingRepository->getCollection(intval($id));
-        $haveRatingWords = $trainingRepository->userHaveRating(intval($id), $chat_id);
+        $rating = $collectionRepository->getCollection(intval($id));
+        $haveRatingWords = $trainingRepository->userHaveCollection(intval($id), $chat_id);
         /** @psalm-suppress TooManyArguments */
         $keyboard = new InlineKeyboard(...BotHelper::getCollectionPagination($id, $haveRatingWords));
         $data = [

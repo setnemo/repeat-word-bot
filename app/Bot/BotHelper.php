@@ -166,7 +166,8 @@ class BotHelper
      */
     public static function getCollectionPagination(int $collectionNum, bool $exist): array
     {
-        $result[] = BotHelper::getPagination($collectionNum);
+        $result[] = BotHelper::getPaginationFw($collectionNum);
+        $result[] = BotHelper::getPaginationNums($collectionNum);
         $addRemove = $exist ?
             [
                 'text' => "🚫 Удалить",
@@ -197,21 +198,47 @@ class BotHelper
      *
      * @return \string[][]
      */
-    private static function getPagination(int $num): array
+    private static function getPaginationNums(int $num): array
     {
-        $emoji = BotHelper::createEmojiNumber($num);
         return [
+            [
+                'text' => $num > 1 ? '   ⏮   ' : '        ',
+                'callback_data' => $num > 2 ? 'rating_' . 1 : 'empty',
+            ],
             [
                 'text' => $num > 1 ? '   ⏪   ' : '        ',
                 'callback_data' => $num > 1 ? 'rating_' . ($num - 1) : 'empty',
             ],
             [
-                'text' => "   {$emoji}   ",
-                'callback_data' => 'empty',
+                'text' => $num < 36 ? '   ⏩   ' : '        ',
+                'callback_data' => $num < 36 ? 'rating_' . ($num + 1) : 'empty',
             ],
             [
-                'text' => $num < 12 ? '   ⏩   ' : '        ',
-                'callback_data' => $num < 12 ? 'rating_' . ($num + 1) : 'empty',
+                'text' => $num < 36 ? '   ⏭   ' : '        ',
+                'callback_data' => $num < 36 ? 'rating_' . 36 : 'empty',
+            ],
+        ];
+    }
+
+    /**
+     * @param int $num
+     *
+     * @return \string[][]
+     */
+    private static function getPaginationFw(int $num): array
+    {
+        return [
+            [
+                'text' => $num > 1 ? BotHelper::createEmojiNumber($num - 1) : ' ',
+                'callback_data' => $num > 2 ? 'rating_' . ($num - 1) : 'empty',
+            ],
+            [
+                'text' => BotHelper::createEmojiNumber($num),
+                'callback_data' => 'rating_' . $num,
+            ],
+            [
+                'text' => $num < 36 ? BotHelper::createEmojiNumber($num + 1) : ' ',
+                'callback_data' => $num < 35 ? 'rating_' . ($num + 1) : 'empty',
             ],
         ];
     }

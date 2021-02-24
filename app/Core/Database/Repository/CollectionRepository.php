@@ -27,21 +27,19 @@ class CollectionRepository extends BaseRepository
     }
 
     /**
-     * @return array
+     * @param int $id
+     *
+     * @return Collection
      */
-    public function getAllPublicCollection(): array
+    public function getCollection(int $id): Collection
     {
         $selectStatement = $this->getConnection()->select(['*'])
             ->from($this->tableName)
             ->where(
-                new Conditional('public', '=', 1)
+                new Conditional('id', '=', $id)
             );
         $stmt = $selectStatement->execute();
         $result = $stmt->fetchAll();
-        $ret = [];
-        foreach ($result as $record) {
-            $ret[$record['id']] = $this->getNewModel($record);
-        }
-        return $ret;
+        return $this->getNewModel($result[0]);
     }
 }

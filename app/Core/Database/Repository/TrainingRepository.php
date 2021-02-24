@@ -34,19 +34,19 @@ class TrainingRepository extends BaseRepository
     }
 
     /**
-     * @param int $rating_id
+     * @param int $collection_id
      * @param int $user_id
      *
      * @return bool
      */
-    public function userHaveRating(int $rating_id, int $user_id): bool
+    public function userHaveCollection(int $collection_id, int $user_id): bool
     {
         $selectStatement = $this->getConnection()->select(['*'])
             ->from($this->tableName)
             ->where(
                 new Grouping(
                     "AND",
-                    new Conditional("$this->tableName.rating", '=', $rating_id),
+                    new Conditional("$this->tableName.collection_id", '=', $collection_id),
                     new Conditional("$this->tableName.user_id", '=', $user_id)
                 )
             );
@@ -58,7 +58,7 @@ class TrainingRepository extends BaseRepository
     /**
      * @param int         $wordId
      * @param int         $userId
-     * @param int         $rating
+     * @param int         $collection_id
      * @param string      $type
      * @param string      $word
      * @param string      $translate
@@ -69,7 +69,7 @@ class TrainingRepository extends BaseRepository
     public function createTraining(
         int $wordId,
         int $userId,
-        int $rating,
+        int $collection_id,
         string $type,
         string $word,
         string $translate,
@@ -82,7 +82,7 @@ class TrainingRepository extends BaseRepository
                 'word_id'       => $wordId,
                 'user_id'       => $userId,
                 'type'          => $type,
-                'rating'        => $rating,
+                'collection_id' => $collection_id,
                 'word'          => $word,
                 'translate'     => $translate,
                 'voice'         => $voice,
