@@ -14,6 +14,7 @@ use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Database\Repository\TrainingRepository;
+use RepeatBot\Core\Metric;
 
 /**
  * Class ResetCommand
@@ -50,6 +51,10 @@ class ResetCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
+        $config = App::getInstance()->getConfig();
+        $metric = Metric::getInstance()->init($config);
+        $metric->increaseMetric('usage');
+
         $flag = false;
         $chat_id = $this->getMessage()->getChat()->getId();
         $userId = $this->getMessage()->getFrom()->getId();

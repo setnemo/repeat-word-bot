@@ -20,6 +20,7 @@ use RepeatBot\Core\Database\Repository\TrainingSaveRepository;
 use RepeatBot\Core\Database\Repository\UserNotificationRepository;
 use RepeatBot\Core\Database\Repository\WordRepository;
 use RepeatBot\Core\Log;
+use RepeatBot\Core\Metric;
 
 /**
  * Class CallbackqueryCommand
@@ -53,6 +54,10 @@ class CallbackqueryCommand extends SystemCommand
         $message_id        = $callback_query->getMessage()->getMessageId();
         $user_id           = $callback_query->getMessage()->getChat()->getId();
         $database          = Database::getInstance()->getConnection();
+
+        $config = App::getInstance()->getConfig();
+        $metric = Metric::getInstance()->init($config);
+        $metric->increaseMetric('usage');
 
         $text = '';
         $array = explode('_', $callback_data);

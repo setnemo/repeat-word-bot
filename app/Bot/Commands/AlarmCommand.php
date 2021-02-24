@@ -10,9 +10,12 @@ use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
+use RepeatBot\Core\App;
+use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Database\Model\LearnNotificationPersonal;
 use RepeatBot\Core\Database\Repository\LearnNotificationPersonalRepository;
+use RepeatBot\Core\Metric;
 
 /**
  * Class AlarmCommand
@@ -49,6 +52,9 @@ class AlarmCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
+        $config = App::getInstance()->getConfig();
+        $metric = Metric::getInstance()->init($config);
+        $metric->increaseMetric('usage');
         $chat_id = $this->getMessage()->getChat()->getId();
         $user_id = $this->getMessage()->getFrom()->getId();
         $database = Database::getInstance()->getConnection();

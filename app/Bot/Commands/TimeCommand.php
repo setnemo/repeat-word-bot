@@ -10,6 +10,8 @@ use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
+use RepeatBot\Core\App;
+use RepeatBot\Core\Metric;
 
 /**
  * Class TimeCommand
@@ -46,6 +48,10 @@ class TimeCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
+        $config = App::getInstance()->getConfig();
+        $metric = Metric::getInstance()->init($config);
+        $metric->increaseMetric('usage');
+
         $chat_id = $this->getMessage()->getChat()->getId();
         /** @psalm-suppress TooManyArguments */
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());

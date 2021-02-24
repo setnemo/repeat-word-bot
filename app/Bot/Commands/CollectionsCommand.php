@@ -11,9 +11,7 @@ use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Database\Model\Collection;
 use RepeatBot\Core\Database\Repository\CollectionRepository;
-use RepeatBot\Core\Database\Repository\RatingRepository;
 use RepeatBot\Core\Database\Repository\TrainingRepository;
 use RepeatBot\Core\Database\Repository\WordRepository;
 
