@@ -12,7 +12,7 @@ $config = $app->getConfig();
 $logger = Log::getInstance()->init($config)->getLogger();
 $bot = Bot::getInstance();
 $bot->init($config, $logger);
-$expectedTime = time() + 60 * 60;
+$expectedTime = time() + 24 * 60 * 60;
 $metric = Metric::getInstance()->init($config);
 while (true) {
     $bot->run();

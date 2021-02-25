@@ -312,7 +312,7 @@ class BotHelper
             ],
             [
                 'value' => 'UTC-11',
-                'abbr' => 'U',
+                'abbr' => 'UTC-11',
                 'offset' => -11,
                 'isdst' => false,
                 'text' => '(UTC-11:00) Coordinated Universal Time-11',
@@ -352,17 +352,6 @@ class BotHelper
                         'America/Nome',
                         'America/Sitka',
                         'America/Yakutat',
-                    ],
-            ],
-            [
-                'value' => 'Pacific Standard Time (Mexico)',
-                'abbr' => 'PDT',
-                'offset' => -7,
-                'isdst' => true,
-                'text' => '(UTC-08:00) Baja California',
-                'utc' =>
-                    [
-                        'America/Santa_Isabel',
                     ],
             ],
             [
@@ -409,18 +398,6 @@ class BotHelper
                         'America/Hermosillo',
                         'America/Phoenix',
                         'Etc/GMT+7',
-                    ],
-            ],
-            [
-                'value' => 'Mountain Standard Time (Mexico)',
-                'abbr' => 'MDT',
-                'offset' => -6,
-                'isdst' => true,
-                'text' => '(UTC-07:00) Chihuahua, La Paz, Mazatlan',
-                'utc' =>
-                    [
-                        'America/Chihuahua',
-                        'America/Mazatlan',
                     ],
             ],
             [
@@ -480,21 +457,6 @@ class BotHelper
                         'America/Resolute',
                         'America/Winnipeg',
                         'CST6CDT',
-                    ],
-            ],
-            [
-                'value' => 'Central Standard Time (Mexico)',
-                'abbr' => 'CDT',
-                'offset' => -5,
-                'isdst' => true,
-                'text' => '(UTC-06:00) Guadalajara, Mexico City, Monterrey',
-                'utc' =>
-                    [
-                        'America/Bahia_Banderas',
-                        'America/Cancun',
-                        'America/Merida',
-                        'America/Mexico_City',
-                        'America/Monterrey',
                     ],
             ],
             [
@@ -571,7 +533,7 @@ class BotHelper
             ],
             [
                 'value' => 'Venezuela Standard Time',
-                'abbr' => 'VST',
+                'abbr' => 'AVST',
                 'offset' => -4.5,
                 'isdst' => false,
                 'text' => '(UTC-04:30) Caracas',
@@ -695,7 +657,7 @@ class BotHelper
             ],
             [
                 'value' => 'Argentina Standard Time',
-                'abbr' => 'AST',
+                'abbr' => 'ARSDT',
                 'offset' => -3,
                 'isdst' => false,
                 'text' => '(UTC-03:00) Buenos Aires',
@@ -738,7 +700,7 @@ class BotHelper
             ],
             [
                 'value' => 'Greenland Standard Time',
-                'abbr' => 'GDT',
+                'abbr' => 'GRDT',
                 'offset' => -3,
                 'isdst' => true,
                 'text' => '(UTC-03:00) Greenland',
@@ -772,28 +734,6 @@ class BotHelper
                     ],
             ],
             [
-                'value' => 'Mid-Atlantic Standard Time',
-                'abbr' => 'MDT',
-                'offset' => -1,
-                'isdst' => true,
-                'text' => '(UTC-02:00) Mid-Atlantic - Old',
-                'utc' =>
-                    [
-                    ],
-            ],
-            [
-                'value' => 'Azores Standard Time',
-                'abbr' => 'ADT',
-                'offset' => 0,
-                'isdst' => true,
-                'text' => '(UTC-01:00) Azores',
-                'utc' =>
-                    [
-                        'America/Scoresbysund',
-                        'Atlantic/Azores',
-                    ],
-            ],
-            [
                 'value' => 'Cape Verde Standard Time',
                 'abbr' => 'CVST',
                 'offset' => -1,
@@ -807,7 +747,7 @@ class BotHelper
             ],
             [
                 'value' => 'Morocco Standard Time',
-                'abbr' => 'MDT',
+                'abbr' => 'MSDT',
                 'offset' => 1,
                 'isdst' => true,
                 'text' => '(UTC) Casablanca',
@@ -845,7 +785,7 @@ class BotHelper
             ],
             [
                 'value' => 'British Summer Time',
-                'abbr' => 'BST',
+                'abbr' => 'BRST',
                 'offset' => 1,
                 'isdst' => true,
                 'text' => '(UTC+01:00) Edinburgh, London',
@@ -957,20 +897,6 @@ class BotHelper
                     ],
             ],
             [
-                'value' => 'Central European Standard Time',
-                'abbr' => 'CEDT',
-                'offset' => 2,
-                'isdst' => true,
-                'text' => '(UTC+01:00) Sarajevo, Skopje, Warsaw, Zagreb',
-                'utc' =>
-                    [
-                        'Europe/Sarajevo',
-                        'Europe/Skopje',
-                        'Europe/Warsaw',
-                        'Europe/Zagreb',
-                    ],
-            ],
-            [
                 'value' => 'W. Central Africa Standard Time',
                 'abbr' => 'WCAST',
                 'offset' => 1,
@@ -996,7 +922,7 @@ class BotHelper
             ],
             [
                 'value' => 'Namibia Standard Time',
-                'abbr' => 'NST',
+                'abbr' => 'NASDT',
                 'offset' => 1,
                 'isdst' => false,
                 'text' => '(UTC+01:00) Windhoek',
@@ -1007,7 +933,7 @@ class BotHelper
             ],
             [
                 'value' => 'GTB Standard Time',
-                'abbr' => 'GDT',
+                'abbr' => 'GEDT',
                 'offset' => 3,
                 'isdst' => true,
                 'text' => '(UTC+02:00) Athens, Bucharest',
@@ -1141,10 +1067,10 @@ class BotHelper
             ],
             [
                 'value' => 'Arabic Standard Time',
-                'abbr' => 'AST',
+                'abbr' => 'ARST',
                 'offset' => 3,
                 'isdst' => false,
-                'text' => '(UTC+03:00) Baghdad',
+                'text' => '(UTC+03:00) Baghdad, Kuwait, Riyadh',
                 'utc' =>
                     [
                         'Asia/Baghdad',
@@ -1162,23 +1088,8 @@ class BotHelper
                     ],
             ],
             [
-                'value' => 'Arab Standard Time',
-                'abbr' => 'AST',
-                'offset' => 3,
-                'isdst' => false,
-                'text' => '(UTC+03:00) Kuwait, Riyadh',
-                'utc' =>
-                    [
-                        'Asia/Aden',
-                        'Asia/Bahrain',
-                        'Asia/Kuwait',
-                        'Asia/Qatar',
-                        'Asia/Riyadh',
-                    ],
-            ],
-            [
                 'value' => 'E. Africa Standard Time',
-                'abbr' => 'EAST',
+                'abbr' => 'EAFST',
                 'offset' => 3,
                 'isdst' => false,
                 'text' => '(UTC+03:00) Nairobi',
@@ -1241,7 +1152,7 @@ class BotHelper
             ],
             [
                 'value' => 'Arabian Standard Time',
-                'abbr' => 'AST',
+                'abbr' => 'ARAST',
                 'offset' => 4,
                 'isdst' => false,
                 'text' => '(UTC+04:00) Abu Dhabi, Muscat',
@@ -1254,7 +1165,7 @@ class BotHelper
             ],
             [
                 'value' => 'Azerbaijan Standard Time',
-                'abbr' => 'ADT',
+                'abbr' => 'AZDT',
                 'offset' => 5,
                 'isdst' => true,
                 'text' => '(UTC+04:00) Baku',
@@ -1363,7 +1274,7 @@ class BotHelper
             ],
             [
                 'value' => 'Central Asia Standard Time',
-                'abbr' => 'CAST',
+                'abbr' => 'CAAST',
                 'offset' => 6,
                 'isdst' => false,
                 'text' => '(UTC+06:00) Nur-Sultan (Astana)',
@@ -1380,7 +1291,7 @@ class BotHelper
             ],
             [
                 'value' => 'Bangladesh Standard Time',
-                'abbr' => 'BST',
+                'abbr' => 'BAST',
                 'offset' => 6,
                 'isdst' => false,
                 'text' => '(UTC+06:00) Dhaka',
@@ -1392,7 +1303,7 @@ class BotHelper
             ],
             [
                 'value' => 'SE Asia Standard Time',
-                'abbr' => 'SAST',
+                'abbr' => 'SEAST',
                 'offset' => 7,
                 'isdst' => false,
                 'text' => '(UTC+07:00) Bangkok, Hanoi, Jakarta',
@@ -1425,7 +1336,7 @@ class BotHelper
             ],
             [
                 'value' => 'China Standard Time',
-                'abbr' => 'CST',
+                'abbr' => 'CHST',
                 'offset' => 8,
                 'isdst' => false,
                 'text' => '(UTC+08:00) Beijing, Chongqing, Hong Kong, Urumqi',
@@ -1466,7 +1377,7 @@ class BotHelper
             ],
             [
                 'value' => 'W. Australia Standard Time',
-                'abbr' => 'WAST',
+                'abbr' => 'WAUST',
                 'offset' => 8,
                 'isdst' => false,
                 'text' => '(UTC+08:00) Perth',
@@ -1527,7 +1438,7 @@ class BotHelper
             ],
             [
                 'value' => 'Korea Standard Time',
-                'abbr' => 'KST',
+                'abbr' => 'SKST',
                 'offset' => 9,
                 'isdst' => false,
                 'text' => '(UTC+09:00) Seoul',
@@ -1539,7 +1450,7 @@ class BotHelper
             ],
             [
                 'value' => 'Cen. Australia Standard Time',
-                'abbr' => 'CAST',
+                'abbr' => 'CNAST',
                 'offset' => 9.5,
                 'isdst' => false,
                 'text' => '(UTC+09:30) Adelaide',
