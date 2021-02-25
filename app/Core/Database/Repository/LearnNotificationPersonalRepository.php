@@ -60,14 +60,18 @@ class LearnNotificationPersonalRepository extends BaseRepository
      */
     public function createNotification(int $userId, string $message, string $alarm, string $tz): void
     {
-        $time = explode(':',$alarm);
+        $time = explode(':', $alarm);
+        $updated = Carbon::now('Europe/Kiev')->setTime($time[0], $time[1])->rawFormat('Y-m-d H:i:s');
+        if (Carbon::now('Europe/Kiev')->lessThan($updated)) {
+            $updated = Carbon::now('Europe/Kiev')->subDay()->setTime($time[0], $time[1])->rawFormat('Y-m-d H:i:s');
+        }
         $insertStatement = $this->getConnection()->insert(
             [
                 'user_id'       => $userId,
                 'message'       => $message,
                 'alarm'         => $alarm,
                 'timezone'      => $tz,
-                'updated_at'    => Carbon::now('Europe/Kiev')->setTime($time[0], $time[1])->rawFormat('Y-m-d H:i:s')
+                'updated_at'    => $updated
             ]
         )->into($this->tableName);
         $insertStatement->execute();
