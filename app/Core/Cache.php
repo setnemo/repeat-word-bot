@@ -64,7 +64,7 @@ class Cache extends Singleton
     {
         $redis = $this->getRedis();
         $slug = $this->getSlugTraining($userId, $type);
-        $redis->set($slug, $value, 'EX', 3600);
+        $redis->set($slug, $value);
     }
 
     /**
@@ -75,7 +75,7 @@ class Cache extends Singleton
     {
         $redis = $this->getRedis();
         $slug = $this->getCacheSlugTrainingStatus($userId, $type);
-        $redis->set($slug, 1, 'EX', 3600);
+        $redis->set($slug, 1);
     }
 
     /**
