@@ -113,8 +113,11 @@ class LearnNotificationPersonalRepository extends BaseRepository
 
     public function updateNotification(LearnNotificationPersonal $notification)
     {
+        $time = explode(':', $notification->getAlarm());
         $updateStatement = $this->getConnection()->update([
-            '`updated_at`' => Carbon::now('Europe/Kiev')->rawFormat('Y-m-d H:i:s'),
+            '`updated_at`' => Carbon::now('Europe/Kiev')
+                ->setTime($time[0], $time[1], 0)
+                ->rawFormat('Y-m-d H:i:s'),
         ])->table($this->tableName)
             ->where(new Conditional('id', '=', $notification->getId()));
         $affectedRows = $updateStatement->execute();
