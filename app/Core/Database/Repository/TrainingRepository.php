@@ -413,7 +413,7 @@ class TrainingRepository extends BaseRepository
                     new Conditional("$this->tableName.type", '=', $type),
                     new Conditional("$this->tableName.user_id", '=', $userId)
                 )
-            )->orderBy('`repeat`', 'desc');
+            )->orderBy('`repeat`', 'asc');
         $stmt = $selectStatement->execute();
         $result = $stmt->fetchAll();
         if (empty($result)) {
