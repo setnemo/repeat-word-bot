@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Longman\TelegramBot\Commands\SystemCommand;
 
+use Carbon\Carbon;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
@@ -100,8 +101,36 @@ class VoiceEnglishCommand extends SystemCommand
             $priority = $cache->getPriority($userId);
             $training = $trainingRepository->getRandomTraining($userId, $type, $priority === 1);
         } catch (EmptyVocabularyException $e) {
+            $cache->removeTrainings($this->getMessage()->getFrom()->getId(), $type);
             $cache->removeTrainingsStatus($this->getMessage()->getFrom()->getId(), $type);
-            return $this->telegram->executeCommand('Collections');
+            try {
+                $training = $trainingRepository->getNearestAvailableTrainingTime($userId, $type);
+                $template = "В тренировке `:training` ближайшее слово для изучения - `:word`, ";
+                $template .= "которое будет доступно `:date`. Вы всегда можете добавить новую коллекцию.";
+                $text = strtr(
+                    $template,
+                    [
+                        ':word' => $training->getWord(),
+                        ':training' => $training->getType(),
+                        ':date' => Carbon::now('UTC')::parse(strtotime($training->getRepeat()))->diffForHumans(),
+                    ]
+                );
+            } catch (EmptyVocabularyException $e) {
+                $text = 'У вас нет слов для изучения. Зайдите в раздел Коллекции и добавьте себе слова для тренировок';
+            }
+            /** @psalm-suppress TooManyArguments */
+            $keyboard = new Keyboard(...BotHelper::getTrainingKeyboard());
+            $keyboard->setResizeKeyboard(true);
+
+            $data = [
+                'chat_id' => $chat_id,
+                'text' => $text,
+                'parse_mode' => 'markdown',
+                'disable_web_page_preview' => true,
+                'reply_markup' => $keyboard,
+                'disable_notification' => 1,
+            ];
+            return Request::sendMessage($data);
         }
         $question .= match($type) {
             'ToEnglish' =>  $training->getTranslate(),

@@ -71,6 +71,10 @@ class GenericmessageCommand extends SystemCommand
         }
         if ($command === 'FromEnglish' || $command === 'ToEnglish') {
             $command = 'VoiceEnglish';
+            $cache->setTrainingStatus(
+                $userId,
+                $command
+            );
         }
 
         return $this->telegram->executeCommand((string)$command);

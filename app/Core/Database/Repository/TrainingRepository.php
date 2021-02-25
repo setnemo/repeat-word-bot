@@ -110,7 +110,7 @@ class TrainingRepository extends BaseRepository
             ->where(
                 new Grouping(
                     "AND",
-                    new Conditional("$this->tableName.repeat", '<', Carbon::now('UTC')->rawFormat('Y-m-d H:i:s')),
+                    new Conditional("$this->tableName.`repeat`", '<', Carbon::now('UTC')->rawFormat('Y-m-d H:i:s')),
                     new Grouping(
                         "AND",
                         new Conditional("$this->tableName.user_id", '=', $userId),
@@ -133,12 +133,21 @@ class TrainingRepository extends BaseRepository
                 'sixth' => 5,
                 'never' => 6,
             ];
-            $ret = [];
+            $ret2 = [];
             foreach ($result as $item) {
-                $ret[$rule[$item['status']]][] = $item;
+                $ret2[$rule[$item['status']]][] = $item;
             }
-            $ret = array_map('array_values', $ret);
-            $ret = $ret[0] ?? [];
+            $ret = [];
+            for ($i = 0; $i < count($ret2); ++$i) {
+                if (!empty($ret)) {
+                    break ;
+                }
+                if (!empty($ret2[$i])) {
+                    foreach ($ret2[$i] as $v) {
+                        $ret[] =  $v;
+                    }
+                }
+            }
             shuffle($ret);
         }
 
@@ -385,5 +394,32 @@ class TrainingRepository extends BaseRepository
         $text .= "\n Не останавливайся! Продолжи свою тренировку прямо сейчас!";
 
         return $text;
+    }
+
+    /**
+     * @param int $userId
+     *
+     * @return Training
+     * @throws EmptyVocabularyException
+     */
+    public function getNearestAvailableTrainingTime(int $userId, string $type): Training
+    {
+        $selectStatement = $this->getConnection()->select([
+            "$this->tableName.*",
+        ])->from($this->tableName)
+            ->where(
+                new Grouping(
+                    'AND',
+                    new Conditional("$this->tableName.type", '=', $type),
+                    new Conditional("$this->tableName.user_id", '=', $userId)
+                )
+            )->orderBy('`repeat`', 'desc');
+        $stmt = $selectStatement->execute();
+        $result = $stmt->fetchAll();
+        if (empty($result)) {
+            throw new EmptyVocabularyException();
+        }
+
+        return $this->getNewModel($result[0]);
     }
 }
