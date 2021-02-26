@@ -63,7 +63,7 @@ class ExportRepository extends BaseRepository
             ->where(new Conditional('id', '=', $export->getId()));
         $affectedRows = $updateStatement->execute();
     }
-    
+
     public function create(int $userId, int $chatId, string $wordType)
     {
         $insertStatement = $this->getConnection()->insert([
@@ -73,7 +73,7 @@ class ExportRepository extends BaseRepository
         ])->into($this->tableName);
         $insertStatement->execute();
     }
-    
+
     public function getExports()
     {
         $selectStatement = $this->
@@ -88,10 +88,10 @@ class ExportRepository extends BaseRepository
         foreach ($result as $record) {
             $ret[] = $this->getNewModel($record);
         }
-        
+
         return $ret;
     }
-    
+
     public function userHaveExport(int $user_id)
     {
         $selectStatement = $this->getConnection()->select(['*'])
@@ -105,7 +105,7 @@ class ExportRepository extends BaseRepository
             );
         $stmt = $selectStatement->execute();
         $result = $stmt->fetchAll();
-    
+
         return !empty($result);
     }
 }

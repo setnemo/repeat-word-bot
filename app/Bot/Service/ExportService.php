@@ -19,32 +19,34 @@ class ExportService
     /**
      * OneYearService constructor.
      *
-     * @param TrainingRepository $trainingRepository
+     * @param TrainingRepository $training
+     * @param ExportRepository   $export
      */
-    public function __construct(
-        private TrainingRepository $trainingRepository,
-        private ExportRepository $exportRepository
-    ){
+    public function __construct(private TrainingRepository $training, private ExportRepository $export)
+    {
     }
 
     /**
-     * @param int $id
+     * @param Export $export
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws \Mpdf\MpdfException
      */
     public function execute(Export $export): void
     {
         $array = explode('_', $export->getWordType());
         if (
             count($array) == 2 &&
-            in_array($array[0], ['FromEnglish','ToEnglish']) &&
-            in_array($array[1], ['first','second','third','fourth','fifth','sixth','never'])
+            in_array($array[0], ['FromEnglish', 'ToEnglish']) &&
+            in_array($array[1], ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'never'])
         ) {
-            $trainings = $this->trainingRepository->getTrainingsWithStatus(
+            $trainings = $this->training->getTrainingsWithStatus(
                 $export->getUserId(),
                 $array[0],
                 $array[1]
             );
         } else {
-            $trainings = $this->trainingRepository->getTrainings($export->getUserId(), 'FromEnglish');
+            $trainings = $this->training->getTrainings($export->getUserId(), 'FromEnglish');
         }
         $uri = $this->createExportFile($trainings, $export);
         $data = [
@@ -56,9 +58,9 @@ class ExportService
             'disable_notification' => 1,
         ];
         Request::sendDocument($data);
-        $this->exportRepository->applyExport($export);
+        $this->export->applyExport($export);
     }
-    
+
     /**
      * @param array  $trainings
      * @param Export $export
@@ -71,18 +73,19 @@ class ExportService
         $mpdf = new Mpdf(['tempDir' => '/tmp']);
         $stylesheet = file_get_contents('/app/resource/export.css');
         $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
-        $mpdf->SetHTMLHeader('<table width="100%"><tr>' .
-            '<td width="50%" style="text-align: left; font-weight: bold;">Export learning words</td>' .
-            '<td width="50%" style="text-align: right; font-weight: bold;"><a href="https:/t.me/RepeatWordBot">Telegram @RepeatWordBot</a></td>' .
-            '</tr></table>');
-        $mpdf->SetHTMLFooter('<table width="100%"><tr>' .
-            '<td width="33%"></td>' .
-            '<td width="33%" align="center">{PAGENO}/{nbpg}</td>' .
-            '<td width="33%" style="text-align: right;"></td>' .
-            '</tr></table>');
-        
-        $mpdf->WriteHTML('<table id="export">');
-        $mpdf->WriteHTML('<tr><th>№ п.п.</th><th>Слово</th><th>Перевод</th></tr>');
+        $header = '<table width="100%"><tr>';
+        $header .= '<td width="50%" style="text-align: left; font-weight: bold;">Экспорт изучаемых слов</td>';
+        $header .= '<td width="50%" style="text-align: right; font-weight: bold;">';
+        $header .= '<a href="https:/t.me/RepeatWordBot">Telegram @RepeatWordBot</a></td></tr></table>';
+        $footer = '<table width="100%"><tr>' ;
+        $footer .= '<td width="33%"></td>' ;
+        $footer .= '<td width="33%" align="center">{PAGENO}/{nbpg}</td>' ;
+        $footer .= '<td width="33%" style="text-align: right;"></td>' ;
+        $footer .= '</tr></table>';
+        $mpdf->SetHTMLHeader($header);
+        $mpdf->SetHTMLFooter($footer);
+
+        $mpdf->WriteHTML('<table id="export"><tr><th>№ п.п.</th><th>Слово</th><th>Перевод</th></tr>');
         foreach ($trainings as $id => $training) {
             $mpdf->WriteHTML(strtr("<tr><td>:number</td><td>:word</td><td>:translate</td></tr>", [
                 ':number' => $id + 1,
@@ -93,7 +96,7 @@ class ExportService
         $mpdf->WriteHTML('</table>');
         $uri = '/tmp/' . $export->getUserId() . '.pdf';
         $mpdf->Output($uri, 'F');
-        
+
         return $uri;
-}
+    }
 }

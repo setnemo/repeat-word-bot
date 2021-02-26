@@ -74,21 +74,20 @@ final class Bot extends Singleton
                     'database' => $config->getKey('database.name'),
                 ]
             );
-
         } catch (TelegramException $e) {
             $logger->error($e->getMessage(), $e->getTrace());
         }
 
         return $this;
     }
-    
-    
+
+
     public function botBefore()
     {
         $this->checkVersion();
         $this->handleNotifications();
     }
-    
+
     public function queue()
     {
         $database = $this->db;
@@ -100,7 +99,7 @@ final class Bot extends Singleton
             $service->execute($export);
         }
     }
-    
+
     /**
      *
      */

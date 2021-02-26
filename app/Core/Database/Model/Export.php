@@ -31,13 +31,13 @@ class Export extends BaseModel
      * @var string
      */
     protected string $word_type;
-    
+
     /**
      * @var int
      */
     protected int $used;
-    
-    
+
+
     /**
      * @var string
      */
@@ -79,7 +79,7 @@ class Export extends BaseModel
     {
         return $this->word_type;
     }
-    
+
     /**
      * @return int
      */

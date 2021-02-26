@@ -175,7 +175,7 @@ class TrainingRepository extends BaseRepository
 
         return $this->getNewModel($result[0]);
     }
-    
+
     /**
      * @param int    $userId
      * @param string $type
@@ -199,7 +199,7 @@ class TrainingRepository extends BaseRepository
         foreach ($result as $record) {
             $ret[] = $this->getNewModel($record);
         }
-        
+
         return $ret;
     }
 
@@ -449,7 +449,7 @@ class TrainingRepository extends BaseRepository
 
         return $this->getNewModel($result[0]);
     }
-    
+
     /**
      * @param int    $userId
      * @param int    $type
@@ -478,7 +478,7 @@ class TrainingRepository extends BaseRepository
         foreach ($result as $record) {
             $ret[] = $this->getNewModel($record);
         }
-    
+
         return $ret;
     }
 }

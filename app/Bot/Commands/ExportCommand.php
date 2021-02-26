@@ -76,7 +76,7 @@ class ExportCommand extends SystemCommand
             ) {
                 $exportRepository->create($user_id, $chat_id, $array[0] . '_' . $array[1]);
             } else {
-                $text = "Допустимые форматы команды\n - /export\n - /export FromEnglish first\n".
+                $text = "Допустимые форматы команды\n - /export\n - /export FromEnglish first\n" .
                     "- /export ToEnglish second\n\n Где первое слово режим без пробела, а второе название итерации. " .
                     "Посмотреть сколько у вас слов в какой итерации можно командой /progress";
             }
