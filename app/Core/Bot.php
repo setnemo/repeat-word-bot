@@ -88,13 +88,16 @@ final class Bot extends Singleton
         $this->handleNotifications();
     }
 
-    public function queue()
+    /**
+     * @param ExportRepository   $exportRepository
+     * @param ExportService      $service
+     *
+     * @throws TelegramException
+     * @throws \Mpdf\MpdfException
+     */
+    public function queue(ExportRepository $exportRepository, ExportService $service): void
     {
-        $database = $this->db;
-        $trainingRepository = new TrainingRepository($database);
-        $exportRepository = new ExportRepository($database);
         $exports = $exportRepository->getExports();
-        $service = new ExportService($trainingRepository, $exportRepository);
         foreach ($exports as $export) {
             $service->execute($export);
         }
