@@ -25,7 +25,7 @@ while (true) {
     try {
         $bot->queue($exportRepository, $service);
         $metric->increaseMetric('queue');
-        sleep(4);
+        sleep(1);
     } catch (\Throwable $e) {
         $logger->error($e->getMessage(), $e->getTrace());
     }
