@@ -52,8 +52,7 @@ class CallbackqueryCommand extends SystemCommand
         $callback_query_id = $callback_query->getId();
         $callback_data     = $callback_query->getData();
         $message_id        = $callback_query->getMessage()->getMessageId();
-        $user_id           = $callback_query->getMessage()->getFrom()->getId();
-        $chat_id           = $callback_query->getMessage()->getChat()->getId();
+        $user_id           = $callback_query->getMessage()->getChat()->getId();
         $database          = Database::getInstance()->getConnection();
 
         $config = App::getInstance()->getConfig();
@@ -96,7 +95,7 @@ class CallbackqueryCommand extends SystemCommand
                 $priority === 1 ? 0 : 1,
             ));
             $data = [
-                'chat_id'      => $chat_id,
+                'chat_id'      => $user_id,
                 'text' => BotHelper::getSettingsText(),
                 'reply_markup' => $keyboard,
                 'message_id'   => $message_id,
@@ -125,7 +124,7 @@ class CallbackqueryCommand extends SystemCommand
             /** @psalm-suppress TooManyArguments */
             $keyboard = new InlineKeyboard(...BotHelper::getCollectionPagination($id, $haveRatingWords));
             $data = [
-                'chat_id' => $chat_id,
+                'chat_id' => $user_id,
                 'message_id'   => $message_id,
                 'text' => strtr($answer, [
                     ':name' => $rating->getName(),
@@ -140,7 +139,7 @@ class CallbackqueryCommand extends SystemCommand
         }
         if ($array[0] === 'ratings' && $array[1] === 'del') {
             Request::sendMessage([
-                'chat_id' => $chat_id,
+                'chat_id' => $this->getCallbackQuery()->getFrom()->getId(),
                 'text' => 'Для удаления слов этой коллекции из вашего прогресса воспользуйтесь командой `/del collection ' .
                     intval($array[2]) .
                     '`',
@@ -151,7 +150,7 @@ class CallbackqueryCommand extends SystemCommand
         }
         if ($array[0] === 'ratings' && $array[1] === 'reset') {
             Request::sendMessage([
-                'chat_id' => $chat_id,
+                'chat_id' => $this->getCallbackQuery()->getFrom()->getId(),
                 'text' => 'Для сброса прогресса по словам с этой коллекции воспользуйтесь командой `/reset collection ' .
                     intval($array[2]) .
                     '`',
@@ -171,7 +170,7 @@ class CallbackqueryCommand extends SystemCommand
             /** @psalm-suppress TooManyArguments */
             $keyboard = new InlineKeyboard(...BotHelper::getCollectionPagination($id, $haveRatingWords));
             $data = [
-                'chat_id' => $chat_id,
+                'chat_id' => $user_id,
                 'message_id'   => $message_id,
                 'text' => strtr($answer, [
                     ':name' => $rating->getName(),

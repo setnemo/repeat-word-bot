@@ -51,7 +51,6 @@ class CollectionsCommand extends SystemCommand
     public function execute(): ServerResponse
     {
         $chat_id = $this->getMessage()->getChat()->getId();
-        $user_id = $this->getMessage()->getFrom()->getId();
         $data = [
             'chat_id' => $chat_id,
             'text' => BotHelper::getCollectionText(),
@@ -68,7 +67,7 @@ class CollectionsCommand extends SystemCommand
         $wordRepository = new WordRepository($database);
         $trainingRepository = new TrainingRepository($database);
         $rating = $collectionRepository->getCollection(intval($id));
-        $haveRatingWords = $trainingRepository->userHaveCollection(intval($id), $user_id);
+        $haveRatingWords = $trainingRepository->userHaveCollection(intval($id), $chat_id);
         /** @psalm-suppress TooManyArguments */
         $keyboard = new InlineKeyboard(...BotHelper::getCollectionPagination($id, $haveRatingWords));
         $data = [
