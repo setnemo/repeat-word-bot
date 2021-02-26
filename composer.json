@@ -18,7 +18,8 @@
     "adbario/php-dot-notation": "^2.2",
     "nesbot/carbon": "^2.45",
     "carbon-cli/carbon-cli": "^1.2",
-    "promphp/prometheus_client_php": "^2.2"
+    "promphp/prometheus_client_php": "^2.2",
+    "mpdf/mpdf": "8.0.10"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.5",

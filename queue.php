@@ -13,9 +13,7 @@ $logger = Log::getInstance()->init($config)->getLogger();
 $bot = Bot::getInstance();
 $bot->init($config, $logger);
 $metric = Metric::getInstance()->init($config);
-$bot->botBefore();
 while (true) {
-    $bot->run();
-    $metric->increaseMetric('worker');
+    $bot->queue();
+    $metric->increaseMetric('queue');
 }
-

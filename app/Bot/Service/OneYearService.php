@@ -6,6 +6,10 @@ namespace RepeatBot\Bot\Service;
 
 use RepeatBot\Core\Database\Repository\TrainingRepository;
 
+/**
+ * Class OneYearService
+ * @package RepeatBot\Bot\Service
+ */
 class OneYearService
 {
     /**

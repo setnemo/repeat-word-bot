@@ -175,6 +175,33 @@ class TrainingRepository extends BaseRepository
 
         return $this->getNewModel($result[0]);
     }
+    
+    /**
+     * @param int    $userId
+     * @param string $type
+     *
+     * @return array
+     */
+    public function getTrainings(int $userId, string $type): array
+    {
+        $selectStatement = $this->getConnection()->select(['*'])
+            ->from($this->tableName)
+            ->where(
+                new Grouping(
+                    "AND",
+                    new Conditional("$this->tableName.user_id", '=', $userId),
+                    new Conditional("$this->tableName.type", '=', $type)
+                )
+            );
+        $stmt = $selectStatement->execute();
+        $result = $stmt->fetchAll();
+        $ret = [];
+        foreach ($result as $record) {
+            $ret[] = $this->getNewModel($record);
+        }
+        
+        return $ret;
+    }
 
     public function upStatusTraining(Training $training, bool $never = false): void
     {
@@ -421,5 +448,37 @@ class TrainingRepository extends BaseRepository
         }
 
         return $this->getNewModel($result[0]);
+    }
+    
+    /**
+     * @param int    $userId
+     * @param int    $type
+     * @param string $status
+     *
+     * @return array
+     */
+    public function getTrainingsWithStatus(int $userId, string $type, string $status): array
+    {
+        $selectStatement = $this->getConnection()->select(['*'])
+            ->from($this->tableName)
+            ->where(
+                new Grouping(
+                    "AND",
+                    new Conditional("$this->tableName.status", '=', $status),
+                    new Grouping(
+                        "AND",
+                        new Conditional("$this->tableName.user_id", '=', $userId),
+                        new Conditional("$this->tableName.type", '=', $type)
+                    )
+                )
+            );
+        $stmt = $selectStatement->execute();
+        $result = $stmt->fetchAll();
+        $ret = [];
+        foreach ($result as $record) {
+            $ret[] = $this->getNewModel($record);
+        }
+    
+        return $ret;
     }
 }

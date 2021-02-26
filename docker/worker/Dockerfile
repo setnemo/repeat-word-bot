@@ -5,31 +5,39 @@ COPY . /app
 
 RUN apk update && apk add --no-cache \
     build-base shadow vim curl supervisor \
-    php7 \
-    php7-fpm \
-    php7-common \
-    php7-pdo \
-    php7-pdo_mysql \
-    php7-mysqli \
-    php7-mcrypt \
-    php7-mbstring \
-    php7-xml \
-    php7-simplexml \
-    php7-openssl \
-    php7-json \
-    php7-phar \
-    php7-zip \
-    php7-gd \
-    php7-dom \
-    php7-session \
-    php7-zlib \
-    php7-redis \
-    php7-session
+    gcc musl-dev make libmcrypt-dev libmcrypt libzip-dev \
+    php8 \
+    php8-fpm \
+    php8-common \
+    php8-pdo \
+    php8-pdo_mysql \
+    php8-mysqli \
+    php8-mbstring \
+    php8-xml \
+    php8-simplexml \
+    php8-openssl \
+    php8-json \
+    php8-phar \
+    php8-zip \
+    php8-gd \
+    php8-dom \
+    php8-session \
+    php8-zlib \
+    php8-redis \
+    php8-session \
+    php8-pear \
+    php8-dev
 
+RUN apk add libpng libpng-dev libjpeg-turbo-dev libwebp-dev zlib-dev libxpm-dev gd
+RUN docker-php-ext-install gd
 
-# Add and Enable PHP-PDO Extenstions
+RUN pecl install mcrypt-1.0.4
+
+# Add and Enable PHP Extenstions
 RUN docker-php-ext-install pdo pdo_mysql
 RUN docker-php-ext-enable pdo_mysql
+
+
 
 # Redis
 RUN apk add --no-cache pcre-dev $PHPIZE_DEPS \
@@ -53,4 +61,3 @@ WORKDIR /app
 RUN composer install
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
-

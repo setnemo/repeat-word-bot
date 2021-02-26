@@ -14,11 +14,13 @@ use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
 use Psr\Log\LoggerInterface;
 use RepeatBot\Bot\BotHelper;
+use RepeatBot\Bot\Service\ExportService;
 use RepeatBot\Common\Config;
 use RepeatBot\Common\Singleton;
 use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Database\Model\LearnNotification;
 use RepeatBot\Core\Database\Model\LearnNotificationPersonal;
+use RepeatBot\Core\Database\Repository\ExportRepository;
 use RepeatBot\Core\Database\Repository\LearnNotificationPersonalRepository;
 use RepeatBot\Core\Database\Repository\LearnNotificationRepository;
 use RepeatBot\Core\Database\Repository\TrainingRepository;
@@ -72,15 +74,33 @@ final class Bot extends Singleton
                     'database' => $config->getKey('database.name'),
                 ]
             );
-            $this->checkVersion();
-            $this->handleNotifications();
+
         } catch (TelegramException $e) {
             $logger->error($e->getMessage(), $e->getTrace());
         }
 
         return $this;
     }
-
+    
+    
+    public function botBefore()
+    {
+        $this->checkVersion();
+        $this->handleNotifications();
+    }
+    
+    public function queue()
+    {
+        $database = $this->db;
+        $trainingRepository = new TrainingRepository($database);
+        $exportRepository = new ExportRepository($database);
+        $exports = $exportRepository->getExports();
+        $service = new ExportService($trainingRepository, $exportRepository);
+        foreach ($exports as $export) {
+            $service->execute($export);
+        }
+    }
+    
     /**
      *
      */
