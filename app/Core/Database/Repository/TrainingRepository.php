@@ -345,7 +345,7 @@ class TrainingRepository extends BaseRepository
     /**
      * @param int $userId
      */
-    public function resetAllTrainings(int $userId, int $collection_id): void
+    public function resetAllTrainings(int $userId): void
     {
         $updateStatement = $this->getConnection()->update([
             'status' => 'first',
