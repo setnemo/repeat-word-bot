@@ -58,7 +58,7 @@ class ExportRepository extends BaseRepository
         $updateStatement = $this->getConnection()
             ->update([
                 'used' => 1,
-                '`updated_at`' => Carbon::now()->rawFormat('Y-m-d H:i:s'),
+                '`updated_at`' => Carbon::now('Europe/Kiev')->rawFormat('Y-m-d H:i:s'),
             ])->table($this->tableName)
             ->where(new Conditional('id', '=', $export->getId()));
         $affectedRows = $updateStatement->execute();

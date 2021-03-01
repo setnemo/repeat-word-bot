@@ -112,7 +112,7 @@ class VoiceEnglishCommand extends SystemCommand
                     [
                         ':word' => $training->getWord(),
                         ':training' => $training->getType(),
-                        ':date' => Carbon::now('UTC')::parse(strtotime($training->getRepeat()))->diffForHumans(),
+                        ':date' => Carbon::now('Europe/Kiev')::parse(strtotime($training->getRepeat()))->diffForHumans(),
                     ]
                 );
             } catch (EmptyVocabularyException $e) {

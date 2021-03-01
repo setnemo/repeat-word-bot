@@ -88,7 +88,7 @@ class TrainingRepository extends BaseRepository
                 'translate' => $translate,
                 'voice' => $voice,
                 'status' => $status ?? 'first',
-                '`repeat`' => $repeat ?? Carbon::now()->rawFormat('Y-m-d H:i:s'),
+                '`repeat`' => $repeat ?? Carbon::now('Europe/Kiev')->rawFormat('Y-m-d H:i:s'),
             ]
         )->into($this->tableName);
         $r = $insertStatement->execute();
@@ -110,7 +110,7 @@ class TrainingRepository extends BaseRepository
             ->where(
                 new Grouping(
                     "AND",
-                    new Conditional("$this->tableName.`repeat`", '<', Carbon::now('UTC')->rawFormat('Y-m-d H:i:s')),
+                    new Conditional("$this->tableName.`repeat`", '<', Carbon::now('Europe/Kiev')->rawFormat('Y-m-d H:i:s')),
                     new Grouping(
                         "AND",
                         new Conditional("$this->tableName.user_id", '=', $userId),
@@ -208,8 +208,8 @@ class TrainingRepository extends BaseRepository
         $newStatus = $this->getNewStatus($training, $never);
         $updateStatement = $this->getConnection()->update([
             'status' => $newStatus['status'],
-            '`repeat`' => Carbon::now()->addMinutes($newStatus['repeat'])->rawFormat('Y-m-d H:i:s'),
-            '`updated_at`' => Carbon::now()->rawFormat('Y-m-d H:i:s'),
+            '`repeat`' => Carbon::now('Europe/Kiev')->addMinutes($newStatus['repeat'])->rawFormat('Y-m-d H:i:s'),
+            '`updated_at`' => Carbon::now('Europe/Kiev')->rawFormat('Y-m-d H:i:s'),
         ])->table($this->tableName)
             ->where(
                 new Grouping(
@@ -329,8 +329,8 @@ class TrainingRepository extends BaseRepository
     {
         $updateStatement = $this->getConnection()->update([
             'status' => 'first',
-            '`repeat`' => Carbon::now()->rawFormat('Y-m-d H:i:s'),
-            '`updated_at`' => Carbon::now()->rawFormat('Y-m-d H:i:s'),
+            '`repeat`' => Carbon::now('Europe/Kiev')->rawFormat('Y-m-d H:i:s'),
+            '`updated_at`' => Carbon::now('Europe/Kiev')->rawFormat('Y-m-d H:i:s'),
         ])->table($this->tableName)
             ->where(
                 new Grouping(
@@ -349,8 +349,8 @@ class TrainingRepository extends BaseRepository
     {
         $updateStatement = $this->getConnection()->update([
             'status' => 'first',
-            '`repeat`' => Carbon::now()->rawFormat('Y-m-d H:i:s'),
-            '`updated_at`' => Carbon::now()->rawFormat('Y-m-d H:i:s'),
+            '`repeat`' => Carbon::now('Europe/Kiev')->rawFormat('Y-m-d H:i:s'),
+            '`updated_at`' => Carbon::now('Europe/Kiev')->rawFormat('Y-m-d H:i:s'),
         ])->table($this->tableName)
             ->where(new Conditional("user_id", "=", $userId));
         $affectedRows = $updateStatement->execute();

@@ -74,7 +74,7 @@ class LearnNotificationRepository extends BaseRepository
     {
         $updateStatement = $this->getConnection()->update([
             'used' => 1,
-            '`updated_at`' => Carbon::now()->rawFormat('Y-m-d H:i:s'),
+            '`updated_at`' => Carbon::now('Europe/Kiev')->rawFormat('Y-m-d H:i:s'),
         ])->table($this->tableName)
             ->where(new Conditional('id', '=', $notification->getId()));
         $affectedRows = $updateStatement->execute();
@@ -93,7 +93,7 @@ class LearnNotificationRepository extends BaseRepository
                 new Conditional(
                     'created_at',
                     '>',
-                    Carbon::now('UTC')->subDays()->addMinutes()->rawFormat('Y-m-d H:i:s')
+                    Carbon::now('Europe/Kiev')->subDays()->addMinutes()->rawFormat('Y-m-d H:i:s')
                 )
             );
         $stmt = $selectStatement->execute();

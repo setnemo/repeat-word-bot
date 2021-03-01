@@ -55,7 +55,7 @@ class UserNotificationRepository extends BaseRepository
         $this->getOrCreateUserNotification($id);
         $updateStatement = $this->getConnection()->update([
             'deleted' => 1,
-            'deleted_at' => Carbon::now()->rawFormat('Y-m-d H:i:s'),
+            'deleted_at' => Carbon::now('Europe/Kiev')->rawFormat('Y-m-d H:i:s'),
         ])
             ->table($this->tableName)
             ->where(new Conditional('user_id', '=', $id));

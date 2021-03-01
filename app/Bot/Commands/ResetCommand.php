@@ -72,7 +72,6 @@ class ResetCommand extends SystemCommand
             $flag = true;
         }
         $array = explode(' ', $text);
-        var_export($array);
         if ($array[0] === 'collection' && intval($array[1]) > 0 && intval($array[1]) < 37) {
             foreach (BotHelper::getTrainingTypes() as $type) {
                 $cache->removeTrainings($this->getMessage()->getFrom()->getId(), $type);
