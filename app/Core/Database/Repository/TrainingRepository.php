@@ -7,6 +7,7 @@ namespace RepeatBot\Core\Database\Repository;
 use Carbon\Carbon;
 use FaaPz\PDO\Clause\Conditional;
 use FaaPz\PDO\Clause\Grouping;
+use FaaPz\PDO\Clause\Join;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\Database\BaseRepository;
 use RepeatBot\Core\Database\Model\InactiveUser;
@@ -104,22 +105,37 @@ class TrainingRepository extends BaseRepository
      */
     public function getRandomTraining(int $userId, string $type, bool $priority): Training
     {
+        $wordTable = 'word';
         $selectStatement = $this->getConnection()->select([
-            "$this->tableName.*",
+            "$this->tableName.id",
+            "$this->tableName.word_id",
+            "$this->tableName.user_id",
+            "$this->tableName.collection_id",
+            "$this->tableName.type",
+            "$this->tableName.word",
+            "$this->tableName.translate",
+            "$wordTable.voice",
+            "$this->tableName.status",
+            "$this->tableName.repeat",
+            "$this->tableName.created_at",
+            "$this->tableName.updated_at",
         ])->from($this->tableName)
+            ->join(new Join(
+                "$wordTable as word",
+                new Conditional("{$wordTable}.id", '=', "training.word_id"))
+            )
             ->where(
                 new Grouping(
                     "AND",
+                    new Conditional("$this->tableName.user_id", '=', $userId),
+                    new Conditional("$this->tableName.type", '=', $type),
                     new Conditional("$this->tableName.`repeat`", '<', Carbon::now('Europe/Kiev')->rawFormat('Y-m-d H:i:s')),
-                    new Grouping(
-                        "AND",
-                        new Conditional("$this->tableName.user_id", '=', $userId),
-                        new Conditional("$this->tableName.type", '=', $type)
                     )
-                )
-            );
-        $stmt = $selectStatement->execute();
+            )
+        ;
+        $stmt = $selectStatement->execute();var_export($stmt->debugDumpParams());
         $result = $stmt->fetchAll();
+        var_export(count($result));
         if (!$priority) {
             shuffle($result);
             $ret = $result;
