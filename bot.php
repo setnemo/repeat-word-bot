@@ -14,22 +14,11 @@ $config = $app->getConfig();
 $logger = Log::getInstance()->init($config)->getLogger();
 $bot = Bot::getInstance();
 $bot->init($config, $logger);
-$entityManager = Database::getInstance()->init($config)->getEntityManager();
 
-var_dump(new \RepeatBot\Core\ORM\Entities\Version());
-
-$productRepository = $entityManager->getRepository(Version::class);
-
-$products = $productRepository->findAll();
-
-foreach ($products as $product) {
-    echo sprintf("-%s\n", $product->getName());
+$metric = Metric::getInstance()->init($config);
+$bot->botBefore();
+while (true) {
+    $bot->run();
+    $metric->increaseMetric('worker');
 }
-
-//$metric = Metric::getInstance()->init($config);
-//$bot->botBefore();
-//while (true) {
-//    $bot->run();
-//    $metric->increaseMetric('worker');
-//}
 

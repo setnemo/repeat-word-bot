@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace RepeatBot\Core\Database;
 
-use Carbon\Doctrine\CarbonImmutableType;
-use Carbon\Doctrine\CarbonType;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Cache\PredisCache;
 use Doctrine\DBAL\Types\Type;
-use Doctrine\DBAL\Types\Types;
 use RepeatBot\Common\Config;
 use RepeatBot\Common\Singleton;
 use FaaPz\PDO\Database as DB;
@@ -66,12 +62,18 @@ class Database extends Singleton
         $redis = CoreCache::getInstance()->init($config)->getRedis();
         $redis = new PredisCache($redis);
         $config2 = Setup::createAnnotationMetadataConfiguration($paths, false, null, $redis, false);
-
-        Type::overrideType('datetime', CarbonType::class);
-        Type::overrideType('datetime_immutable', CarbonImmutableType::class);
+        
 
         $this->entityManager = EntityManager::create($dbParams, $config2);
         $conn = $this->entityManager->getConnection();
+    
+        Type::addType('carbon_immutable', \Carbon\Doctrine\DateTimeImmutableType::class);
+        Type::addType('carbon', \Carbon\Doctrine\CarbonType::class);
+        Type::addType('carbon_time', \Carbon\Doctrine\DateTimeType::class);
+//        Type::overrideType('carbon_immutable', DateTimeImmutableType::class);
+        $conn->getDatabasePlatform()->registerDoctrineTypeMapping('time', 'carbon_time');
+        $conn->getDatabasePlatform()->registerDoctrineTypeMapping('datetime', 'carbon');
+        $conn->getDatabasePlatform()->registerDoctrineTypeMapping('datetime_immutable', 'carbon_immutable');
         $conn->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
         return $this;
     }

@@ -21,7 +21,6 @@ use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Database\Model\LearnNotification;
 use RepeatBot\Core\Database\Model\LearnNotificationPersonal;
 use RepeatBot\Core\Database\Repository\ExportRepository;
-use RepeatBot\Core\Database\Repository\LearnNotificationPersonalRepository;
 use RepeatBot\Core\Database\Repository\LearnNotificationRepository;
 use RepeatBot\Core\Database\Repository\TrainingRepository;
 use RepeatBot\Core\Database\Repository\UserNotificationRepository;
@@ -182,9 +181,20 @@ final class Bot extends Singleton
     private function handleNotifications(): void
     {
         $database = $this->db;
-        $learnNotificationRepository = new LearnNotificationRepository($database);
-        $trainingRepository = new TrainingRepository($database);
-        $userNotificationRepository = new UserNotificationRepository($database);
+        $learnNotificationRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(ORM\Entities\LearnNotificationPersonal::class);
+    
+        $trainingRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(ORM\Entities\Training::class);
+    
+    
+        $userNotificationRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(ORM\Entities\UserNotification::class);
+        
+
         $userNotifications = $userNotificationRepository->getUserNotifications();
         $inactiveUser = $trainingRepository->getInactiveUsers($userNotifications);
         $newNotifications = $learnNotificationRepository->filterNotifications($inactiveUser);
@@ -206,12 +216,16 @@ final class Bot extends Singleton
 
     private function handleNotificationsPersonal(): void
     {
-        $database = $this->db;
-        $learnNotificationRepository = new LearnNotificationPersonalRepository($database);
+        $learnNotificationRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(ORM\Entities\LearnNotificationPersonal::class);
+
         $notifications = $learnNotificationRepository->getNotifications();
-        $userNotificationRepository = new UserNotificationRepository($database);
+        $userNotificationRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(ORM\Entities\UserNotification::class);
         $tzs = BotHelper::getTimeZones();
-        /** @var LearnNotificationPersonal $notification */
+        /** @var ORM\Entities\LearnNotificationPersonal $notification */
         foreach ($notifications as $notification) {
             $currentTz = $notification->getTimezone();
             $tmp = array_filter($tzs, function (array $item) use ($currentTz) {
@@ -222,7 +236,7 @@ final class Bot extends Singleton
                 $new = $item;
             }
             date_default_timezone_set($new['utc'][0]);
-            if (strtotime($notification->getAlarm()) < time()) {
+            if ($notification->getAlarm()->getTimestamp() < time()) {
                 $silent = $userNotificationRepository->getOrCreateUserNotification(
                     $notification->getUserId()
                 )->getSilent();
