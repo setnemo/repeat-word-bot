@@ -15,7 +15,7 @@ use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
 use Psr\Log\LoggerInterface;
 use RepeatBot\Bot\BotHelper;
-use RepeatBot\Bot\Service\ExportService;
+use RepeatBot\Bot\Service\ExportQueueService;
 use RepeatBot\Common\Config;
 use RepeatBot\Common\Singleton;
 use RepeatBot\Core\Database\Database;
@@ -79,12 +79,12 @@ final class Bot extends Singleton
 
     /**
      * @param ExportRepository   $exportRepository
-     * @param ExportService      $service
+     * @param ExportQueueService $service
      *
      * @throws TelegramException
      * @throws \Mpdf\MpdfException
      */
-    public function queue(ExportRepository $exportRepository, ExportService $service): void
+    public function queue(ExportRepository $exportRepository, ExportQueueService $service): void
     {
         $exports = $exportRepository->getExports();
         foreach ($exports as $export) {

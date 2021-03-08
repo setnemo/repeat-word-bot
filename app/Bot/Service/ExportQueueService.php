@@ -15,7 +15,7 @@ use RepeatBot\Core\ORM\Repositories\TrainingRepository;
  * Class ExportService
  * @package RepeatBot\Bot\Service
  */
-class ExportService
+class ExportQueueService
 {
     /**
      * OneYearService constructor.

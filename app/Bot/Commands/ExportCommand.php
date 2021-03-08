@@ -8,6 +8,8 @@ use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
+use RepeatBot\Bot\Service\CommandService\CommandDirector;
+use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\Metric;
@@ -48,42 +50,19 @@ class ExportCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        $text = $this->getMessage()->getText(true);
-        $config = App::getInstance()->getConfig();
-        $metric = Metric::getInstance()->init($config);
-        $metric->increaseMetric('usage');
-        $metric->increaseMetric('export');
-        $chat_id = $this->getMessage()->getChat()->getId();
-        $user_id = $this->getMessage()->getFrom()->getId();
-        $exportRepository = Database::getInstance()
-            ->getEntityManager()
-            ->getRepository(Export::class);
-        $array = explode(' ', $text);
-        if (!$exportRepository->userHaveExport($user_id)) {
-            $text = "Создание экспорта поставлено в очередь. Как только файл будет готов вы получите его в личном сообщении.";
-            if (count($array) === 1 && $array[0] === '') {
-                $exportRepository->create($user_id, $chat_id, 'FromEnglish');
-            } elseif (
-                count($array) == 2 &&
-                in_array($array[0], ['FromEnglish','ToEnglish']) &&
-                in_array($array[1], ['first','second','third','fourth','fifth','sixth','never'])
-            ) {
-                $exportRepository->create($user_id, $chat_id, $array[0] . '_' . $array[1]);
-            } else {
-                $text = "Допустимые форматы команды\n - /export\n - /export FromEnglish first\n" .
-                    "- /export ToEnglish second\n\n Где первое слово режим без пробела, а второе название итерации. " .
-                    "Посмотреть сколько у вас слов в какой итерации можно командой /progress";
-            }
-        } else {
-            $text = "У вас есть экспорт слов, дождитесь очереди для создания файла";
+        $director = new CommandDirector(
+            new CommandOptions(
+                'export',
+                explode(' ', $this->getMessage()->getText(true)),
+                $this->getMessage()->getChat()->getId(),
+            )
+        );
+        $service = $director->makeService();
+    
+        if (!$service->hasResponse()) {
+            $service->execute();
         }
-
-        $data = [
-            'chat_id' => $chat_id,
-            'text' => $text,
-            'parse_mode' => 'markdown',
-            'disable_notification' => 1,
-        ];
-        return Request::sendMessage($data);
+    
+        return $service->postStackMessages()->getResponseMessage();
     }
 }

@@ -33,7 +33,7 @@ class DirectorFabric
         return match($command) {
             'collections' => $this->makeCollectionCommand(),
             'settings'    => $this->makeSettingsCommand(),
-        default       => $this->makeEmptyCallback(),
+        default           => $this->makeEmptyCallback(),
         };
     }
 
@@ -45,7 +45,7 @@ class DirectorFabric
             'voices'   => $this->makeSettingsVoicesCommand(),
             'silent'   => $this->makeSettingsSilentCommand(),
             'priority' => $this->makeSettingsPriorityCommand(),
-        default    => $this->makeEmptyCallback(),
+        default        => $this->makeEmptyCallback(),
         };
     }
 

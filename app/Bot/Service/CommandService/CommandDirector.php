@@ -9,11 +9,15 @@ use RepeatBot\Bot\Service\CommandService\Commands\CollectionService;
 use RepeatBot\Bot\Service\CommandService\Commands\CommandInterface;
 use RepeatBot\Bot\Service\CommandService\Commands\DelService;
 use RepeatBot\Bot\Service\CommandService\Commands\EmptyCallbackService;
+use RepeatBot\Bot\Service\CommandService\Commands\ExportService;
+use RepeatBot\Bot\Service\CommandService\Commands\HelpService;
+use RepeatBot\Bot\Service\CommandService\Commands\ProgressService;
 use RepeatBot\Bot\Service\CommandService\Commands\SettingsPriorityService;
 use RepeatBot\Bot\Service\CommandService\Commands\SettingsSilentService;
 use RepeatBot\Bot\Service\CommandService\Commands\SettingsVoicesService;
 use RepeatBot\Bot\Service\CommandService\Validators\AlarmValidator;
 use RepeatBot\Bot\Service\CommandService\Validators\DelValidator;
+use RepeatBot\Bot\Service\CommandService\Validators\ExportValidator;
 
 class CommandDirector
 {
@@ -29,13 +33,16 @@ class CommandDirector
     public function makeService(): CommandInterface
     {
         return match($this->getOptions()->getCommand()) {
-            'alarm' => $this->makeAlarmCommand($this->getOptions()),
-            'collection' => $this->makeCollectionCommand($this->getOptions()),
-            'settings_voices' => $this->makeSettingsVoicesCommand($this->getOptions()),
-            'settings_silent' => $this->makeSettingsSilentCommand($this->getOptions()),
+            'alarm'             => $this->makeAlarmCommand($this->getOptions()),
+            'collection'        => $this->makeCollectionCommand($this->getOptions()),
+            'empty'             => $this->makeEmptyCommand($this->getOptions()),
+            'settings_voices'   => $this->makeSettingsVoicesCommand($this->getOptions()),
+            'settings_silent'   => $this->makeSettingsSilentCommand($this->getOptions()),
             'settings_priority' => $this->makeSettingsPriorityCommand($this->getOptions()),
-            'del' => $this->makeDelCommand($this->getOptions()),
-            'empty' => $this->makeEmptyCommand($this->getOptions()),
+            'del'               => $this->makeDelCommand($this->getOptions()),
+            'export'            => $this->makeExportCommand($this->getOptions()),
+            'help'              => $this->makeHelpCommand($this->getOptions()),
+            'progress'          => $this->makeProgressCommand($this->getOptions()),
         };
     }
 
@@ -72,5 +79,20 @@ class CommandDirector
     private function makeDelCommand(CommandOptions $options)
     {
         return (new DelService($options))->validate(new DelValidator());
+    }
+
+    private function makeExportCommand(CommandOptions $options)
+    {
+        return (new ExportService($options))->validate(new ExportValidator());
+    }
+    
+    private function makeHelpCommand(CommandOptions $options)
+    {
+        return new HelpService($options);
+    }
+    
+    private function makeProgressCommand(CommandOptions $options)
+    {
+        return new ProgressService($options);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-use RepeatBot\Bot\Service\ExportService;
+use RepeatBot\Bot\Service\ExportQueueService;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Bot;
 use RepeatBot\Core\Database\Database;
@@ -22,7 +22,7 @@ $trainingRepository =  Database::getInstance()
 $exportRepository = Database::getInstance()
     ->getEntityManager()
     ->getRepository(\RepeatBot\Core\ORM\Entities\Export::class);
-$service = new ExportService($trainingRepository, $exportRepository);
+$service = new ExportQueueService($trainingRepository, $exportRepository);
 while (true) {
     try {
         $bot->queue($exportRepository, $service);
