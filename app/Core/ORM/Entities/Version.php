@@ -49,7 +49,7 @@ class Version
      * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
      */
     private Carbon $createdAt;
-    
+
     /**
      * @return Carbon
      */
@@ -57,7 +57,7 @@ class Version
     {
         return $this->createdAt;
     }
-    
+
     /**
      * @param Carbon $createdAt
      */
@@ -65,7 +65,7 @@ class Version
     {
         $this->createdAt = $createdAt;
     }
-    
+
     /**
      * @return int
      */
@@ -73,7 +73,7 @@ class Version
     {
         return $this->used;
     }
-    
+
     /**
      * @param int $used
      */
@@ -81,7 +81,7 @@ class Version
     {
         $this->used = $used;
     }
-    
+
     /**
      * @return string
      */
@@ -89,7 +89,7 @@ class Version
     {
         return $this->description;
     }
-    
+
     /**
      * @param string $description
      */
@@ -97,7 +97,7 @@ class Version
     {
         $this->description = $description;
     }
-    
+
     /**
      * @return string
      */
@@ -105,7 +105,7 @@ class Version
     {
         return $this->version;
     }
-    
+
     /**
      * @param string $version
      */
@@ -113,7 +113,7 @@ class Version
     {
         $this->version = $version;
     }
-    
+
     /**
      * @return int
      */
@@ -121,7 +121,7 @@ class Version
     {
         return $this->id;
     }
-    
+
     /**
      * @param int $id
      */
@@ -129,6 +129,4 @@ class Version
     {
         $this->id = $id;
     }
-    
-    
 }

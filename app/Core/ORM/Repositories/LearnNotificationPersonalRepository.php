@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace RepeatBot\Core\ORM\Repositories;
 
@@ -24,11 +25,11 @@ class LearnNotificationPersonalRepository extends EntityRepository
             ->setParameter(
                 'upd',
                 Carbon::now('Europe/Kiev')->subDay()
-            )->orderBy('lnp.createdAt', 'DESC');
-        
+            );
+
         return new LearnNotificationPersonalCollection($query->getQuery()->getResult());
     }
-    
+
     /**
      * @param int    $userId
      * @param string $message
@@ -54,7 +55,7 @@ class LearnNotificationPersonalRepository extends EntityRepository
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
     }
-    
+
     /**
      * @param int $userId
      *
@@ -66,20 +67,20 @@ class LearnNotificationPersonalRepository extends EntityRepository
             $this->findBy(['userId' => $userId], ['createdAt' => 'DESC'])
         );
     }
-    
+
     /**
-     * @param int $user_id
+     * @param int $userId
      */
-    public function delNotifications(int $user_id): void
+    public function delNotifications(int $userId): void
     {
         $query = $this->getEntityManager()->createQueryBuilder()
             ->delete('RepeatBot\Core\ORM\Entities\LearnNotificationPersonal', 'lnp')
             ->where('lnp.userId = :userId')
-            ->setParameter('userId', $user_id);
-        
+            ->setParameter('userId', $userId);
+
         $query->getQuery()->execute();
     }
-    
+
     public function updateNotification(LearnNotificationPersonal $entity): void
     {
         $entity->setUpdatedAt(Carbon::now('Europe/Kiev'));

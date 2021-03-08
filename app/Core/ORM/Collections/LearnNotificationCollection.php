@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace RepeatBot\Core\ORM\Collections;
 
@@ -10,7 +11,7 @@ use RepeatBot\Core\ORM\ValueObjects\InactiveUser;
 class LearnNotificationCollection extends ArrayCollection
 {
     private array $usersIds = [];
-    
+
     public function __construct(array $elements = [])
     {
         /** @var LearnNotification $element */
@@ -19,7 +20,7 @@ class LearnNotificationCollection extends ArrayCollection
         }
         parent::__construct($elements);
     }
-    
+
     /**
      * @param InactiveUser $inactiveUser
      *
@@ -29,7 +30,7 @@ class LearnNotificationCollection extends ArrayCollection
     {
         return in_array($inactiveUser->getUserId(), $this->getUsersIds());
     }
-    
+
     /**
      * @return array
      */

@@ -42,7 +42,7 @@ class UserNotification
      * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
      */
     private Carbon $deletedAt;
-    
+
     /**
      * @return int
      */
@@ -50,7 +50,7 @@ class UserNotification
     {
         return $this->userId;
     }
-    
+
     /**
      * @param int $userId
      */
@@ -58,7 +58,7 @@ class UserNotification
     {
         $this->userId = $userId;
     }
-    
+
     /**
      * @return int
      */
@@ -66,7 +66,7 @@ class UserNotification
     {
         return $this->silent;
     }
-    
+
     /**
      * @param int $silent
      */
@@ -74,7 +74,7 @@ class UserNotification
     {
         $this->silent = $silent;
     }
-    
+
     /**
      * @return int
      */
@@ -82,7 +82,7 @@ class UserNotification
     {
         return $this->deleted;
     }
-    
+
     /**
      * @param int $deleted
      */
@@ -90,7 +90,7 @@ class UserNotification
     {
         $this->deleted = $deleted;
     }
-    
+
     /**
      * @return Carbon
      */
@@ -98,7 +98,7 @@ class UserNotification
     {
         return $this->deletedAt;
     }
-    
+
     /**
      * @param Carbon $deletedAt
      */
@@ -106,6 +106,4 @@ class UserNotification
     {
         $this->deletedAt = $deletedAt;
     }
-    
-    
 }

@@ -13,7 +13,7 @@ use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Database\Repository\UserNotificationRepository;
+use RepeatBot\Core\ORM\Entities\UserNotification;
 
 /**
  * Class SettingsCommand
@@ -51,8 +51,9 @@ class SettingsCommand extends SystemCommand
     public function execute(): ServerResponse
     {
         $userId = $this->getMessage()->getFrom()->getId();
-        $database = Database::getInstance()->getConnection();
-        $userNotificationRepository = new UserNotificationRepository($database);
+        $userNotificationRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(UserNotification::class);
         $silent = $userNotificationRepository->getOrCreateUserNotification(
             $userId
         )->getSilent();
@@ -64,10 +65,12 @@ class SettingsCommand extends SystemCommand
         $chat_id = $this->getMessage()->getChat()->getId();
         $textSilent = "Тихий режим сообщений: {$symbolSilent}";
         $texPriority = "Приоритет меньших итераций: {$symbolPriority}";
+        $texVoices = "Выбрать голоса для тренировок";
         /** @psalm-suppress TooManyArguments */
         $keyboard = new InlineKeyboard(...BotHelper::getSettingsKeyboard(
             $textSilent,
             $texPriority,
+            $texVoices,
             $silent === 1 ? 0 : 1,
             $priority === 1 ? 0 : 1,
         ));

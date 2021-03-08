@@ -11,9 +11,9 @@ use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Database\Repository\CollectionRepository;
-use RepeatBot\Core\Database\Repository\TrainingRepository;
-use RepeatBot\Core\Database\Repository\WordRepository;
+use RepeatBot\Core\ORM\Entities\Collection;
+use RepeatBot\Core\ORM\Entities\Training;
+use RepeatBot\Core\ORM\Entities\Word;
 
 /**
  * Class CollectionsCommand
@@ -62,10 +62,15 @@ class CollectionsCommand extends SystemCommand
 
         $answer = "Коллекция `:name` содержит такие слова, как:\n\n`:words`";
         $id = 1;
-        $database = Database::getInstance()->getConnection();
-        $collectionRepository = new CollectionRepository($database);
-        $wordRepository = new WordRepository($database);
-        $trainingRepository = new TrainingRepository($database);
+        $collectionRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(Collection::class);
+        $wordRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(Word::class);
+        $trainingRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(Training::class);
         $rating = $collectionRepository->getCollection(intval($id));
         $haveRatingWords = $trainingRepository->userHaveCollection(intval($id), $chat_id);
         /** @psalm-suppress TooManyArguments */

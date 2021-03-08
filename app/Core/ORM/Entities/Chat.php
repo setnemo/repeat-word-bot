@@ -2,6 +2,7 @@
 
 namespace RepeatBot\Core\ORM\Entities;
 
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -61,17 +62,17 @@ class Chat
      *
      * @ORM\Column(name="all_members_are_administrators", type="boolean", nullable=true, options={"comment"="True if a all members of this group are admins"})
      */
-    private $allMembersAreAdministrators = '0';
+    private $allMembersAreAdministrators = false;
 
     /**
-     * @var carbon|null
+     * @var Carbon
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"comment"="Entry date creation"})
      */
     private $createdAt;
 
     /**
-     * @var carbon|null
+     * @var Carbon
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=true, options={"comment"="Entry date update"})
      */
@@ -83,6 +84,4 @@ class Chat
      * @ORM\Column(name="old_id", type="bigint", nullable=true, options={"comment"="Unique chat identifier, this is filled when a group is converted to a supergroup"})
      */
     private $oldId;
-
-
 }

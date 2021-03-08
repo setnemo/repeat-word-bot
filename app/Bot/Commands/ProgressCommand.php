@@ -10,7 +10,7 @@ use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Database\Repository\TrainingRepository;
+use RepeatBot\Core\ORM\Entities\Training;
 
 /**
  * Class ProgressCommand
@@ -49,8 +49,9 @@ class ProgressCommand extends SystemCommand
     {
         $chat_id = $this->getMessage()->getChat()->getId();
         $userId = $this->getMessage()->getFrom()->getId();
-        $database = Database::getInstance()->getConnection();
-        $trainingRepository = new TrainingRepository($database);
+        $trainingRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(Training::class);
         $records = $trainingRepository->getMyStats($userId);
         $text = '';
         $flag = false;
@@ -60,7 +61,7 @@ class ProgressCommand extends SystemCommand
                 $status = ucfirst($item['status']);
                 $text .= BotHelper::getAnswer(
                     "\[{$type}] {$status} итерация: ",
-                    $item['counter']
+                    (int)$item['counter']
                 ) . "\n";
             }
         }

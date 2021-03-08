@@ -63,7 +63,7 @@ class Export
      * @ORM\Column(name="updated_at", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
      */
     private Carbon $updatedAt;
-    
+
     /**
      * @return int
      */
@@ -71,7 +71,7 @@ class Export
     {
         return $this->id;
     }
-    
+
     /**
      * @param int $id
      */
@@ -79,7 +79,7 @@ class Export
     {
         $this->id = $id;
     }
-    
+
     /**
      * @return Carbon
      */
@@ -87,7 +87,7 @@ class Export
     {
         return $this->createdAt;
     }
-    
+
     /**
      * @param Carbon $createdAt
      */
@@ -95,7 +95,7 @@ class Export
     {
         $this->createdAt = $createdAt;
     }
-    
+
     /**
      * @return Carbon
      */
@@ -103,7 +103,7 @@ class Export
     {
         return $this->updatedAt;
     }
-    
+
     /**
      * @param Carbon $updatedAt
      */
@@ -111,7 +111,7 @@ class Export
     {
         $this->updatedAt = $updatedAt;
     }
-    
+
     /**
      * @return int
      */
@@ -119,7 +119,7 @@ class Export
     {
         return $this->used;
     }
-    
+
     /**
      * @param int $used
      */
@@ -127,7 +127,7 @@ class Export
     {
         $this->used = $used;
     }
-    
+
     /**
      * @return string
      */
@@ -135,7 +135,7 @@ class Export
     {
         return $this->wordType;
     }
-    
+
     /**
      * @param string $wordType
      */
@@ -143,7 +143,7 @@ class Export
     {
         $this->wordType = $wordType;
     }
-    
+
     /**
      * @return int
      */
@@ -151,7 +151,7 @@ class Export
     {
         return $this->userId;
     }
-    
+
     /**
      * @param int $userId
      */
@@ -159,7 +159,7 @@ class Export
     {
         $this->userId = $userId;
     }
-    
+
     /**
      * @return int
      */
@@ -167,7 +167,7 @@ class Export
     {
         return $this->chatId;
     }
-    
+
     /**
      * @param int $chatId
      */
@@ -175,6 +175,4 @@ class Export
     {
         $this->chatId = $chatId;
     }
-    
-    
 }

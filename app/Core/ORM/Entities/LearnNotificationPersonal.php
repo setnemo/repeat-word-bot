@@ -32,7 +32,7 @@ class LearnNotificationPersonal
     /**
      * @var Carbon
      *
-     * @ORM\Column(name="alarm", type="carbon_time", nullable=false)
+     * @ORM\Column(name="alarm", type="time", nullable=false)
      */
     private Carbon $alarm;
 
@@ -53,17 +53,17 @@ class LearnNotificationPersonal
     /**
      * @var Carbon
      *
-     * @ORM\Column(name="created_at", type="carbon", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
      */
     private Carbon $createdAt;
 
     /**
      * @var Carbon
      *
-     * @ORM\Column(name="updated_at", type="carbon", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
      */
     private Carbon $updatedAt;
-    
+
     /**
      * @return int
      */
@@ -71,7 +71,7 @@ class LearnNotificationPersonal
     {
         return $this->id;
     }
-    
+
     /**
      * @param int $id
      */
@@ -79,7 +79,7 @@ class LearnNotificationPersonal
     {
         $this->id = $id;
     }
-    
+
     /**
      * @return int
      */
@@ -87,7 +87,7 @@ class LearnNotificationPersonal
     {
         return $this->userId;
     }
-    
+
     /**
      * @param int $userId
      */
@@ -95,7 +95,7 @@ class LearnNotificationPersonal
     {
         $this->userId = $userId;
     }
-    
+
     /**
      * @return Carbon
      */
@@ -103,7 +103,7 @@ class LearnNotificationPersonal
     {
         return $this->alarm;
     }
-    
+
     /**
      * @param Carbon $alarm
      */
@@ -111,7 +111,7 @@ class LearnNotificationPersonal
     {
         $this->alarm = $alarm;
     }
-    
+
     /**
      * @return string
      */
@@ -119,7 +119,7 @@ class LearnNotificationPersonal
     {
         return $this->message;
     }
-    
+
     /**
      * @param string $message
      */
@@ -127,7 +127,7 @@ class LearnNotificationPersonal
     {
         $this->message = $message;
     }
-    
+
     /**
      * @return string
      */
@@ -135,7 +135,7 @@ class LearnNotificationPersonal
     {
         return $this->timezone;
     }
-    
+
     /**
      * @param string $timezone
      */
@@ -143,7 +143,7 @@ class LearnNotificationPersonal
     {
         $this->timezone = $timezone;
     }
-    
+
     /**
      * @return Carbon
      */
@@ -151,7 +151,7 @@ class LearnNotificationPersonal
     {
         return $this->createdAt;
     }
-    
+
     /**
      * @param Carbon $createdAt
      */
@@ -159,7 +159,7 @@ class LearnNotificationPersonal
     {
         $this->createdAt = $createdAt;
     }
-    
+
     /**
      * @return Carbon
      */
@@ -167,7 +167,7 @@ class LearnNotificationPersonal
     {
         return $this->updatedAt;
     }
-    
+
     /**
      * @param Carbon $updatedAt
      */
@@ -175,6 +175,4 @@ class LearnNotificationPersonal
     {
         $this->updatedAt = $updatedAt;
     }
-    
-    
 }

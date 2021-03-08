@@ -6,9 +6,10 @@ namespace RepeatBot\Bot\Service;
 
 use Longman\TelegramBot\Request;
 use Mpdf\Mpdf;
-use RepeatBot\Core\Database\Model\Export;
-use RepeatBot\Core\Database\Repository\ExportRepository;
-use RepeatBot\Core\Database\Repository\TrainingRepository;
+use RepeatBot\Core\ORM\Collections\TrainingCollection;
+use RepeatBot\Core\ORM\Entities\Export;
+use RepeatBot\Core\ORM\Repositories\ExportRepository;
+use RepeatBot\Core\ORM\Repositories\TrainingRepository;
 
 /**
  * Class ExportService
@@ -62,13 +63,13 @@ class ExportService
     }
 
     /**
-     * @param array  $trainings
+     * @param TrainingCollection  $trainings
      * @param Export $export
      *
      * @return string
      * @throws \Mpdf\MpdfException
      */
-    private function createExportFile(array $trainings, Export $export): string
+    private function createExportFile(TrainingCollection $trainings, Export $export): string
     {
         $mpdf = new Mpdf(['tempDir' => '/tmp']);
         $stylesheet = file_get_contents('/app/resource/export.css');
@@ -89,8 +90,8 @@ class ExportService
         foreach ($trainings as $id => $training) {
             $mpdf->WriteHTML(strtr("<tr><td>:number</td><td>:word</td><td>:translate</td></tr>", [
                 ':number' => $id + 1,
-                ':word' => $training->getWord(),
-                ':translate' => $training->getTranslate(),
+                ':word' => $training->getWord()->getWord(),
+                ':translate' => $training->getWord()->getTranslate(),
             ]));
         }
         $mpdf->WriteHTML('</table>');

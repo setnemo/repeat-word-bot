@@ -2,6 +2,7 @@
 
 namespace RepeatBot\Core\ORM\Entities;
 
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -57,18 +58,16 @@ class Conversation
     private $notes;
 
     /**
-     * @var carbon|null
+     * @var Carbon
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"comment"="Entry date creation"})
      */
     private $createdAt;
 
     /**
-     * @var carbon|null
+     * @var Carbon
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=true, options={"comment"="Entry date update"})
      */
     private $updatedAt;
-
-
 }

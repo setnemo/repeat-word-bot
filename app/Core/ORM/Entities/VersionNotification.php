@@ -42,7 +42,7 @@ class VersionNotification
      * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
      */
     private Carbon $createdAt;
-    
+
     /**
      * @return Carbon
      */
@@ -50,7 +50,7 @@ class VersionNotification
     {
         return $this->createdAt;
     }
-    
+
     /**
      * @param Carbon $createdAt
      */
@@ -58,7 +58,7 @@ class VersionNotification
     {
         $this->createdAt = $createdAt;
     }
-    
+
     /**
      * @return int
      */
@@ -66,7 +66,7 @@ class VersionNotification
     {
         return $this->versionId;
     }
-    
+
     /**
      * @param int $versionId
      */
@@ -74,7 +74,7 @@ class VersionNotification
     {
         $this->versionId = $versionId;
     }
-    
+
     /**
      * @return int
      */
@@ -82,7 +82,7 @@ class VersionNotification
     {
         return $this->chatId;
     }
-    
+
     /**
      * @param int $chatId
      */
@@ -90,7 +90,7 @@ class VersionNotification
     {
         $this->chatId = $chatId;
     }
-    
+
     /**
      * @return int
      */
@@ -98,7 +98,7 @@ class VersionNotification
     {
         return $this->id;
     }
-    
+
     /**
      * @param int $id
      */
@@ -106,6 +106,4 @@ class VersionNotification
     {
         $this->id = $id;
     }
-    
-    
 }

@@ -5,20 +5,13 @@ declare(strict_types=1);
 namespace Longman\TelegramBot\Commands\SystemCommand;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
-use Mpdf\Mpdf;
-use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\App;
-use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Database\Model\LearnNotificationPersonal;
-use RepeatBot\Core\Database\Repository\ExportRepository;
-use RepeatBot\Core\Database\Repository\LearnNotificationPersonalRepository;
-use RepeatBot\Core\Database\Repository\TrainingRepository;
 use RepeatBot\Core\Metric;
+use RepeatBot\Core\ORM\Entities\Export;
 
 /**
  * Class ExportCommand
@@ -62,8 +55,9 @@ class ExportCommand extends SystemCommand
         $metric->increaseMetric('export');
         $chat_id = $this->getMessage()->getChat()->getId();
         $user_id = $this->getMessage()->getFrom()->getId();
-        $database = Database::getInstance()->getConnection();
-        $exportRepository = new ExportRepository($database);
+        $exportRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(Export::class);
         $array = explode(' ', $text);
         if (!$exportRepository->userHaveExport($user_id)) {
             $text = "Создание экспорта поставлено в очередь. Как только файл будет готов вы получите его в личном сообщении.";

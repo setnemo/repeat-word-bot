@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace RepeatBot\Core\ORM\Repositories;
 
@@ -8,7 +9,6 @@ use RepeatBot\Core\ORM\Entities\Collection;
 
 class CollectionRepository extends EntityRepository
 {
-    
     /**
      * @param int $id
      *

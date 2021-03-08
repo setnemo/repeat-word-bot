@@ -12,15 +12,14 @@ use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Database\Model\TrainingSave;
-use RepeatBot\Core\Database\Model\Word;
-use RepeatBot\Core\Database\Repository\CollectionRepository;
-use RepeatBot\Core\Database\Repository\TrainingRepository;
-use RepeatBot\Core\Database\Repository\TrainingSaveRepository;
-use RepeatBot\Core\Database\Repository\UserNotificationRepository;
-use RepeatBot\Core\Database\Repository\WordRepository;
-use RepeatBot\Core\Log;
 use RepeatBot\Core\Metric;
+use RepeatBot\Core\ORM\Collections\WordCollection;
+use RepeatBot\Core\ORM\Entities\Collection;
+use RepeatBot\Core\ORM\Entities\Training;
+use RepeatBot\Core\ORM\Entities\UserNotification;
+use RepeatBot\Core\ORM\Entities\UserVoice;
+use RepeatBot\Core\ORM\Entities\Word;
+use RepeatBot\Core\ORM\Repositories\TrainingRepository;
 
 /**
  * Class CallbackqueryCommand
@@ -52,8 +51,7 @@ class CallbackqueryCommand extends SystemCommand
         $callback_query_id = $callback_query->getId();
         $callback_data     = $callback_query->getData();
         $message_id        = $callback_query->getMessage()->getMessageId();
-        $user_id           = $callback_query->getMessage()->getChat()->getId();
-        $database          = Database::getInstance()->getConnection();
+        $userId            = $callback_query->getMessage()->getChat()->getId();
 
         $config = App::getInstance()->getConfig();
         $metric = Metric::getInstance()->init($config);
@@ -64,67 +62,125 @@ class CallbackqueryCommand extends SystemCommand
         if ($array[0] === 'settings') {
             $config = App::getInstance()->getConfig();
             $cache = Cache::getInstance()->init($config);
-
-            if ($array[1] === 'silent') {
+            $userNotificationRepository = Database::getInstance()
+                ->getEntityManager()
+                ->getRepository(UserNotification::class);
+            if ($array[1] === 'voices') {
+                $userVoiceRepository = Database::getInstance()
+                    ->getEntityManager()
+                    ->getRepository(UserVoice::class);
+                if ($array[2] === 'start') {
+                    $data = [
+                        'chat_id' => $userId,
+                        'text' => BotHelper::getSettingsText(),
+                        'reply_markup' => new InlineKeyboard(...BotHelper::getSettingsVoicesKeyboard(
+                            $userVoiceRepository->getFormattedVoices($userId)
+                        )),
+                        'message_id' => $message_id,
+                        'parse_mode' => 'markdown',
+    
+                    ];
+                } elseif ($array[2] === 'example') {
+                    $num = intval($array[3]);
+                    Request::sendVoice([
+                        'chat_id' => $userId,
+                        'voice' => Request::encodeFile('/app/words/example/' . $num . '.mp3'),
+                        'caption' => 'Example ' . BotHelper::getVoices()[$num],
+                        'disable_notification' => 1,
+                    ]);
+                    return Request::answerCallbackQuery([
+                        'callback_query_id' => $callback_query_id,
+                        'text'              => $text,
+                        'show_alert'        => true,
+                        'cache_time'        => 3,
+                    ]);
+                } elseif ($array[2] === 'back') {
+                    $silent = $userNotificationRepository->getOrCreateUserNotification(
+                        $userId
+                    )->getSilent();
+                    $config = App::getInstance()->getConfig();
+                    $cache = Cache::getInstance()->init($config);
+                    $priority = $cache->getPriority($userId);
+                    $symbolSilent = $silent === 1 ? '✅' : '❌';
+                    $symbolPriority = $priority === 1 ? '✅' : '❌';
+                    $textSilent = "Тихий режим сообщений: {$symbolSilent}";
+                    $texPriority = "Приоритет меньших итераций: {$symbolPriority}";
+                    $texVoices = "Выбрать голоса для тренировок";
+                    /** @psalm-suppress TooManyArguments */
+                    $keyboard = new InlineKeyboard(...BotHelper::getSettingsKeyboard(
+                        $textSilent,
+                        $texPriority,
+                        $texVoices,
+                        $silent === 1 ? 0 : 1,
+                        $priority === 1 ? 0 : 1,
+                    ));
+                    $data = [
+                        'chat_id' => $userId,
+                        'text' => BotHelper::getSettingsText(),
+                        'message_id' => $message_id,
+                        'parse_mode' => 'markdown',
+                        'disable_notification' => 1,
+                        'reply_markup' => $keyboard,
+                    ];
+                    Request::editMessageText($data);
+                } else {
+                    $num = intval($array[2]);
+                    $switcher = intval($array[3]);
+                    $userVoiceRepository->updateUserVoice($userId, BotHelper::getVoices()[$num], $switcher);
+                    $data = [
+                        'chat_id' => $userId,
+                        'text' => BotHelper::getSettingsText(),
+                        'message_id' => $message_id,
+                        'parse_mode' => 'markdown',
+                        'disable_notification' => 1,
+                        'reply_markup' => new InlineKeyboard(...BotHelper::getSettingsVoicesKeyboard(
+                            $userVoiceRepository->getFormattedVoices($userId)
+                        )),
+                    ];
+    
+                    return Request::editMessageText($data);
+    
+                }
+            } elseif ($array[1] === 'silent') {
                 $silent = intval($array[2]);
-                $userNotificationRepository = new UserNotificationRepository($database);
                 $userNotificationRepository->createOdUpdateNotification(
-                    $user_id,
+                    $userId,
                     $silent
                 );
-            } else {
-                $userNotificationRepository = new UserNotificationRepository($database);
-                $silent = $userNotificationRepository->getOrCreateUserNotification(
-                    $user_id
-                )->getSilent();
-            }
-            if ($array[1] === 'priority') {
+                $priority = $cache->getPriority($userId);
+                $data = $this->editMainMenuSettings($silent, $priority, $userId, $message_id);
+    
+            } elseif ($array[1] === 'priority') {
                 $priority = intval($array[2]);
-                $cache->setPriority($user_id, $priority);
-            } else {
-                $priority = $cache->getPriority($user_id);
+                $cache->setPriority($userId, $priority);
+                $silent = $userNotificationRepository->getOrCreateUserNotification(
+                    $userId
+                )->getSilent();
+                $data = $this->editMainMenuSettings($silent, $priority, $userId, $message_id);
             }
-            $symbolSilent = $silent === 1 ? '✅' : '❌';
-            $symbolPriority = $priority === 1 ? '✅' : '❌';
-            $textSilent = "Тихий режим сообщений: {$symbolSilent}";
-            $texPriority = "Приоритет меньшей итерации: {$symbolPriority}";
-            $keyboard = new InlineKeyboard(...BotHelper::getSettingsKeyboard(
-                $textSilent,
-                $texPriority,
-                $silent === 1 ? 0 : 1,
-                $priority === 1 ? 0 : 1,
-            ));
-            $data = [
-                'chat_id'      => $user_id,
-                'text' => BotHelper::getSettingsText(),
-                'reply_markup' => $keyboard,
-                'message_id'   => $message_id,
-                'parse_mode'   => 'markdown',
-
-            ];
-            Request::editMessageText($data);
+            return Request::editMessageText($data);
         }
         if ($array[0] === 'ratings' && $array[1] === 'add') {
             $id = intval($array[2]);
-            $wordRepository = new WordRepository($database);
+            $wordRepository = Database::getInstance()
+                ->getEntityManager()
+                ->getRepository(Word::class);
             $words = $wordRepository->getWordsByCollectionId($id);
-            $trainingRepository = new TrainingRepository($database);
-            $trainingSaveRepository = new TrainingSaveRepository($database);
-            $count = ($this->addNewWords($trainingRepository, $trainingSaveRepository, $words, $user_id)) / 2;
-            if ($count > 0) {
-                $this->progressNotify(intval($count));
-            }
+            $trainingRepository = Database::getInstance()
+                ->getEntityManager()
+                ->getRepository(Training::class);
+            $this->addNewWords($trainingRepository, $words, $userId);
             $text = 'Слова добавлены';
             $answer = "Коллекция `:name` содержит такие слова, как:\n\n`:words`";
-            $collectionRepository = new CollectionRepository($database);
-            $wordRepository = new WordRepository($database);
-            $trainingRepository = new TrainingRepository($database);
+            $collectionRepository = Database::getInstance()
+                ->getEntityManager()
+                ->getRepository(Collection::class);
             $rating = $collectionRepository->getCollection(intval($id));
-            $haveRatingWords = $trainingRepository->userHaveCollection(intval($id), $user_id);
+            $haveRatingWords = $trainingRepository->userHaveCollection(intval($id), $userId);
             /** @psalm-suppress TooManyArguments */
             $keyboard = new InlineKeyboard(...BotHelper::getCollectionPagination($id, $haveRatingWords));
             $data = [
-                'chat_id' => $user_id,
+                'chat_id' => $userId,
                 'message_id'   => $message_id,
                 'text' => strtr($answer, [
                     ':name' => $rating->getName(),
@@ -162,15 +218,21 @@ class CallbackqueryCommand extends SystemCommand
         if ($array[0] === 'rating') {
             $id = intval($array[1]);
             $answer = "Коллекция `:name` содержит такие слова, как:\n\n`:words`";
-            $collectionRepository = new CollectionRepository($database);
-            $wordRepository = new WordRepository($database);
-            $trainingRepository = new TrainingRepository($database);
+            $collectionRepository = Database::getInstance()
+                ->getEntityManager()
+                ->getRepository(Collection::class);
+            $wordRepository = Database::getInstance()
+                ->getEntityManager()
+                ->getRepository(Word::class);
+            $trainingRepository = Database::getInstance()
+                ->getEntityManager()
+                ->getRepository(Training::class);
             $rating = $collectionRepository->getCollection(intval($id));
-            $haveRatingWords = $trainingRepository->userHaveCollection(intval($id), $user_id);
+            $haveRatingWords = $trainingRepository->userHaveCollection(intval($id), $userId);
             /** @psalm-suppress TooManyArguments */
             $keyboard = new InlineKeyboard(...BotHelper::getCollectionPagination($id, $haveRatingWords));
             $data = [
-                'chat_id' => $user_id,
+                'chat_id' => $userId,
                 'message_id'   => $message_id,
                 'text' => strtr($answer, [
                     ':name' => $rating->getName(),
@@ -193,68 +255,26 @@ class CallbackqueryCommand extends SystemCommand
     }
 
     /**
-     * @param TrainingRepository     $trainingRepository
-     * @param TrainingSaveRepository $trainingSaveRepository
-     * @param array                  $words
-     * @param int                    $userId
+     * @param TrainingRepository $trainingRepository
+     * @param array              $words
+     * @param int                $userId
      *
      * @return int
      */
     public function addNewWords(
         TrainingRepository $trainingRepository,
-        TrainingSaveRepository $trainingSaveRepository,
-        array $words,
+        WordCollection $words,
         int $userId
-    ): int {
+    ): void {
         $i = 0;
-        $config = App::getInstance()->getConfig();
-        $logger = Log::getInstance()->init($config)->getLogger();
-        $saves = $trainingSaveRepository->getTrainingSave($userId);
         foreach (BotHelper::getTrainingTypes() as $type) {
-            /** @var Word $word */
-            foreach ($words as $word) {
-                try {
-                    $wordId = $word->getId();
-                    $collectionId = $word->getCollectionId();
-                    $wordW = $word->getWord();
-                    $translate = $word->getTranslate();
-                    $voice = $word->getVoice();
-                    $repeat = null;
-                    $status = null;
-                    if (isset($saves[$type][$word->getWord()])) {
-                        /** @var TrainingSave $save */
-                        $save = $saves[$type][$word->getWord()];
-                        $repeat = $save->getRepeat();
-                        $status = $save->getStatus();
-                    }
-                    $trainingRepository->createTraining(
-                        $wordId,
-                        $userId,
-                        $collectionId,
-                        $type,
-                        $wordW,
-                        $translate,
-                        $voice,
-                        $status,
-                        $repeat
-                    );
-                    if (isset($saves[$type][$word->getWord()])) {
-                        /** @var TrainingSave $save */
-                        $save = $saves[$type][$word->getWord()];
-                        $trainingSaveRepository->setUsed($save);
-                    }
-                    ++$i;
-                    if ($i % 1000 == 0) {
-                        $this->progressNotify($i / 2);
-                        $i = 0;
-                    }
-                } catch (\Throwable $t) {
-                    $logger->error('addNewWords: ' . $t->getMessage(), $t->getTrace());
-                }
-            }
+            $i += $trainingRepository->bulkCreateTraining(
+                $words,
+                $type,
+                $userId
+            );
         }
-
-        return $i;
+        $this->progressNotify($i / 2);
     }
 
     /**
@@ -272,5 +292,37 @@ class CallbackqueryCommand extends SystemCommand
             'disable_web_page_preview' => true,
             'disable_notification' => 1,
         ]);
+    }
+    /**
+     * @param int $silent
+     * @param int $priority
+     * @param int $user_id
+     * @param int $message_id
+     * @return array
+     */
+    private function editMainMenuSettings(int $silent, int $priority, int $user_id, int $message_id): array
+    {
+        $symbolSilent = $silent === 1 ? '✅' : '❌';
+        $symbolPriority = $priority === 1 ? '✅' : '❌';
+        $textSilent = "Тихий режим сообщений: {$symbolSilent}";
+        $texPriority = "Приоритет меньшей итерации: {$symbolPriority}";
+        $texVoices = "Выбрать голоса для тренировок";
+        $keyboard = new InlineKeyboard(...BotHelper::getSettingsKeyboard(
+            $textSilent,
+            $texPriority,
+            $texVoices,
+            $silent === 1 ? 0 : 1,
+            $priority === 1 ? 0 : 1,
+        ));
+        $data = [
+            'chat_id' => $user_id,
+            'text' => BotHelper::getSettingsText(),
+            'reply_markup' => $keyboard,
+            'message_id' => $message_id,
+            'parse_mode' => 'markdown',
+        
+        ];
+        
+        return $data;
     }
 }

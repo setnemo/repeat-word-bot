@@ -42,7 +42,7 @@ class Collection
      * @ORM\Column(name="public", type="integer", nullable=true)
      */
     private int $public = 0;
-    
+
     /**
      * @return int
      */
@@ -50,7 +50,7 @@ class Collection
     {
         return $this->id;
     }
-    
+
     /**
      * @param int $id
      */
@@ -58,7 +58,7 @@ class Collection
     {
         $this->id = $id;
     }
-    
+
     /**
      * @return int
      */
@@ -66,7 +66,7 @@ class Collection
     {
         return $this->public;
     }
-    
+
     /**
      * @param int $public
      */
@@ -74,7 +74,7 @@ class Collection
     {
         $this->public = $public;
     }
-    
+
     /**
      * @return string
      */
@@ -82,7 +82,7 @@ class Collection
     {
         return $this->name;
     }
-    
+
     /**
      * @param string $name
      */
@@ -90,7 +90,7 @@ class Collection
     {
         $this->name = $name;
     }
-    
+
     /**
      * @return Carbon
      */
@@ -98,7 +98,7 @@ class Collection
     {
         return $this->createdAt;
     }
-    
+
     /**
      * @param Carbon $createdAt
      */
@@ -106,6 +106,4 @@ class Collection
     {
         $this->createdAt = $createdAt;
     }
-    
-    
 }

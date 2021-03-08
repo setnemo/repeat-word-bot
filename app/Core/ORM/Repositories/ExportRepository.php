@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace RepeatBot\Core\ORM\Repositories;
 
@@ -21,7 +22,7 @@ class ExportRepository extends EntityRepository
     {
         return $this->findOneBy(['userId' => $userId], ['createdAt' => 'DESC']);
     }
-    
+
     /**
      * @param Export $entity
      *
@@ -35,7 +36,7 @@ class ExportRepository extends EntityRepository
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
     }
-    
+
     /**
      * @param int    $userId
      * @param int    $chatId
@@ -53,7 +54,7 @@ class ExportRepository extends EntityRepository
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
     }
-    
+
     /**
      * @return ExportCollection
      */
@@ -61,7 +62,7 @@ class ExportRepository extends EntityRepository
     {
         return new ExportCollection($this->findBy(['used' => 0]));
     }
-    
+
     /**
      * @param int $userId
      *

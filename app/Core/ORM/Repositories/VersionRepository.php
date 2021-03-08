@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace RepeatBot\Core\ORM\Repositories;
 
@@ -10,13 +11,13 @@ use RepeatBot\Core\ORM\Entities\Version;
 class VersionRepository extends EntityRepository
 {
     /**
-     * @return Version
+     * @return ?Version
      */
-    public function getNewLatestVersion(): Version
+    public function getNewLatestVersion(): ?Version
     {
         return $this->findOneBy(['used' => 0], ['createdAt' => 'DESC']);
     }
-    
+
     /**
      * @param Version $entity
      *

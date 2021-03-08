@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace Longman\TelegramBot\Commands\SystemCommand;
 
-use Carbon\Carbon;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
+use RepeatBot\Bot\Service\GoogleTextToSpeechService;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Database\Model\Training;
-use RepeatBot\Core\Database\Repository\TrainingRepository;
+use RepeatBot\Core\ORM\Entities\Training;
 use RepeatBot\Core\Exception\EmptyVocabularyException;
+use RepeatBot\Core\ORM\Entities\UserVoice;
+use RepeatBot\Core\ORM\Entities\Word;
 
 /**
  * Class VoiceEnglishCommand
@@ -57,26 +58,34 @@ class VoiceEnglishCommand extends SystemCommand
         $userId = $this->getMessage()->getFrom()->getId();
         $config = App::getInstance()->getConfig();
         $cache = Cache::getInstance()->init($config);
-        $database = Database::getInstance()->getConnection();
-        $trainingRepository = new TrainingRepository($database);
+        $trainingRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(Training::class);
+        $wordRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(Word::class);
+        $wordRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(UserVoice::class);
         $question = '';
         $type = $cache->checkTrainingsStatus($userId);
         if ($type) {
             $trainingId = $cache->getTrainings($userId, $type);
             if ($trainingId) {
                 $training = $trainingRepository->getTraining($trainingId);
+                $word = $training->getWord();
                 $text = mb_strtolower($this->getMessage()->getText(false));
                 $text = preg_replace('/(ё)/i', 'е', $text);
                 $correct = match($type) {
-                    'ToEnglish' => $training->getWord(),
-                    'FromEnglish' => $training->getTranslate(),
+                    'ToEnglish' => $word->getWord(),
+                    'FromEnglish' => $word->getTranslate(),
                 };
                 $oldQuestion = match($type) {
-                    'ToEnglish' => $training->getTranslate(),
-                    'FromEnglish' => $training->getWord(),
+                    'ToEnglish' => $word->getTranslate(),
+                    'FromEnglish' => $word->getWord(),
                 };
                 $result = match($type) {
-                    'ToEnglish' => $text === mb_strtolower($training->getWord()),
+                    'ToEnglish' => $text === mb_strtolower($word->getWord()),
                     'FromEnglish' => $this->getToEnglishResult($training, $text),
                 };
                 if ($cache->checkSkipTrainings($userId, $type)) {
@@ -100,6 +109,7 @@ class VoiceEnglishCommand extends SystemCommand
         try {
             $priority = $cache->getPriority($userId);
             $training = $trainingRepository->getRandomTraining($userId, $type, $priority === 1);
+            $word = $training->getWord();
         } catch (EmptyVocabularyException $e) {
             $cache->removeTrainings($this->getMessage()->getFrom()->getId(), $type);
             $cache->removeTrainingsStatus($this->getMessage()->getFrom()->getId(), $type);
@@ -110,9 +120,9 @@ class VoiceEnglishCommand extends SystemCommand
                 $text = strtr(
                     $template,
                     [
-                        ':word' => $training->getWord(),
+                        ':word' => $word->getWord(),
                         ':training' => $training->getType(),
-                        ':date' => Carbon::now('Europe/Kiev')::parse(strtotime($training->getRepeat()))->diffForHumans(),
+                        ':date' => $training->getNext()->diffForHumans()
                     ]
                 );
             } catch (EmptyVocabularyException $e) {
@@ -133,16 +143,23 @@ class VoiceEnglishCommand extends SystemCommand
             return Request::sendMessage($data);
         }
         $question .= match($type) {
-            'ToEnglish' =>  $training->getTranslate(),
-            'FromEnglish' => $training->getWord(),
+            'ToEnglish' =>  $word->getTranslate(),
+            'FromEnglish' => $word->getWord(),
         };
-
+        $word = $training->getWord();
         $cache->setTrainingStatusId($userId, $type, $training->getId());
         /** @psalm-suppress TooManyArguments */
         $keyboard = new Keyboard(...BotHelper::getInTrainingKeyboard());
         $keyboard->setResizeKeyboard(true);
-
-        $uri = './words/' . $training->getVoice();
+        $userVoiceRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(UserVoice::class);
+        $voice = $userVoiceRepository->getRandomVoice($userId);
+        if ($voice !== 'default') {
+            $uri = (new GoogleTextToSpeechService($voice))->getMp3($word->getWord());
+        } else {
+            $uri = '/app/words/' . $word->getVoice();
+        }
         $data = [
             'chat_id' => $chat_id,
             'voice' => Request::encodeFile($uri),
@@ -162,7 +179,7 @@ class VoiceEnglishCommand extends SystemCommand
     private function getToEnglishResult(Training $training, string $text): bool
     {
         $result = false;
-        foreach (explode('; ', mb_strtolower($training->getTranslate())) as $translate) {
+        foreach (explode('; ', mb_strtolower($training->getWord()->getTranslate())) as $translate) {
             if ($translate === trim($text)) {
                 $result = true;
             }

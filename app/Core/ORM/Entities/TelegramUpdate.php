@@ -104,6 +104,4 @@ class TelegramUpdate
      * @ORM\Column(name="poll_answer_poll_id", type="bigint", nullable=true, options={"unsigned"=true,"comment"="A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself."})
      */
     private $pollAnswerPollId;
-
-
 }

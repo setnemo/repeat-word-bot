@@ -2,6 +2,7 @@
 
 namespace RepeatBot\Core\ORM\Entities;
 
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -47,7 +48,7 @@ class Poll
      *
      * @ORM\Column(name="is_closed", type="boolean", nullable=true, options={"comment"="True, if the poll is closed"})
      */
-    private $isClosed = '0';
+    private $isClosed = false;
 
     /**
      * @var bool|null
@@ -68,7 +69,7 @@ class Poll
      *
      * @ORM\Column(name="allows_multiple_answers", type="boolean", nullable=true, options={"comment"="True, if the poll allows multiple answers"})
      */
-    private $allowsMultipleAnswers = '0';
+    private $allowsMultipleAnswers = false;
 
     /**
      * @var int|null
@@ -99,18 +100,16 @@ class Poll
     private $openPeriod;
 
     /**
-     * @var carbon|null
+     * @var Carbon
      *
      * @ORM\Column(name="close_date", type="datetime", nullable=true, options={"comment"="Point in time (Unix timestamp) when the poll will be automatically closed"})
      */
     private $closeDate;
 
     /**
-     * @var carbon|null
+     * @var Carbon
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"comment"="Entry date creation"})
      */
     private $createdAt;
-
-
 }

@@ -26,5 +26,6 @@ return [
         'host' => getenv('REDIS_HOST'),
         'port' => (string) getenv('REDIS_PORT'),
         'database' => getenv('REDIS_DB'),
+        'database2' => '2',
     ],
 ];

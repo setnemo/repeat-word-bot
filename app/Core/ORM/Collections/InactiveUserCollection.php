@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace RepeatBot\Core\ORM\Collections;
 
@@ -20,7 +21,7 @@ class InactiveUserCollection extends ArrayCollection
             $learnNotification->setSilent($inactiveUser->getSilent());
             $learnNotificationCollection->add($learnNotification);
         }
-        
+
         return $learnNotificationCollection;
     }
 }

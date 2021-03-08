@@ -56,7 +56,7 @@ class Word
      * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
      */
     private Carbon $createdAt;
-    
+
     /**
      * @return Carbon
      */
@@ -64,7 +64,7 @@ class Word
     {
         return $this->createdAt;
     }
-    
+
     /**
      * @param Carbon $createdAt
      */
@@ -72,7 +72,7 @@ class Word
     {
         $this->createdAt = $createdAt;
     }
-    
+
     /**
      * @return int
      */
@@ -80,7 +80,7 @@ class Word
     {
         return $this->collectionId;
     }
-    
+
     /**
      * @param int $collectionId
      */
@@ -112,7 +112,7 @@ class Word
     {
         return $this->translate;
     }
-    
+
     /**
      * @param string $translate
      */
@@ -120,7 +120,7 @@ class Word
     {
         $this->translate = $translate;
     }
-    
+
     /**
      * @return string
      */
@@ -128,7 +128,7 @@ class Word
     {
         return $this->word;
     }
-    
+
     /**
      * @param string $word
      */
@@ -136,7 +136,7 @@ class Word
     {
         $this->word = $word;
     }
-    
+
     /**
      * @return int
      */
@@ -144,7 +144,7 @@ class Word
     {
         return $this->id;
     }
-    
+
     /**
      * @param int $id
      */
@@ -152,6 +152,4 @@ class Word
     {
         $this->id = $id;
     }
-    
-    
 }

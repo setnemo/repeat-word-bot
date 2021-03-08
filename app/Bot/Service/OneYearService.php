@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service;
 
-use RepeatBot\Core\Database\Repository\TrainingRepository;
+use RepeatBot\Core\ORM\Repositories\TrainingRepository;
 
 /**
  * Class OneYearService

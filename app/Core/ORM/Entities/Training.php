@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Training
  *
- * @ORM\Table(name="training", uniqueConstraints={@ORM\UniqueConstraint(name="training_word_type_collection_id_uindex", columns={"word", "type", "collection_id", "user_id"})}, indexes={@ORM\Index(name="repeat", columns={"repeat"}), @ORM\Index(name="training_word_id_index", columns={"word_id"}), @ORM\Index(name="user_id", columns={"user_id"}), @ORM\Index(name="training_type_index", columns={"type"})})
+ * @ORM\Table(name="training", uniqueConstraints={@ORM\UniqueConstraint(name="training_word_type_collection_id_uindex", columns={"word_id", "type", "collection_id", "user_id"})}, indexes={@ORM\Index(name="training_type_index", columns={"type"}), @ORM\Index(name="training_word_id_index", columns={"word_id"}), @ORM\Index(name="user_id", columns={"user_id"}), @ORM\Index(name="training_next_index", columns={"next"})})
  * @ORM\Entity(repositoryClass="RepeatBot\Core\ORM\Repositories\TrainingRepository")
  */
 class Training
@@ -28,6 +28,12 @@ class Training
      * @ORM\Column(name="word_id", type="integer", nullable=false)
      */
     private int $wordId;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RepeatBot\Core\ORM\Entities\Word")
+     * @ORM\JoinColumn(name="word_id", referencedColumnName="id", nullable=true)
+     */
+    private Word $word;
 
     /**
      * @var int
@@ -53,27 +59,6 @@ class Training
     /**
      * @var string
      *
-     * @ORM\Column(name="word", type="string", length=255, nullable=false)
-     */
-    private string $word;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="translate", type="text", length=0, nullable=true)
-     */
-    private string $translate;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="voice", type="text", length=65535, nullable=false)
-     */
-    private string $voice;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="status", type="string", length=0, nullable=true, options={"default"="first"})
      */
     private string $status = 'first';
@@ -81,9 +66,9 @@ class Training
     /**
      * @var Carbon
      *
-     * @ORM\Column(name="repeat", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(name="next", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
      */
-    private Carbon $repeat;
+    private Carbon $next;
 
     /**
      * @var Carbon
@@ -98,7 +83,7 @@ class Training
      * @ORM\Column(name="updated_at", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
      */
     private Carbon $updatedAt;
-    
+
     /**
      * @return int
      */
@@ -106,7 +91,7 @@ class Training
     {
         return $this->id;
     }
-    
+
     /**
      * @param int $id
      */
@@ -114,7 +99,7 @@ class Training
     {
         $this->id = $id;
     }
-    
+
     /**
      * @return int
      */
@@ -122,7 +107,7 @@ class Training
     {
         return $this->wordId;
     }
-    
+
     /**
      * @param int $wordId
      */
@@ -130,7 +115,7 @@ class Training
     {
         $this->wordId = $wordId;
     }
-    
+
     /**
      * @return int
      */
@@ -138,7 +123,7 @@ class Training
     {
         return $this->userId;
     }
-    
+
     /**
      * @param int $userId
      */
@@ -146,7 +131,7 @@ class Training
     {
         $this->userId = $userId;
     }
-    
+
     /**
      * @return int
      */
@@ -154,7 +139,7 @@ class Training
     {
         return $this->collectionId;
     }
-    
+
     /**
      * @param int $collectionId
      */
@@ -162,7 +147,7 @@ class Training
     {
         $this->collectionId = $collectionId;
     }
-    
+
     /**
      * @return string
      */
@@ -170,7 +155,7 @@ class Training
     {
         return $this->type;
     }
-    
+
     /**
      * @param string $type
      */
@@ -178,55 +163,7 @@ class Training
     {
         $this->type = $type;
     }
-    
-    /**
-     * @return string
-     */
-    public function getWord(): string
-    {
-        return $this->word;
-    }
-    
-    /**
-     * @param string $word
-     */
-    public function setWord(string $word): void
-    {
-        $this->word = $word;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getTranslate(): string
-    {
-        return $this->translate;
-    }
-    
-    /**
-     * @param string $translate
-     */
-    public function setTranslate(string $translate): void
-    {
-        $this->translate = $translate;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getVoice(): string
-    {
-        return $this->voice;
-    }
-    
-    /**
-     * @param string $voice
-     */
-    public function setVoice(string $voice): void
-    {
-        $this->voice = $voice;
-    }
-    
+
     /**
      * @return string
      */
@@ -234,7 +171,7 @@ class Training
     {
         return $this->status;
     }
-    
+
     /**
      * @param string $status
      */
@@ -242,23 +179,23 @@ class Training
     {
         $this->status = $status;
     }
-    
+
     /**
      * @return Carbon
      */
-    public function getRepeat(): Carbon
+    public function getNext(): Carbon
     {
-        return $this->repeat;
+        return $this->next;
     }
-    
+
     /**
-     * @param Carbon $repeat
+     * @param Carbon $next
      */
-    public function setRepeat(Carbon $repeat): void
+    public function setNext(Carbon $next): void
     {
-        $this->repeat = $repeat;
+        $this->next = $next;
     }
-    
+
     /**
      * @return Carbon
      */
@@ -266,7 +203,7 @@ class Training
     {
         return $this->createdAt;
     }
-    
+
     /**
      * @param Carbon $createdAt
      */
@@ -274,7 +211,7 @@ class Training
     {
         $this->createdAt = $createdAt;
     }
-    
+
     /**
      * @return Carbon
      */
@@ -282,7 +219,7 @@ class Training
     {
         return $this->updatedAt;
     }
-    
+
     /**
      * @param Carbon $updatedAt
      */
@@ -290,6 +227,20 @@ class Training
     {
         $this->updatedAt = $updatedAt;
     }
-    
-    
+
+    /**
+     * @return Word
+     */
+    public function getWord(): Word
+    {
+        return $this->word;
+    }
+
+    /**
+     * @param Word $word
+     */
+    public function setWord(Word $word): void
+    {
+        $this->word = $word;
+    }
 }

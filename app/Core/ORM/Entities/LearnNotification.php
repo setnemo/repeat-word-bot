@@ -63,7 +63,7 @@ class LearnNotification
      * @ORM\Column(name="updated_at", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
      */
     private Carbon $updatedAt;
-    
+
     /**
      * @return int
      */
@@ -71,7 +71,7 @@ class LearnNotification
     {
         return $this->id;
     }
-    
+
     /**
      * @param int $id
      */
@@ -79,7 +79,7 @@ class LearnNotification
     {
         $this->id = $id;
     }
-    
+
     /**
      * @return int
      */
@@ -87,7 +87,7 @@ class LearnNotification
     {
         return $this->userId;
     }
-    
+
     /**
      * @param int $userId
      */
@@ -95,7 +95,7 @@ class LearnNotification
     {
         $this->userId = $userId;
     }
-    
+
     /**
      * @return string
      */
@@ -103,7 +103,7 @@ class LearnNotification
     {
         return $this->message;
     }
-    
+
     /**
      * @param string $message
      */
@@ -111,7 +111,7 @@ class LearnNotification
     {
         $this->message = $message;
     }
-    
+
     /**
      * @return int
      */
@@ -119,7 +119,7 @@ class LearnNotification
     {
         return $this->silent;
     }
-    
+
     /**
      * @param int $silent
      */
@@ -127,7 +127,7 @@ class LearnNotification
     {
         $this->silent = $silent;
     }
-    
+
     /**
      * @return int
      */
@@ -135,7 +135,7 @@ class LearnNotification
     {
         return $this->used;
     }
-    
+
     /**
      * @param int $used
      */
@@ -143,7 +143,7 @@ class LearnNotification
     {
         $this->used = $used;
     }
-    
+
     /**
      * @return Carbon
      */
@@ -151,7 +151,7 @@ class LearnNotification
     {
         return $this->createdAt;
     }
-    
+
     /**
      * @param Carbon $createdAt
      */
@@ -159,7 +159,7 @@ class LearnNotification
     {
         $this->createdAt = $createdAt;
     }
-    
+
     /**
      * @return Carbon
      */
@@ -167,7 +167,7 @@ class LearnNotification
     {
         return $this->updatedAt;
     }
-    
+
     /**
      * @param Carbon $updatedAt
      */
@@ -175,6 +175,4 @@ class LearnNotification
     {
         $this->updatedAt = $updatedAt;
     }
-    
-    
 }

@@ -4,10 +4,27 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot;
 
-use RepeatBot\Core\Database\Model\Collection;
+use RepeatBot\Core\ORM\Entities\Collection;
 
 class BotHelper
 {
+    protected const VOICES = [
+        ['text' => 'en-US-Wavenet-A'],
+        ['text' => 'en-US-Wavenet-B'],
+        ['text' => 'en-US-Wavenet-C'],
+        ['text' => 'en-US-Wavenet-D'],
+        ['text' => 'en-US-Wavenet-E'],
+        ['text' => 'en-US-Wavenet-F'],
+        ['text' => 'en-US-Wavenet-G'],
+        ['text' => 'en-US-Wavenet-H'],
+        ['text' => 'en-US-Wavenet-I'],
+        ['text' => 'en-US-Wavenet-J'],
+    ];
+    
+    public static function getVoices(): array
+    {
+        return array_column(self::VOICES, 'text');
+    }
     /**
      * @return array
      */
@@ -103,10 +120,11 @@ class BotHelper
             'ToEnglish',
         ];
     }
-
+    
     /**
      * @param string $textSilent
      * @param string $textPriority
+     * @param string $textVoices
      * @param int    $silent
      * @param int    $priority
      *
@@ -115,6 +133,7 @@ class BotHelper
     public static function getSettingsKeyboard(
         string $textSilent,
         string $textPriority,
+        string $textVoices,
         int $silent,
         int $priority
     ): array {
@@ -124,7 +143,38 @@ class BotHelper
             ],
             [
                 ['text' => $textPriority, 'callback_data' => "settings_priority_{$priority}"],
-            ]];
+            ],
+            [
+                ['text' => $textVoices, 'callback_data' => "settings_voices_start"],
+            ]
+        ];
+    }
+    
+    public static function getSettingsVoicesKeyboard(array $switchers): array
+    {
+        $result = [];
+        
+        foreach (self::VOICES as $it => $value) {
+            $key =  self::VOICES[$it]['text'];
+            $switcher = $switchers[$key] == 1 ? '✅' : '❌';
+            $switcherNum = $switchers[$key] == 1 ? 0 : 1;
+            $result[] = [
+                [
+                    'text' => "{$key} {$switcher}",
+                    'callback_data' => "settings_voices_{$it}_{$switcherNum}"
+                ],
+                [
+                    'text' => 'Пример',
+                    'callback_data' => "settings_voices_example_{$it}"
+                ],
+            ];
+        }
+        
+        $result[] = [
+            ['text' => 'Назад', 'callback_data' => "settings_voices_back"],
+        ];
+        
+        return $result;
     }
 
     /**
@@ -214,7 +264,7 @@ class BotHelper
         return [
             [
                 'text' => $num > 1 ? '   ⏮   ' : '        ',
-                'callback_data' => $num > 2 ? 'rating_' . 1 : 'empty',
+                'callback_data' => $num > 1 ? 'rating_' . 1 : 'empty',
             ],
             [
                 'text' => $num > 1 ? '   ⏪   ' : '        ',
@@ -241,7 +291,7 @@ class BotHelper
         return [
             [
                 'text' => $num > 1 ? BotHelper::createEmojiNumber($num - 1) : ' ',
-                'callback_data' => $num > 2 ? 'rating_' . ($num - 1) : 'empty',
+                'callback_data' => $num > 1 ? 'rating_' . ($num - 1) : 'empty',
             ],
             [
                 'text' => BotHelper::createEmojiNumber($num),
@@ -249,7 +299,7 @@ class BotHelper
             ],
             [
                 'text' => $num < 36 ? BotHelper::createEmojiNumber($num + 1) : ' ',
-                'callback_data' => $num < 35 ? 'rating_' . ($num + 1) : 'empty',
+                'callback_data' => $num < 36 ? 'rating_' . ($num + 1) : 'empty',
             ],
         ];
     }
@@ -290,10 +340,14 @@ class BotHelper
         return "`Тихий режим сообщений`:\n" .
             "По умолчанию тихий режим включен для всех. Для переключения режима нажмите на кнопку" .
             " *Тихий режим сообщений*\n\n" .
-            "По умолчанию в тренировках выключен приоритет для слов с разных итераций, и они " .
+            "`Приоритет меньших итераций`:\nПо умолчанию в тренировках выключен приоритет для слов с разных итераций, и они " .
             "показываются в случайно порядке. Если вы хотите сначала проходить слова с меньших итераций, то " .
             "вы можете включить или выключить этот режим нажав на кнопку " .
-            " *Приоритет меньших итераций*\n\n";
+            " *Приоритет меньших итераций*\n\n" .
+            "`Голоса для тренировок`:\n" .
+            "По умолчанию всегда включен один стандартный женский голос для голосовых сообщений. Для получения бОльшего " .
+            "опыта в прослушивании разных вариантов произношения вы можете включить до 10 дополнительных голосов, один " .
+            "из которых будет выбираться случайно при каждом слове в тренировках";
     }
 
     public static function getTimeZones(): array

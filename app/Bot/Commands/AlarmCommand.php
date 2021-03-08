@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace Longman\TelegramBot\Commands\SystemCommand;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\App;
-use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Database\Model\LearnNotificationPersonal;
-use RepeatBot\Core\Database\Repository\LearnNotificationPersonalRepository;
 use RepeatBot\Core\Metric;
+use RepeatBot\Core\ORM\Entities\LearnNotificationPersonal;
+use RepeatBot\Core\ORM\Repositories\LearnNotificationPersonalRepository;
 
 /**
  * Class AlarmCommand
@@ -58,7 +56,10 @@ class AlarmCommand extends SystemCommand
         $chat_id = $this->getMessage()->getChat()->getId();
         $user_id = $this->getMessage()->getFrom()->getId();
         $database = Database::getInstance()->getConnection();
-        $learnNotificationPersonalRepository = new LearnNotificationPersonalRepository($database);
+        /** @var LearnNotificationPersonalRepository $learnNotificationPersonalRepository */
+        $learnNotificationPersonalRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(LearnNotificationPersonal::class);
         $textCommand = $this->getMessage()->getText(true);
         if ($textCommand === 'list') {
             $items = $learnNotificationPersonalRepository->getMyAlarms($user_id);
@@ -67,7 +68,7 @@ class AlarmCommand extends SystemCommand
             foreach ($items as $item) {
                 $text .= strtr("(:tz) :time\n", [
                     ':tz' => $item->getTimezone(),
-                    ':time' => $item->getAlarm(),
+                    ':time' => $item->getAlarm()->rawFormat('H:i:s'),
                 ]);
             }
             $data = [

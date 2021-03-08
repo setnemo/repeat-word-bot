@@ -2,6 +2,7 @@
 
 namespace RepeatBot\Core\ORM\Entities;
 
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -43,11 +44,9 @@ class RequestLimiter
     private $method;
 
     /**
-     * @var carbon|null
+     * @var Carbon
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"comment"="Entry date creation"})
      */
     private $createdAt;
-
-
 }

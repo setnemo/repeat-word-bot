@@ -2,6 +2,7 @@
 
 namespace RepeatBot\Core\ORM\Entities;
 
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -43,7 +44,7 @@ class EditedMessage
     private $userId;
 
     /**
-     * @var carbon|null
+     * @var Carbon
      *
      * @ORM\Column(name="edit_date", type="datetime", nullable=true, options={"comment"="Date the message was edited in timestamp format"})
      */
@@ -69,6 +70,4 @@ class EditedMessage
      * @ORM\Column(name="caption", type="text", length=65535, nullable=true, options={"comment"="For message with caption, the actual UTF-8 text of the caption"})
      */
     private $caption;
-
-
 }

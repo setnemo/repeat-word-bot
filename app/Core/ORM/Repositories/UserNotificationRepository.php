@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace RepeatBot\Core\ORM\Repositories;
 
@@ -21,7 +22,7 @@ class UserNotificationRepository extends EntityRepository
             $this->findBy([])
         );
     }
-    
+
     /**
      * @param int $userId
      *
@@ -36,7 +37,7 @@ class UserNotificationRepository extends EntityRepository
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
     }
-    
+
     /**
      * @param int $userId
      *
@@ -47,18 +48,17 @@ class UserNotificationRepository extends EntityRepository
     public function getOrCreateUserNotification(int $userId): UserNotification
     {
         $entity = $this->findOneBy(['userId' => $userId]);
-    
-        if (null === $entity)
-        {
-            $entity = new UserNotification;
+
+        if (null === $entity) {
+            $entity = new UserNotification();
             $entity->setUserId($userId);
             $this->getEntityManager()->persist($entity);
             $this->getEntityManager()->flush();
         }
-    
+
         return $entity;
     }
-    
+
     /**
      * @param int $userId
      * @param int $silent
@@ -75,7 +75,7 @@ class UserNotificationRepository extends EntityRepository
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
     }
-    
+
     /**
      * @param int $userId
      * @param int $silent
@@ -87,16 +87,16 @@ class UserNotificationRepository extends EntityRepository
      */
     public function createNotification(int $userId, int $silent, int $deleted = 0): UserNotification
     {
-        $entity = new UserNotification;
+        $entity = new UserNotification();
         $entity->setUserId($userId);
         $entity->setSilent($silent);
         $entity->setDeleted($deleted);
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
-        
+
         return $entity;
     }
-    
+
     /**
      * @param int $userId
      * @param int $silent

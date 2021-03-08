@@ -20,7 +20,11 @@ class Cache extends Singleton
     /**
      * @var Client
      */
-    private Client $redis;
+    private Client $redisFirst;
+    /**
+     * @var Client
+     */
+    private Client $redisSecond;
 
     /**
      * @param Config $config
@@ -29,10 +33,15 @@ class Cache extends Singleton
      */
     public function init(Config $config): self
     {
-        $this->redis = new Client([
+        $this->redisFirst = new Client([
             'host' => $config->getKey('redis.host'),
             'port' => intval($config->getKey('redis.port')),
             'database' => $config->getKey('redis.database'),
+        ]);
+        $this->redisSecond = new Client([
+            'host' => $config->getKey('redis.host'),
+            'port' => intval($config->getKey('redis.port')),
+            'database' => $config->getKey('redis.database2'),
         ]);
         return $this;
     }
@@ -42,7 +51,7 @@ class Cache extends Singleton
      */
     public function getRedis(): Client
     {
-        return $this->redis;
+        return $this->redisFirst;
     }
 
     /**

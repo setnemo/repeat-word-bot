@@ -29,6 +29,4 @@ class UserChat
      * @ORM\GeneratedValue(strategy="NONE")
      */
     private $chatId;
-
-
 }

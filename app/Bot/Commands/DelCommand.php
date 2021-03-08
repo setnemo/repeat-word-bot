@@ -13,8 +13,8 @@ use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Database\Repository\TrainingRepository;
 use RepeatBot\Core\Metric;
+use RepeatBot\Core\ORM\Entities\Training;
 
 /**
  * Class DelCommand
@@ -59,9 +59,9 @@ class DelCommand extends SystemCommand
         $chat_id = $this->getMessage()->getChat()->getId();
         $userId = $this->getMessage()->getFrom()->getId();
         $text = trim($this->getMessage()->getText(true)) ?? '';
-        $database = Database::getInstance()->getConnection();
-        $trainingRepository = new TrainingRepository($database);
-        $config = App::getInstance()->getConfig();
+        $trainingRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(Training::class);
         $cache = Cache::getInstance()->init($config);
         if ($text === 'my progress') {
             foreach (BotHelper::getTrainingTypes() as $type) {

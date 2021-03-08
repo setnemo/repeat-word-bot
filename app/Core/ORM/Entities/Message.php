@@ -2,6 +2,7 @@
 
 namespace RepeatBot\Core\ORM\Entities;
 
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -45,7 +46,7 @@ class Message
     private $userId;
 
     /**
-     * @var carbon|null
+     * @var Carbon
      *
      * @ORM\Column(name="date", type="datetime", nullable=true, options={"comment"="Date the message was sent in timestamp format"})
      */
@@ -87,7 +88,7 @@ class Message
     private $forwardSenderName;
 
     /**
-     * @var carbon|null
+     * @var Carbon
      *
      * @ORM\Column(name="forward_date", type="datetime", nullable=true, options={"comment"="date the original message was sent in timestamp format"})
      */
@@ -294,28 +295,28 @@ class Message
      *
      * @ORM\Column(name="delete_chat_photo", type="boolean", nullable=true, options={"comment"="Informs that the chat photo was deleted"})
      */
-    private $deleteChatPhoto = '0';
+    private $deleteChatPhoto = false;
 
     /**
      * @var bool|null
      *
      * @ORM\Column(name="group_chat_created", type="boolean", nullable=true, options={"comment"="Informs that the group has been created"})
      */
-    private $groupChatCreated = '0';
+    private $groupChatCreated = false;
 
     /**
      * @var bool|null
      *
      * @ORM\Column(name="supergroup_chat_created", type="boolean", nullable=true, options={"comment"="Informs that the supergroup has been created"})
      */
-    private $supergroupChatCreated = '0';
+    private $supergroupChatCreated = false;
 
     /**
      * @var bool|null
      *
      * @ORM\Column(name="channel_chat_created", type="boolean", nullable=true, options={"comment"="Informs that the channel chat has been created"})
      */
-    private $channelChatCreated = '0';
+    private $channelChatCreated = false;
 
     /**
      * @var int|null
@@ -379,6 +380,4 @@ class Message
      * @ORM\Column(name="reply_markup", type="text", length=65535, nullable=true, options={"comment"="Inline keyboard attached to the message"})
      */
     private $replyMarkup;
-
-
 }

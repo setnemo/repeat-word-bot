@@ -2,6 +2,7 @@
 
 namespace RepeatBot\Core\ORM\Entities;
 
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,7 +27,7 @@ class User
      *
      * @ORM\Column(name="is_bot", type="boolean", nullable=true, options={"comment"="True, if this user is a bot"})
      */
-    private $isBot = '0';
+    private $isBot = false;
 
     /**
      * @var string
@@ -57,18 +58,16 @@ class User
     private $languageCode;
 
     /**
-     * @var carbon|null
+     * @var Carbon
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"comment"="Entry date creation"})
      */
     private $createdAt;
 
     /**
-     * @var carbon|null
+     * @var Carbon
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=true, options={"comment"="Entry date update"})
      */
     private $updatedAt;
-
-
 }

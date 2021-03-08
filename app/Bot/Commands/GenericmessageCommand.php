@@ -10,8 +10,8 @@ use RepeatBot\Bot\Service\OneYearService;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Database\Repository\TrainingRepository;
 use RepeatBot\Core\Metric;
+use RepeatBot\Core\ORM\Entities\Training;
 
 class GenericmessageCommand extends SystemCommand
 {
@@ -65,8 +65,9 @@ class GenericmessageCommand extends SystemCommand
         }
         if ($this->isOneYear($text)) {
             $cache->saveOneYear($userId, $command);
-            $database = Database::getInstance()->getConnection();
-            $trainingRepository = new TrainingRepository($database);
+            $trainingRepository = Database::getInstance()
+                ->getEntityManager()
+                ->getRepository(Training::class);
             (new OneYearService($trainingRepository))->execute($cache->getTrainings($userId, $command));
         }
         if ($command === 'FromEnglish' || $command === 'ToEnglish') {

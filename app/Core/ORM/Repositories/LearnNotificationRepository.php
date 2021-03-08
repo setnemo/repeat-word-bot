@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace RepeatBot\Core\ORM\Repositories;
 
@@ -21,12 +22,12 @@ class LearnNotificationRepository extends EntityRepository
     {
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('ln')
-            ->from('learn_notification', 'ln')
+            ->from('RepeatBot\Core\ORM\Entities\LearnNotification', 'ln')
             ->where('ln.used = 0')
-            ->orderBy('ln.created_at', 'DESC');
+            ->orderBy('ln.createdAt', 'DESC');
         return $query->getQuery()->getResult();
     }
-    
+
     /**
      * @param int    $userId
      * @param string $message
@@ -38,16 +39,16 @@ class LearnNotificationRepository extends EntityRepository
      */
     public function createNotification(int $userId, string $message, int $silent): LearnNotification
     {
-        $entity = new LearnNotification;
+        $entity = new LearnNotification();
         $entity->setUserId($userId);
         $entity->setMessage($message);
         $entity->setSilent($silent);
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
-    
+
         return $entity;
     }
-    
+
     /**
      * @param LearnNotification $entity
      *
@@ -61,7 +62,7 @@ class LearnNotificationRepository extends EntityRepository
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
     }
-    
+
     /**
      * @param InactiveUserCollection $inactiveUsers
      *
@@ -69,28 +70,23 @@ class LearnNotificationRepository extends EntityRepository
      */
     public function filterNotifications(InactiveUserCollection $inactiveUsers): LearnNotificationCollection
     {
-        $dql = "SELECT ln FROM RepeatBot\Core\ORM\Entities\LearnNotification ln WHERE ln.createdAt > ?1 ORDER BY ln.createdAt DESC";
-        $query = $this->getEntityManager()->createQuery($dql)->setParameter(1, Carbon::now('Europe/Kiev')->subDays()->addMinutes());
-    
-        $result = $query->getResult();
-        
-//        $query = $this->getEntityManager()->createQueryBuilder()
-//            ->select('ln')
-//            ->from('RepeatBot\Core\ORM\Entities\LearnNotification', 'ln')
-//            ->where('ln.createdAt > :created')
-//            ->setParameter(
-//                'created',
-//
-//            )->orderBy('ln.createdAt', 'DESC');
-//
-        $learnNotificationCollection = new LearnNotificationCollection($result);
-        $inactiveUsers->filter(static function(InactiveUser $current) use ($learnNotificationCollection) {
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('ln')
+            ->from('RepeatBot\Core\ORM\Entities\LearnNotification', 'ln')
+            ->where('ln.createdAt > :created')
+            ->setParameter(
+                'created',
+                Carbon::now('Europe/Kiev')->subDays()->addMinutes()
+            )->orderBy('ln.createdAt', 'DESC');
+
+        $learnNotificationCollection = new LearnNotificationCollection($query->getQuery()->getResult());
+        $inactiveUsers->filter(static function (InactiveUser $current) use ($learnNotificationCollection) {
             return !$learnNotificationCollection->hasUser($current);
         });
-        
+
         return $inactiveUsers->convertToLearnNotification();
     }
-    
+
     /**
      * @param LearnNotificationCollection $newNotifications
      *
