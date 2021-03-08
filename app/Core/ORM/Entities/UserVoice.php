@@ -35,14 +35,14 @@ class UserVoice
      * @ORM\Column(name="voice", type="string", length=255, nullable=false)
      */
     private string $voice;
-    
+
     /**
      * @var int
      *
      * @ORM\Column(name="used", type="integer", nullable=false, options={"default"="0"})
      */
     private int $used = 0;
-    
+
     /**
      * @var Carbon
      *
@@ -120,7 +120,7 @@ class UserVoice
     {
         $this->id = $id;
     }
-    
+
     /**
      * @return Carbon
      */
@@ -128,7 +128,7 @@ class UserVoice
     {
         return $this->updatedAt;
     }
-    
+
     /**
      * @param Carbon $updatedAt
      */
@@ -136,7 +136,7 @@ class UserVoice
     {
         $this->updatedAt = $updatedAt;
     }
-    
+
     /**
      * @return int
      */
@@ -144,7 +144,7 @@ class UserVoice
     {
         return $this->used;
     }
-    
+
     /**
      * @param int $used
      */

@@ -88,7 +88,7 @@ class Word
     {
         $this->collectionId = $collectionId;
     }
-    
+
     /**
      * @return string
      */
@@ -96,7 +96,7 @@ class Word
     {
         return $this->voice;
     }
-    
+
     /**
      * @param string $voice
      */
@@ -104,7 +104,7 @@ class Word
     {
         $this->voice = $voice;
     }
-    
+
     /**
      * @return string
      */

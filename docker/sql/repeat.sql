@@ -729,12 +729,13 @@ DROP TABLE IF EXISTS `user_notification`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_notification` (
-  `user_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `silent` int(1) DEFAULT '1',
-  `deleted` int(11) DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `table_name_user_id_uindex` (`user_id`)
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `user_id` bigint(20) NOT NULL,
+    `silent` int(1) DEFAULT '1',
+    `deleted` int(11) DEFAULT NULL,
+    `deleted_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `table_name_user_id_uindex` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

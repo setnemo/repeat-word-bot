@@ -37,7 +37,7 @@ class UserVoiceRepository extends EntityRepository
         }
         return $resultVoices;
     }
-    
+
     /**
      * @param int    $userId
      * @param string $voice
@@ -64,7 +64,7 @@ class UserVoiceRepository extends EntityRepository
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
     }
-    
+
     /**
      * @param int $userId
      *
@@ -78,7 +78,7 @@ class UserVoiceRepository extends EntityRepository
             return 'default';
         }
         $random = mt_rand(0, count($results));
-        
+
         return $results[$random]->getVoice();
     }
 }

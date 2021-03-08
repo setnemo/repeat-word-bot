@@ -412,6 +412,6 @@ class TrainingRepository extends EntityRepository
                 'status' => 'second',
                 'repeat' => 24 * 60,
             ],
-        };
+            };
     }
 }

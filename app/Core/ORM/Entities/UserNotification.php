@@ -16,11 +16,18 @@ class UserNotification
     /**
      * @var int
      *
-     * @ORM\Column(name="user_id", type="bigint", nullable=false)
+     * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private int $userId;
+    private $id;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="user_id", type="bigint", nullable=false)
+     */
+    private $userId;
 
     /**
      * @var int
@@ -42,6 +49,14 @@ class UserNotification
      * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
      */
     private Carbon $deletedAt;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
 
     /**
      * @return int

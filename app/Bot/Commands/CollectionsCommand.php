@@ -5,15 +5,10 @@ declare(strict_types=1);
 namespace Longman\TelegramBot\Commands\SystemCommand;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Request;
-use RepeatBot\Bot\BotHelper;
-use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\ORM\Entities\Collection;
-use RepeatBot\Core\ORM\Entities\Training;
-use RepeatBot\Core\ORM\Entities\Word;
+use Prometheus\Exception\MetricsRegistrationException;
+use RepeatBot\Bot\Service\CommandService\CommandDirector;
+use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 /**
  * Class CollectionsCommand
@@ -46,46 +41,23 @@ class CollectionsCommand extends SystemCommand
      * Command execute method
      *
      * @return ServerResponse
-     * @throws TelegramException
+     * @throws MetricsRegistrationException
      */
     public function execute(): ServerResponse
     {
-        $chat_id = $this->getMessage()->getChat()->getId();
-        $data = [
-            'chat_id' => $chat_id,
-            'text' => BotHelper::getCollectionText(),
-            'parse_mode' => 'markdown',
-            'disable_web_page_preview' => true,
-            'disable_notification' => 1,
-        ];
-        Request::sendMessage($data);
+        $director = new CommandDirector(
+            new CommandOptions(
+                'collection',
+                [],
+                $this->getMessage()->getChat()->getId(),
+            )
+        );
+        $service = $director->makeService();
 
-        $answer = "Коллекция `:name` содержит такие слова, как:\n\n`:words`";
-        $id = 1;
-        $collectionRepository = Database::getInstance()
-            ->getEntityManager()
-            ->getRepository(Collection::class);
-        $wordRepository = Database::getInstance()
-            ->getEntityManager()
-            ->getRepository(Word::class);
-        $trainingRepository = Database::getInstance()
-            ->getEntityManager()
-            ->getRepository(Training::class);
-        $rating = $collectionRepository->getCollection(intval($id));
-        $haveRatingWords = $trainingRepository->userHaveCollection(intval($id), $chat_id);
-        /** @psalm-suppress TooManyArguments */
-        $keyboard = new InlineKeyboard(...BotHelper::getCollectionPagination($id, $haveRatingWords));
-        $data = [
-            'chat_id' => $chat_id,
-            'text' => strtr($answer, [
-                ':name' => $rating->getName(),
-                ':words' => implode(', ', $wordRepository->getExampleWords($rating->getId())),
-            ]),
-            'parse_mode' => 'markdown',
-            'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
-        ];
-        return Request::sendMessage($data);
+        if (!$service->hasResponse()) {
+            $service->execute();
+        }
+
+        return $service->postStackMessages()->getResponseMessage();
     }
 }

@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service;
 
@@ -28,7 +29,7 @@ class GoogleTextToSpeechService
      */
     private SynthesisInput $synthesisInputText;
     private string $prefix;
-    
+
     public function __construct(string $voiceName, string $language = 'en-US')
     {
         $this->prefix = "/app/words/$language/$voiceName/";
@@ -47,9 +48,8 @@ class GoogleTextToSpeechService
             ->setSpeakingRate(0.89)
         ;
         $this->synthesisInputText = (new SynthesisInput());
-
     }
-    
+
     public function getMp3(string $text): string
     {
         $path = $this->prefix . $text . '.mp3';

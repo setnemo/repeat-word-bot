@@ -61,12 +61,6 @@ class VoiceEnglishCommand extends SystemCommand
         $trainingRepository = Database::getInstance()
             ->getEntityManager()
             ->getRepository(Training::class);
-        $wordRepository = Database::getInstance()
-            ->getEntityManager()
-            ->getRepository(Word::class);
-        $wordRepository = Database::getInstance()
-            ->getEntityManager()
-            ->getRepository(UserVoice::class);
         $question = '';
         $type = $cache->checkTrainingsStatus($userId);
         if ($type) {
@@ -111,8 +105,8 @@ class VoiceEnglishCommand extends SystemCommand
             $training = $trainingRepository->getRandomTraining($userId, $type, $priority === 1);
             $word = $training->getWord();
         } catch (EmptyVocabularyException $e) {
-            $cache->removeTrainings($this->getMessage()->getFrom()->getId(), $type);
-            $cache->removeTrainingsStatus($this->getMessage()->getFrom()->getId(), $type);
+            $cache->removeTrainings($userId, $type);
+            $cache->removeTrainingsStatus($userId, $type);
             try {
                 $training = $trainingRepository->getNearestAvailableTrainingTime($userId, $type);
                 $template = "В тренировке `:training` ближайшее слово для изучения - `:word`, ";

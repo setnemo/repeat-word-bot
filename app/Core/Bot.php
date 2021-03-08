@@ -194,8 +194,6 @@ final class Bot extends Singleton
 
         $userNotifications = $userNotificationRepository->getUserNotifications();
         $inactiveUser = $trainingRepository->getInactiveUsers($userNotifications);
-
-//        var_export($inactiveUser);die;
         $newNotifications = $learnNotificationRepository->filterNotifications($inactiveUser);
         $learnNotificationRepository->saveNotifications($newNotifications);
         $notifications = $learnNotificationRepository->getUnsentNotifications();
