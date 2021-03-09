@@ -1,4 +1,4 @@
-FROM php:8.0.2-fpm-alpine3.11
+FROM php:8.0.3-fpm-alpine3.11
 
 COPY . /app
 
