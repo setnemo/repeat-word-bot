@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RepeatBot\Core;
 
-use FaaPz\PDO\Database as DB;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\Message;
@@ -45,10 +44,6 @@ final class Bot extends Singleton
      */
     private LoggerInterface $logger;
 
-    /**
-     * @var DB
-     */
-    private DB $db;
 
     /**
      * @param Config          $config
@@ -59,7 +54,6 @@ final class Bot extends Singleton
     public function init(Config $config, LoggerInterface $logger): self
     {
         $this->logger = $logger;
-        $this->db = Database::getInstance()->init($config)->getConnection();
         try {
             $bot_api_key = $config->getKey('telegram.token');
             $bot_username = $config->getKey('telegram.bot_name');
@@ -85,10 +79,12 @@ final class Bot extends Singleton
     }
 
 
-    public function botBefore()
+    public function botNotify()
     {
         $this->checkVersion();
         $this->handleNotifications();
+        $this->handleNotificationsPersonal();
+    
     }
 
     /**
@@ -111,11 +107,12 @@ final class Bot extends Singleton
      */
     public function run(): void
     {
+        $this->register('repeat-webhook');
         try {
-            $this->telegram->handleGetUpdates();
-            $this->handleNotificationsPersonal();
+            $this->telegram->handle();
+            Metric::getInstance()->increaseMetric('webhook');
         } catch (TelegramException $e) {
-            $this->getLogger()->error($e->getMessage(), $e->getTrace());
+            Log::getInstance()->getLogger()->error($e->getMessage(), $e->getTrace());
         }
     }
 
@@ -261,5 +258,28 @@ final class Bot extends Singleton
             }
             return $flag;
         });
+    }
+    
+    
+    
+    /**
+     * @param string $prefix
+     */
+    private function register(string $prefix): void
+    {
+        /** @var Client $cache */
+        $cache = Cache::getInstance()->getConnection();
+        $key = $prefix . '_registered';
+        if (!$cache->exists($key)) {
+            try {
+                $hook_url = "https://repeat.webhook.pp.ua";
+                $result = $this->telegram->setWebhook($hook_url);
+                if ($result->isOk()) {
+                    $cache->set($key, $result->getDescription());
+                }
+            } catch (TelegramException $e) {
+                Log::getInstance()->getLogger()->error('Registered failed', ['error' => $e->getMessage()]);
+            }
+        }
     }
 }

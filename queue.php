@@ -23,9 +23,10 @@ $exportRepository = new ExportRepository($database);
 $service = new ExportService($trainingRepository, $exportRepository);
 while (true) {
     try {
+        $bot->botNotify();
         $bot->queue($exportRepository, $service);
         $metric->increaseMetric('queue');
-        sleep(1);
+        usleep(500000);
     } catch (\Throwable $e) {
         $logger->error($e->getMessage(), $e->getTrace());
     }
