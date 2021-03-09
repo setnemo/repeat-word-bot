@@ -1,6 +1,39 @@
 version: '3'
 
 services:
+
+  repeat-nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    container_name: 'repeat-bot-nginx'
+    restart: always
+    ports:
+      - "8980:80"
+    volumes:
+      - .:/app/
+    networks:
+      - tier
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  repeat:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: 'repeat-bot-php'
+    restart: always
+    volumes:
+      - .:/app/
+    networks:
+      - tier
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   worker:
     build:
       context: .

@@ -9,10 +9,12 @@ use FaaPz\PDO\Database as DB;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
+use Predis\Client;
 use Psr\Log\LoggerInterface;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\ExportQueueService;
@@ -48,6 +50,7 @@ final class Bot extends Singleton
     public function init(Config $config, LoggerInterface $logger): self
     {
         $this->logger = $logger;
+        $this->db = Database::getInstance()->init($config)->getConnection();
         try {
             $bot_api_key = $config->getKey('telegram.token');
             $bot_username = $config->getKey('telegram.bot_name');
@@ -63,6 +66,8 @@ final class Bot extends Singleton
                     'database' => $config->getKey('database.name'),
                 ]
             );
+            $this->telegram->enableLimiter();
+//            $this->getSetUpdateFilter();
         } catch (TelegramException $e) {
             $logger->error($e->getMessage(), $e->getTrace());
         }
@@ -71,10 +76,12 @@ final class Bot extends Singleton
     }
 
 
-    public function botBefore()
+    public function botNotify()
     {
         $this->checkVersion();
         $this->handleNotifications();
+        $this->handleNotificationsPersonal();
+    
     }
 
     /**
@@ -99,13 +106,14 @@ final class Bot extends Singleton
     /**
      *
      */
-    public function run(): void
+    public function runHook(): void
     {
+        $this->register('repeat-webhook');
         try {
-            $this->telegram->handleGetUpdates();
-            $this->handleNotificationsPersonal();
+            $this->telegram->handle();
+            Metric::getInstance()->increaseMetric('webhook');
         } catch (TelegramException $e) {
-            $this->getLogger()->error($e->getMessage(), $e->getTrace());
+            Log::getInstance()->getLogger()->error($e->getMessage(), $e->getTrace());
         }
     }
 
@@ -244,6 +252,53 @@ final class Bot extends Singleton
                     'disable_notification' => $silent
                 ]);
                 $learnNotificationRepository->updateNotification($notification);
+            }
+        }
+    }
+    
+    private function getSetUpdateFilter(): void
+    {
+        $this->telegram->setUpdateFilter(static function (Update $array) {
+            $bannedIds = ['1239727062'];
+            $flag = true;
+            if ($array->getMessage()) {
+                if (in_array($array->getMessage()->getFrom()->getId(), $bannedIds)) {
+                    $flag = false;
+                }
+            }
+            if ($flag === false) {
+                $data = [
+                    'chat_id' => 1239727062,
+                    'text' => 'Permanently banned',
+                    'parse_mode' => 'markdown',
+                    'disable_web_page_preview' => true,
+                    'disable_notification' => 1,
+                ];
+                Request::sendMessage($data);
+            }
+            return $flag;
+        });
+    }
+    
+    
+    
+    /**
+     * @param string $prefix
+     */
+    private function register(string $prefix): void
+    {
+        /** @var Client $cache */
+        $cache = Cache::getInstance()->getRedis();
+        $key = $prefix . '_registered';
+        if (!$cache->exists($key)) {
+            try {
+                $hook_url = "https://repeat.webhook.pp.ua";
+                $result = $this->telegram->setWebhook($hook_url);
+                if ($result->isOk()) {
+                    $cache->set($key, $result->getDescription());
+                }
+            } catch (TelegramException $e) {
+                Log::getInstance()->getLogger()->error('Registered failed', ['error' => $e->getMessage()]);
             }
         }
     }
