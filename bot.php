@@ -13,9 +13,9 @@ $logger = Log::getInstance()->init($config)->getLogger();
 $bot = Bot::getInstance();
 $bot->init($config, $logger);
 $metric = Metric::getInstance()->init($config);
-$bot->botNotify();
 while (true) {
-    $bot->runHook();
-    $metric->increaseMetric('worker');
+    $bot->botNotify();
+    usleep(500000);
+    $metric->increaseMetric('notify');
 }
 
