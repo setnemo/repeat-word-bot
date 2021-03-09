@@ -15,7 +15,7 @@ $bot->init($config, $logger);
 $metric = Metric::getInstance()->init($config);
 $bot->botNotify();
 while (true) {
-    $bot->run();
+    $bot->runHook();
     $metric->increaseMetric('worker');
 }
 

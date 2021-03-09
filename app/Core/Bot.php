@@ -105,7 +105,7 @@ final class Bot extends Singleton
     /**
      *
      */
-    public function run(): void
+    public function runHook(): void
     {
         $this->register('repeat-webhook');
         try {

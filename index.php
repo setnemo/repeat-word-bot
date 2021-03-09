@@ -13,6 +13,4 @@ $logger = Log::getInstance()->init($config)->getLogger();
 $bot = Bot::getInstance();
 $bot->init($config, $logger);
 $metric = Metric::getInstance()->init($config);
-while (true) {
-    $bot->run();
-}
+$bot->runHook();
