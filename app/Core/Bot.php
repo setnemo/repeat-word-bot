@@ -250,24 +250,6 @@ final class Bot extends Singleton
                     $flag = false;
                 }
             }
-            if ($array->getInlineQuery()) {
-                if (in_array($array->getInlineQuery()->getFrom()->getId(), $bannedIds)) {
-                    $text = 'getInlineQuery';
-                    $flag = false;
-                }
-            }
-            if ($array->getChosenInlineResult()) {
-                if (in_array($array->getChosenInlineResult()->getFrom()->getId(), $bannedIds)) {
-                    $text = 'getChosenInlineResult';
-                    $flag = false;
-                }
-            }
-            if ($array->getCallbackQuery()) {
-                if (in_array($array->getCallbackQuery()->getFrom()->getId(), $bannedIds)) {
-                    $text = 'getCallbackQuery';
-                    $flag = false;
-                }
-            }
             if ($flag === false) {
                 $data = [
                     'chat_id' => 281861745,
