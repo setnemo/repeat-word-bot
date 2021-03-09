@@ -75,7 +75,7 @@ final class Bot extends Singleton
                     'database' => $config->getKey('database.name'),
                 ]
             );
-            $this->getSetUpdateFilter();
+//            $this->getSetUpdateFilter();
         } catch (TelegramException $e) {
             $logger->error($e->getMessage(), $e->getTrace());
         }
@@ -242,11 +242,9 @@ final class Bot extends Singleton
     {
         $this->telegram->setUpdateFilter(static function (Update $array) {
             $bannedIds = ['1239727062'];
-            $text = '';
             $flag = true;
             if ($array->getMessage()) {
                 if (in_array($array->getMessage()->getFrom()->getId(), $bannedIds)) {
-                    $text = 'getMessage';
                     $flag = false;
                 }
             }
