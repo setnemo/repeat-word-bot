@@ -5,6 +5,7 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\OneYearService;
 use RepeatBot\Core\App;
@@ -35,6 +36,17 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
+        if($this->getMessage() === null) {
+            $data = [
+                'chat_id' => 281861745,
+                'text' => print_r($this, true),
+                'parse_mode' => 'markdown',
+                'disable_web_page_preview' => true,
+                'disable_notification' => 1,
+            ];
+            return Request::sendMessage($data);
+        };
+        
         $text = $this->getMessage()->getText(false) ?? '';
         $config = App::getInstance()->getConfig();
         $metric = Metric::getInstance()->init($config);

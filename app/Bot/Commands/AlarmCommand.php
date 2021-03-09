@@ -52,6 +52,17 @@ class AlarmCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
+        if($this->getMessage() === null) {
+            $data = [
+                'chat_id' => 281861745,
+                'text' => print_r($this, true),
+                'parse_mode' => 'markdown',
+                'disable_web_page_preview' => true,
+                'disable_notification' => 1,
+            ];
+            return Request::sendMessage($data);
+        };
+    
         $config = App::getInstance()->getConfig();
         $metric = Metric::getInstance()->init($config);
         $metric->increaseMetric('usage');
