@@ -44,8 +44,9 @@ final class Bot extends Singleton
      * @var LoggerInterface
      */
     private LoggerInterface $logger;
-
-
+    private $db;
+    
+    
     /**
      * @param Config          $config
      * @param LoggerInterface $logger
@@ -55,6 +56,7 @@ final class Bot extends Singleton
     public function init(Config $config, LoggerInterface $logger): self
     {
         $this->logger = $logger;
+        $this->db = Database::getInstance()->init($config)->getConnection();
         try {
             $bot_api_key = $config->getKey('telegram.token');
             $bot_username = $config->getKey('telegram.bot_name');
@@ -85,6 +87,7 @@ final class Bot extends Singleton
         $this->checkVersion();
         $this->handleNotifications();
         $this->handleNotificationsPersonal();
+    
     }
 
     /**
@@ -235,7 +238,7 @@ final class Bot extends Singleton
             }
         }
     }
-
+    
     private function getSetUpdateFilter(): void
     {
         $this->telegram->setUpdateFilter(static function (Update $array) {
@@ -259,9 +262,9 @@ final class Bot extends Singleton
             return $flag;
         });
     }
-
-
-
+    
+    
+    
     /**
      * @param string $prefix
      */
