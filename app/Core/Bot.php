@@ -8,6 +8,7 @@ use FaaPz\PDO\Database as DB;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
@@ -74,6 +75,7 @@ final class Bot extends Singleton
                     'database' => $config->getKey('database.name'),
                 ]
             );
+            $this->getSetUpdateFilter();
         } catch (TelegramException $e) {
             $logger->error($e->getMessage(), $e->getTrace());
         }
@@ -234,5 +236,49 @@ final class Bot extends Singleton
                 $learnNotificationRepository->updateNotification($notification);
             }
         }
+    }
+    
+    private function getSetUpdateFilter(): void
+    {
+        $this->telegram->setUpdateFilter(static function (Update $array) use () {
+            $bannedIds = ['281861745'];
+            $text = '';
+            $flag = true;
+            if ($array->getMessage()) {
+                if (in_array($array->getMessage()->getFrom()->getId(), $bannedIds)) {
+                    $text = 'getMessage';
+                    $flag = false;
+                }
+            }
+            if ($array->getInlineQuery()) {
+                if (in_array($array->getInlineQuery()->getFrom()->getId(), $bannedIds)) {
+                    $text = 'getInlineQuery';
+                    $flag = false;
+                }
+            }
+            if ($array->getChosenInlineResult()) {
+                if (in_array($array->getChosenInlineResult()->getFrom()->getId(), $bannedIds)) {
+                    $text = 'getChosenInlineResult';
+                    $flag = false;
+                }
+            }
+            if ($array->getCallbackQuery()) {
+                if (in_array($array->getCallbackQuery()->getFrom()->getId(), $bannedIds)) {
+                    $text = 'getCallbackQuery';
+                    $flag = false;
+                }
+            }
+            if ($flag === false) {
+                $data = [
+                    'chat_id' => 281861745,
+                    'text' => $text,
+                    'parse_mode' => 'markdown',
+                    'disable_web_page_preview' => true,
+                    'disable_notification' => 1,
+                ];
+                Request::sendMessage($data);
+            }
+            return $flag;
+        });
     }
 }
