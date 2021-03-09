@@ -240,7 +240,7 @@ final class Bot extends Singleton
     
     private function getSetUpdateFilter(): void
     {
-        $this->telegram->setUpdateFilter(static function (Update $array) use () {
+        $this->telegram->setUpdateFilter(static function (Update $array) {
             $bannedIds = ['281861745'];
             $text = '';
             $flag = true;
