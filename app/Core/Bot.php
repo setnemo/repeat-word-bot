@@ -12,6 +12,7 @@ use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
+use Predis\Client;
 use Psr\Log\LoggerInterface;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\ExportService;
@@ -268,7 +269,7 @@ final class Bot extends Singleton
     private function register(string $prefix): void
     {
         /** @var Client $cache */
-        $cache = Cache::getInstance()->getConnection();
+        $cache = Cache::getInstance()->getRedis();
         $key = $prefix . '_registered';
         if (!$cache->exists($key)) {
             try {
