@@ -252,8 +252,8 @@ final class Bot extends Singleton
             }
             if ($flag === false) {
                 $data = [
-                    'chat_id' => 281861745,
-                    'text' => $text,
+                    'chat_id' => 1239727062,
+                    'text' => 'Permanently banned',
                     'parse_mode' => 'markdown',
                     'disable_web_page_preview' => true,
                     'disable_notification' => 1,
