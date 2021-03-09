@@ -16,3 +16,6 @@ $bot->init($config, $logger);
 $metric = Metric::getInstance()->init($config);
 Cache::getInstance()->init($config);
 $bot->runHook();
+echo json_encode(
+    ["repeat-bot" => "ok"]
+);

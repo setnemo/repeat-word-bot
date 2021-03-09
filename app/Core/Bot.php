@@ -85,7 +85,6 @@ final class Bot extends Singleton
         $this->checkVersion();
         $this->handleNotifications();
         $this->handleNotificationsPersonal();
-    
     }
 
     /**
@@ -236,7 +235,7 @@ final class Bot extends Singleton
             }
         }
     }
-    
+
     private function getSetUpdateFilter(): void
     {
         $this->telegram->setUpdateFilter(static function (Update $array) {
@@ -260,9 +259,9 @@ final class Bot extends Singleton
             return $flag;
         });
     }
-    
-    
-    
+
+
+
     /**
      * @param string $prefix
      */
