@@ -108,7 +108,7 @@ final class Bot extends Singleton
      */
     public function runHook(): void
     {
-        $this->register('repeat-webhook');
+        $this->register('repeat-webhook1');
         try {
             $this->telegram->handle();
             Metric::getInstance()->increaseMetric('webhook');
@@ -289,10 +289,10 @@ final class Bot extends Singleton
     {
         /** @var Client $cache */
         $cache = Cache::getInstance()->getRedis();
-        $key = $prefix . '_registered';
+        $key = $prefix . '_registered1';
         if (!$cache->exists($key)) {
             try {
-                $hook_url = "https://repeat.webhook.pp.ua";
+                $hook_url = "https://60e8a0217010.ngrok.io/";
                 $result = $this->telegram->setWebhook($hook_url);
                 if ($result->isOk()) {
                     $cache->set($key, $result->getDescription());
