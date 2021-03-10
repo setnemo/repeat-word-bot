@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RepeatBot\Core\ORM\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -9,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="telegram_update", indexes={@ORM\Index(name="poll_id", columns={"poll_id"}), @ORM\Index(name="chat_message_id", columns={"chat_id", "message_id"}), @ORM\Index(name="chat_id", columns={"chat_id", "channel_post_id"}), @ORM\Index(name="edited_message_id", columns={"edited_message_id"}), @ORM\Index(name="edited_channel_post_id", columns={"edited_channel_post_id"}), @ORM\Index(name="chosen_inline_result_id", columns={"chosen_inline_result_id"}), @ORM\Index(name="shipping_query_id", columns={"shipping_query_id"}), @ORM\Index(name="pre_checkout_query_id", columns={"pre_checkout_query_id"}), @ORM\Index(name="message_id", columns={"message_id"}), @ORM\Index(name="poll_answer_poll_id", columns={"poll_answer_poll_id"}), @ORM\Index(name="channel_post_id", columns={"channel_post_id"}), @ORM\Index(name="inline_query_id", columns={"inline_query_id"}), @ORM\Index(name="callback_query_id", columns={"callback_query_id"})})
  * @ORM\Entity
+ *
+ * @package RepeatBot\Core\ORM\Entities
  */
 class TelegramUpdate
 {

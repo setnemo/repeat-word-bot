@@ -6,6 +6,10 @@ namespace RepeatBot\Core\Exception;
 
 use Exception;
 
+/**
+ * Class EmptyVocabularyException
+ * @package RepeatBot\Core\Exception
+ */
 class EmptyVocabularyException extends Exception
 {
 

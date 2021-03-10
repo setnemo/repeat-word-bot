@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService\Commands;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Exception;
 use Longman\TelegramBot\Entities\InlineKeyboard;
+use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
@@ -15,22 +19,32 @@ use RepeatBot\Core\ORM\Entities\UserVoice;
 use RepeatBot\Core\ORM\Repositories\UserNotificationRepository;
 use RepeatBot\Core\ORM\Repositories\UserVoiceRepository;
 
+/**
+ * Class SettingsVoicesService
+ * @package RepeatBot\Bot\Service\CommandService\Commands
+ */
 class SettingsVoicesService extends BaseCommandService
 {
     private UserVoiceRepository $userVoiceRepository;
     private UserNotificationRepository $userNotificationRepository;
-
+    
+    /**
+     * {@inheritDoc}
+     */
     public function __construct(CommandOptions $options)
     {
-        $this->userVoiceRepository = Database::getInstance()
-            ->getEntityManager()
-            ->getRepository(UserVoice::class);
-        $this->userNotificationRepository = Database::getInstance()
-            ->getEntityManager()
-            ->getRepository(UserNotification::class);
+        $em =  Database::getInstance()->getEntityManager();
+        /** @psalm-suppress PropertyTypeCoercion */
+        $this->userVoiceRepository = $em->getRepository(UserVoice::class);
+        /** @psalm-suppress PropertyTypeCoercion */
+        $this->userNotificationRepository = $em->getRepository(UserNotification::class);
         parent::__construct($options);
     }
-
+    
+    /**
+     * {@inheritDoc}
+     * @throws Exception
+     */
     public function execute(): CommandInterface
     {
         $array = $this->getOptions()->getPayload();
@@ -47,16 +61,21 @@ class SettingsVoicesService extends BaseCommandService
 
         return $this;
     }
-
+    
+    /**
+     * @throws Exception
+     */
     private function executeSettingsVoicesStartCommand(): void
     {
         $userId = $this->getOptions()->getChatId();
+        /** @psalm-suppress TooManyArguments */
+        $keyboard = new InlineKeyboard(...BotHelper::getSettingsVoicesKeyboard(
+            $this->userVoiceRepository->getFormattedVoices($userId)
+        ));
         $data = [
             'chat_id' => $userId,
             'text' => BotHelper::getSettingsText(),
-            'reply_markup' => new InlineKeyboard(...BotHelper::getSettingsVoicesKeyboard(
-                $this->userVoiceRepository->getFormattedVoices($userId)
-            )),
+            'reply_markup' => $keyboard,
             'message_id' => $this->getOptions()->getMessageId(),
             'parse_mode' => 'markdown',
 
@@ -64,7 +83,13 @@ class SettingsVoicesService extends BaseCommandService
 
         $this->setResponse(new ResponseDirector('editMessageText', $data));
     }
-
+    
+    /**
+     * @param $num
+     *
+     * @throws TelegramException
+     * @throws Exception
+     */
     private function executeSettingsVoicesExampleCommand($num): void
     {
         $userId = $this->getOptions()->getChatId();
@@ -83,7 +108,12 @@ class SettingsVoicesService extends BaseCommandService
             'cache_time' => 3,
         ]));
     }
-
+    
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Exception
+     */
     private function executeSettingsVoicesBackCommand(): void
     {
         $userId = $this->getOptions()->getChatId();
@@ -95,11 +125,22 @@ class SettingsVoicesService extends BaseCommandService
 
         $this->setResponse(new ResponseDirector('editMessageText', $data));
     }
-
+    
+    /**
+     * @param int $num
+     * @param int $switcher
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Exception
+     */
     private function executeSettingsVoicesSwitcherCommand(int $num, int $switcher): void
     {
         $userId = $this->getOptions()->getChatId();
-
+        /** @psalm-suppress TooManyArguments */
+        $keyboard = new InlineKeyboard(...BotHelper::getSettingsVoicesKeyboard(
+            $this->userVoiceRepository->getFormattedVoices($userId)
+        ));
         $this->userVoiceRepository->updateUserVoice($userId, BotHelper::getVoices()[$num], $switcher);
         $data = [
             'chat_id' => $userId,
@@ -107,9 +148,7 @@ class SettingsVoicesService extends BaseCommandService
             'message_id' => $this->getOptions()->getMessageId(),
             'parse_mode' => 'markdown',
             'disable_notification' => 1,
-            'reply_markup' => new InlineKeyboard(...BotHelper::getSettingsVoicesKeyboard(
-                $this->userVoiceRepository->getFormattedVoices($userId)
-            )),
+            'reply_markup' => $keyboard,
         ];
         $this->setResponse(new ResponseDirector('editMessageText', $data));
     }

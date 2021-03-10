@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RepeatBot\Core\ORM\Entities;
 
 use Carbon\Carbon;
@@ -10,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="word", uniqueConstraints={@ORM\UniqueConstraint(name="word_word_uindex", columns={"word"})})
  * @ORM\Entity(repositoryClass="RepeatBot\Core\ORM\Repositories\WordRepository")
+ *
+ * @package RepeatBot\Core\ORM\Entities
  */
 class Word
 {
@@ -35,13 +39,6 @@ class Word
      * @ORM\Column(name="translate", type="text", length=0, nullable=true)
      */
     private string $translate;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="voice", type="text", length=65535, nullable=false)
-     */
-    private string $voice;
 
     /**
      * @var int
@@ -87,22 +84,6 @@ class Word
     public function setCollectionId(int $collectionId): void
     {
         $this->collectionId = $collectionId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getVoice(): string
-    {
-        return $this->voice;
-    }
-
-    /**
-     * @param string $voice
-     */
-    public function setVoice(string $voice): void
-    {
-        $this->voice = $voice;
     }
 
     /**

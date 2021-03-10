@@ -45,10 +45,12 @@ class DelCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
+        $input = $this->getMessage()->getText(true);
+        $text = null === $input ? '' : $input;
         $director = new CommandDirector(
             new CommandOptions(
                 'del',
-                explode(' ', $this->getMessage()->getText(true)),
+                explode(' ', $text),
                 $this->getMessage()->getChat()->getId(),
             )
         );

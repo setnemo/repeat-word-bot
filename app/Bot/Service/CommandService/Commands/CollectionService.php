@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService\Commands;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Exception;
 use Longman\TelegramBot\Entities\InlineKeyboard;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
@@ -24,23 +27,38 @@ class CollectionService extends BaseCommandService
     private WordRepository $wordRepository;
 
     private TrainingRepository $trainingRepository;
-
+    
+    /**
+     * {@inheritDoc}
+     */
     public function __construct(CommandOptions $options)
     {
         $em = Database::getInstance()->getEntityManager();
+        /** @psalm-suppress PropertyTypeCoercion */
         $this->collectionRepository = $em->getRepository(Collection::class);
+        /** @psalm-suppress PropertyTypeCoercion */
         $this->wordRepository = $em->getRepository(Word::class);
+        /** @psalm-suppress PropertyTypeCoercion */
         $this->trainingRepository = $em->getRepository(Training::class);
 
         parent::__construct($options);
     }
-
+    
+    /**
+     * {@inheritDoc}
+     * @throws Exception
+     */
     public function execute(): CommandInterface
     {
         $this->executeCollectionCommand([] !== $this->getOptions()->getPayload());
         return $this;
     }
-
+    
+    /**
+     * @param bool $edit
+     *
+     * @throws Exception
+     */
     private function executeCollectionCommand(bool $edit = false): void
     {
         if (false === $edit) {
@@ -68,7 +86,12 @@ class CollectionService extends BaseCommandService
                 );
         }
     }
-
+    
+    /**
+     * @param int $id
+     *
+     * @throws Exception
+     */
     private function executeFirstCollectionCommand(int $id): void
     {
         $chatId = $this->getOptions()->getChatId();
@@ -86,6 +109,7 @@ class CollectionService extends BaseCommandService
         );
         $rating = $this->collectionRepository->getCollection(intval($id));
         $haveRatingWords = $this->trainingRepository->userHaveCollection(intval($id), $chatId);
+        /** @psalm-suppress TooManyArguments */
         $keyboard = new InlineKeyboard(...BotHelper::getCollectionPagination($id, $haveRatingWords));
         $text = strtr("Коллекция `:name` содержит такие слова, как:\n\n`:words`", [
             ':name' => $rating->getName(),
@@ -105,7 +129,13 @@ class CollectionService extends BaseCommandService
             )
         );
     }
-
+    
+    /**
+     * @param int $id
+     *
+     * @return string
+     * @throws Exception
+     */
     private function executeAddCollectionCommand(int $id): string
     {
         $userId = $this->getOptions()->getChatId();
@@ -115,7 +145,13 @@ class CollectionService extends BaseCommandService
 
         return 'Слова добавлены';
     }
-
+    
+    /**
+     * @param int $id
+     *
+     * @return string
+     * @throws Exception
+     */
     private function executeDelCollectionCommand(int $id): string
     {
         $text = "Для удаления слов этой коллекции из вашего прогресса воспользуйтесь командой `/del collection {$id}`";
@@ -131,7 +167,13 @@ class CollectionService extends BaseCommandService
 
         return '';
     }
-
+    
+    /**
+     * @param int $id
+     *
+     * @return string
+     * @throws Exception
+     */
     private function executeResetCollectionCommand(int $id): string
     {
         $text = "Для сброса прогресса по словам с этой коллекции воспользуйтесь командой `/reset collection {$id}`";
@@ -147,7 +189,13 @@ class CollectionService extends BaseCommandService
 
         return '';
     }
-
+    
+    /**
+     * @param int $id
+     *
+     * @return string
+     * @throws Exception
+     */
     private function editCollectionMessage(int $id): string
     {
         $userId = $this->getOptions()->getChatId();
@@ -157,20 +205,31 @@ class CollectionService extends BaseCommandService
             ':name' => $rating->getName(),
             ':words' => implode(', ', $this->wordRepository->getExampleWords($rating->getId())),
         ]);
+        /** @psalm-suppress TooManyArguments */
+        $keyboard = new InlineKeyboard(...BotHelper::getCollectionPagination($id, $haveRatingWords));
         $data = [
             'callback_query_id' => $this->getOptions()->getCallbackQueryId(),
             'chat_id' => $userId,
             'message_id' => $this->getOptions()->getMessageId(),
             'text' => $text,
             'parse_mode' => 'markdown',
-            'reply_markup' => new InlineKeyboard(...BotHelper::getCollectionPagination($id, $haveRatingWords)),
+            'reply_markup' => $keyboard,
             'disable_notification' => 1,
         ];
         $this->addStackMessage(new ResponseDirector('editMessageText', $data));
 
         return '';
     }
-
+    
+    /**
+     * @param TrainingRepository $trainingRepository
+     * @param WordCollection     $words
+     * @param int                $userId
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Exception
+     */
     public function addNewWords(
         TrainingRepository $trainingRepository,
         WordCollection $words,
@@ -184,9 +243,10 @@ class CollectionService extends BaseCommandService
                 $userId
             );
         }
+        $count = $i / 2;
         $data = [
             'chat_id' => $this->getOptions()->getChatId(),
-            'text' => BotHelper::getAnswer('Добавлено ', $i / 2) . '!',
+            'text' => BotHelper::getAnswer("Добавлено ", (int)$count) . '!',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'disable_notification' => 1,

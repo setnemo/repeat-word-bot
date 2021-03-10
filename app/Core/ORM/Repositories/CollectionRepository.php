@@ -7,6 +7,10 @@ namespace RepeatBot\Core\ORM\Repositories;
 use Doctrine\ORM\EntityRepository;
 use RepeatBot\Core\ORM\Entities\Collection;
 
+/**
+ * Class CollectionRepository
+ * @package RepeatBot\Core\ORM\Repositories
+ */
 class CollectionRepository extends EntityRepository
 {
     /**

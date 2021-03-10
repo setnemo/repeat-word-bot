@@ -184,8 +184,9 @@ class BotHelper
 
     public static function getCollectionPagination(int $collectionNum, bool $exist): array
     {
-        $result[] = BotHelper::getPaginationFw($collectionNum);
-        $result[] = BotHelper::getPaginationNums($collectionNum);
+        $result = [];
+        $result = array_merge($result, BotHelper::getPaginationFw($collectionNum));
+        $result = array_merge($result, BotHelper::getPaginationNums($collectionNum));
         $addRemove = $exist ?
             [
                 'text' => "🚫 Удалить",
@@ -204,10 +205,10 @@ class BotHelper
                 'text' => " ",
                 'callback_data' => 'empty',
             ];
-        $result[] = [
+        $result = array_merge($result, [
             $progress,
             $addRemove,
-        ];
+        ]);
 
         return $result;
     }
@@ -284,6 +285,7 @@ class BotHelper
         $textSilent = "Тихий режим сообщений: {$symbolSilent}";
         $texPriority = "Приоритет меньшей итерации: {$symbolPriority}";
         $texVoices = "Выбрать голоса для тренировок";
+        /** @psalm-suppress TooManyArguments */
         $keyboard = new InlineKeyboard(...BotHelper::getSettingsKeyboard(
             $textSilent,
             $texPriority,
@@ -310,8 +312,8 @@ class BotHelper
             "вы можете включить или выключить этот режим нажав на кнопку " .
             " *Приоритет меньших итераций*\n\n" .
             "`Голоса для тренировок`:\n" .
-            "По умолчанию всегда включен один стандартный женский голос для голосовых сообщений. Для получения бОльшего " .
-            "опыта в прослушивании разных вариантов произношения вы можете включить до 10 дополнительных голосов, один " .
+            "По умолчанию всегда включен один стандартный голос en-US-Wavenet-A. Для получения бОльшего " .
+            "опыта в прослушивании разных вариантов произношения вы можете включить до 9 дополнительных голосов, один " .
             "из которых будет выбираться случайно при каждом слове в тренировках";
     }
 

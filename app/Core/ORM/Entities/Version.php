@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RepeatBot\Core\ORM\Entities;
 
 use Carbon\Carbon;
@@ -10,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="version", indexes={@ORM\Index(name="version_created_at_index", columns={"created_at"})})
  * @ORM\Entity(repositoryClass="RepeatBot\Core\ORM\Repositories\VersionRepository")
+ *
+ * @package RepeatBot\Core\ORM\Entities
  */
 class Version
 {

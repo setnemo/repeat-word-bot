@@ -51,6 +51,7 @@ class SettingsCommand extends SystemCommand
     public function execute(): ServerResponse
     {
         $userId = $this->getMessage()->getFrom()->getId();
+        /** @psalm-suppress PropertyTypeCoercion */
         $userNotificationRepository = Database::getInstance()
             ->getEntityManager()
             ->getRepository(UserNotification::class);

@@ -89,7 +89,7 @@ class ExportQueueService
         $mpdf->WriteHTML('<table id="export"><tr><th>№ п.п.</th><th>Слово</th><th>Перевод</th></tr>');
         foreach ($trainings as $id => $training) {
             $mpdf->WriteHTML(strtr("<tr><td>:number</td><td>:word</td><td>:translate</td></tr>", [
-                ':number' => $id + 1,
+                ':number' => ((int)$id) + 1,
                 ':word' => $training->getWord()->getWord(),
                 ':translate' => $training->getWord()->getTranslate(),
             ]));

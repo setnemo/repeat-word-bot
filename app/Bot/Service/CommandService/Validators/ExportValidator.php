@@ -16,6 +16,7 @@ class ExportValidator implements ValidateCommand
 
     public function __construct()
     {
+        /** @psalm-suppress PropertyTypeCoercion */
         $this->exportRepository = Database::getInstance()
             ->getEntityManager()
             ->getRepository(Export::class);
@@ -36,7 +37,8 @@ class ExportValidator implements ValidateCommand
         }
 
         $payload = $options->getPayload();
-        if (count($payload) === 2 &&
+        if (
+            count($payload) === 2 &&
             (
                 !in_array($payload[0], ['FromEnglish','ToEnglish']) ||
                 !in_array($payload[1], ['first','second','third','fourth','fifth','sixth','never'])

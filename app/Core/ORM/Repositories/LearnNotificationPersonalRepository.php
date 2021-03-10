@@ -11,6 +11,10 @@ use Doctrine\ORM\ORMException;
 use RepeatBot\Core\ORM\Collections\LearnNotificationPersonalCollection;
 use RepeatBot\Core\ORM\Entities\LearnNotificationPersonal;
 
+/**
+ * Class LearnNotificationPersonalRepository
+ * @package RepeatBot\Core\ORM\Repositories
+ */
 class LearnNotificationPersonalRepository extends EntityRepository
 {
     /**
@@ -42,6 +46,9 @@ class LearnNotificationPersonalRepository extends EntityRepository
     public function createNotification(int $userId, string $message, string $alarm, string $tz): void
     {
         $time = explode(':', $alarm);
+        array_walk($time, static function ($item) {
+            return (int) $item;
+        });
         $updated = Carbon::now('Europe/Kiev')->setTime($time[0], $time[1], 0);
         if (Carbon::now('Europe/Kiev')->lessThan($updated)) {
             $updated = Carbon::now('Europe/Kiev')->subDay()->setTime($time[0], $time[1], 0);
@@ -81,6 +88,12 @@ class LearnNotificationPersonalRepository extends EntityRepository
         $query->getQuery()->execute();
     }
 
+    /**
+     * @param LearnNotificationPersonal $entity
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function updateNotification(LearnNotificationPersonal $entity): void
     {
         $entity->setUpdatedAt(Carbon::now('Europe/Kiev'));

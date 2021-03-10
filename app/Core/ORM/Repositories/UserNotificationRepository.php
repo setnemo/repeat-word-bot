@@ -11,6 +11,10 @@ use Doctrine\ORM\ORMException;
 use RepeatBot\Core\ORM\Collections\UserNotificationCollection;
 use RepeatBot\Core\ORM\Entities\UserNotification;
 
+/**
+ * Class UserNotificationRepository
+ * @package RepeatBot\Core\ORM\Repositories
+ */
 class UserNotificationRepository extends EntityRepository
 {
     /**

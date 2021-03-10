@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RepeatBot\Core\ORM\Entities;
 
 use Carbon\Carbon;
@@ -10,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="training", uniqueConstraints={@ORM\UniqueConstraint(name="training_word_type_collection_id_uindex", columns={"word_id", "type", "collection_id", "user_id"})}, indexes={@ORM\Index(name="training_type_index", columns={"type"}), @ORM\Index(name="training_word_id_index", columns={"word_id"}), @ORM\Index(name="user_id", columns={"user_id"}), @ORM\Index(name="training_next_index", columns={"next"})})
  * @ORM\Entity(repositoryClass="RepeatBot\Core\ORM\Repositories\TrainingRepository")
+ *
+ * @package RepeatBot\Core\ORM\Entities
  */
 class Training
 {

@@ -7,12 +7,8 @@ namespace Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Request;
-use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandDirector;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
-use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\ORM\Entities\Training;
 
 /**
  * Class ProgressCommand
@@ -57,11 +53,11 @@ class ProgressCommand extends SystemCommand
             )
         );
         $service = $command->makeService();
-    
+
         if (!$service->hasResponse()) {
             $service->execute();
         }
-    
+
         return $service->postStackMessages()->getResponseMessage();
     }
 }

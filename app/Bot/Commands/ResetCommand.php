@@ -13,7 +13,6 @@ use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Database\Repository\TrainingRepository;
 use RepeatBot\Core\Metric;
 use RepeatBot\Core\ORM\Entities\Training;
 
@@ -59,7 +58,9 @@ class ResetCommand extends SystemCommand
         $flag = false;
         $chat_id = $this->getMessage()->getChat()->getId();
         $userId = $this->getMessage()->getFrom()->getId();
-        $text = trim($this->getMessage()->getText(true)) ?? '';
+        $input = $this->getMessage()->getText(true);
+        $text = null === $input ? '' : $input;
+        /** @psalm-suppress PropertyTypeCoercion */
         $trainingRepository = Database::getInstance()
             ->getEntityManager()
             ->getRepository(Training::class);

@@ -5,7 +5,6 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\OneYearService;
 use RepeatBot\Core\App;
@@ -66,9 +65,11 @@ class GenericmessageCommand extends SystemCommand
         }
         if ($this->isOneYear($text)) {
             $cache->saveOneYear($userId, $command);
+            /** @psalm-suppress PropertyTypeCoercion */
             $trainingRepository = Database::getInstance()
                 ->getEntityManager()
                 ->getRepository(Training::class);
+            /** @psalm-suppress ArgumentTypeCoercion */
             (new OneYearService($trainingRepository))->execute($cache->getTrainings($userId, $command));
         }
         if ($command === 'FromEnglish' || $command === 'ToEnglish') {

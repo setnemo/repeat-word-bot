@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RepeatBot\Core\ORM\Entities;
 
 use Carbon\Carbon;
@@ -10,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="edited_message", indexes={@ORM\Index(name="message_id", columns={"message_id"}), @ORM\Index(name="chat_id_2", columns={"chat_id", "message_id"}), @ORM\Index(name="chat_id", columns={"chat_id"}), @ORM\Index(name="user_id", columns={"user_id"})})
  * @ORM\Entity
+ *
+ * @package RepeatBot\Core\ORM\Entities
  */
 class EditedMessage
 {

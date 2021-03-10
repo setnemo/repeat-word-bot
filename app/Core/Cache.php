@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RepeatBot\Core;
 
-use JetBrains\PhpStorm\Pure;
 use Predis\Client;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Common\Config;
@@ -14,7 +13,7 @@ use RepeatBot\Common\Singleton;
  * Class Redis
  * @package RepeatBot\Core
  */
-class Cache extends Singleton
+final class Cache extends Singleton
 {
     public const PREFIX = 'repeat_bot_';
     /**
@@ -86,12 +85,12 @@ class Cache extends Singleton
         $slug = $this->getCacheSlugTrainingStatus($userId, $type);
         $redis->set($slug, 1);
     }
-
+    
     /**
      * @param int    $userId
      * @param string $type
      *
-     * @return int
+     * @return void
      */
     public function skipTrainings(int $userId, string $type): void
     {
@@ -99,12 +98,12 @@ class Cache extends Singleton
         $slug = $this->getCacheSlugSkip($userId, $type);
         $redis->set($slug, 1, 'EX', 3600);
     }
-
+    
     /**
      * @param int    $userId
      * @param string $type
      *
-     * @return int
+     * @return void
      */
     public function saveOneYear(int $userId, string $type): void
     {
@@ -251,7 +250,7 @@ class Cache extends Singleton
      *
      * @return string
      */
-    #[Pure] private function getCacheSlugTrainingStatus(int $userId, string $type): string
+    private function getCacheSlugTrainingStatus(int $userId, string $type): string
     {
         return $this->getCacheSlug("{$userId}_{$type}_status");
     }
@@ -262,7 +261,7 @@ class Cache extends Singleton
      *
      * @return string
      */
-    #[Pure] private function getCacheOneYear(int $userId, string $type): string
+    private function getCacheOneYear(int $userId, string $type): string
     {
         return $this->getCacheSlug("{$userId}_{$type}_one_year");
     }
@@ -273,7 +272,7 @@ class Cache extends Singleton
      *
      * @return string
      */
-    #[Pure] private function getCacheSlugSkip(int $userId, string $type): string
+    private function getCacheSlugSkip(int $userId, string $type): string
     {
         return $this->getCacheSlug("{$userId}_{$type}_skip");
     }
@@ -284,7 +283,7 @@ class Cache extends Singleton
      *
      * @return string
      */
-    #[Pure] private function getSlugTraining(int $userId, string $type): string
+    private function getSlugTraining(int $userId, string $type): string
     {
         return $this->getCacheSlug("{$userId}_{$type}");
     }
@@ -295,7 +294,7 @@ class Cache extends Singleton
      *
      * @return string
      */
-    #[Pure] private function getSlugPriority(int $userId): string
+    private function getSlugPriority(int $userId): string
     {
         return $this->getCacheSlug("{$userId}_priority");
     }

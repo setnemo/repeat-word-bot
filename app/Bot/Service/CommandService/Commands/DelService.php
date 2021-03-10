@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService\Commands;
 
-use Longman\TelegramBot\Entities\InlineKeyboard;
+use Exception;
 use Longman\TelegramBot\Entities\Keyboard;
-use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
@@ -14,18 +13,29 @@ use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\ORM\Entities\Training;
 use RepeatBot\Core\ORM\Repositories\TrainingRepository;
 
+/**
+ * Class DelService
+ * @package RepeatBot\Bot\Service\CommandService\Commands
+ */
 class DelService extends BaseCommandService
 {
     private TrainingRepository $trainingRepository;
-
+    
+    /**
+     * {@inheritDoc}
+     */
     public function __construct(CommandOptions $options)
     {
+        /** @psalm-suppress PropertyTypeCoercion */
         $this->trainingRepository = Database::getInstance()
             ->getEntityManager()
             ->getRepository(Training::class);
         parent::__construct($options);
     }
-
+    
+    /**
+     * {@inheritDoc}
+     */
     public function execute(): CommandInterface
     {
         $array = $this->getOptions()->getPayload();
@@ -38,7 +48,10 @@ class DelService extends BaseCommandService
 
         return $this;
     }
-
+    
+    /**
+     * @throws Exception
+     */
     private function executeDelMyProgressCommand(): void
     {
         $userId = $this->getOptions()->getChatId();
@@ -47,6 +60,7 @@ class DelService extends BaseCommandService
             $this->cache->removeTrainingsStatus($userId, $type);
         }
         $this->trainingRepository->removeAllTrainings($userId);
+        /** @psalm-suppress TooManyArguments */
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $data = [
@@ -60,7 +74,12 @@ class DelService extends BaseCommandService
 
         $this->setResponse(new ResponseDirector('sendMessage', $data));
     }
-
+    
+    /**
+     * @param int $num
+     *
+     * @throws Exception
+     */
     private function executeDelCollectionCommand(int $num): void
     {
         $userId = $this->getOptions()->getChatId();
@@ -69,6 +88,7 @@ class DelService extends BaseCommandService
             $this->cache->removeTrainingsStatus($userId, $type);
         }
         $this->trainingRepository->removeTrainings($userId, $num);
+        /** @psalm-suppress TooManyArguments */
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $data = [

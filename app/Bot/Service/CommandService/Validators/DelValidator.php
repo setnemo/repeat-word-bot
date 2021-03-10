@@ -21,7 +21,8 @@ class DelValidator implements ValidateCommand
         ) {
             return [];
         }
-
+        
+        /** @psalm-suppress TooManyArguments */
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $data = [

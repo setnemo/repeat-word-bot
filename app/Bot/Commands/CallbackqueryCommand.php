@@ -5,20 +5,8 @@ declare(strict_types=1);
 namespace Longman\TelegramBot\Commands\SystemCommand;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Request;
-use RepeatBot\Bot\BotHelper;
-use RepeatBot\Bot\Service\CommandService\CommandDirector;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\DirectorFabric;
-use RepeatBot\Core\App;
-use RepeatBot\Core\Cache;
-use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Metric;
-use RepeatBot\Core\ORM\Entities\UserNotification;
-use RepeatBot\Core\ORM\Entities\UserVoice;
-use RepeatBot\Core\ORM\Repositories\TrainingRepository;
 
 /**
  * Class CallbackqueryCommand

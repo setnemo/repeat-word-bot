@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RepeatBot\Core\ORM\Entities;
 
 use Carbon\Carbon;
@@ -10,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="version_notification", uniqueConstraints={@ORM\UniqueConstraint(name="version_notification_user_id_version_id_uindex", columns={"chat_id", "version_id"})})
  * @ORM\Entity(repositoryClass="RepeatBot\Core\ORM\Repositories\VersionNotificationRepository")
+ *
+ * @package RepeatBot\Core\ORM\Entities
  */
 class VersionNotification
 {

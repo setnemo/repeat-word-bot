@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RepeatBot\Core\ORM\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -9,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="user_chat", indexes={@ORM\Index(name="chat_id", columns={"chat_id"})})
  * @ORM\Entity
+ *
+ * @package RepeatBot\Core\ORM\Entities
  */
 class UserChat
 {

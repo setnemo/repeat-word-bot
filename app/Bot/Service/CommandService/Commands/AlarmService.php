@@ -4,25 +4,40 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService\Commands;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Exception;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\ORM\Entities\LearnNotificationPersonal;
 use RepeatBot\Core\ORM\Repositories\LearnNotificationPersonalRepository;
 
+/**
+ * Class AlarmService
+ * @package RepeatBot\Bot\Service\CommandService\Commands
+ */
 class AlarmService extends BaseCommandService
 {
     private LearnNotificationPersonalRepository $repository;
-
+    
+    /**
+     * {@inheritDoc}
+     */
     public function __construct(CommandOptions $options)
     {
+        /** @psalm-suppress PropertyTypeCoercion */
         $this->repository = Database::getInstance()
             ->getEntityManager()
             ->getRepository(LearnNotificationPersonal::class);
 
         parent::__construct($options);
     }
-
+    
+    /**
+     * {@inheritDoc}
+     * @throws Exception
+     */
     public function execute(): CommandInterface
     {
         $text = $this->getOptions()->getPayload();
@@ -36,7 +51,10 @@ class AlarmService extends BaseCommandService
 
         return $this;
     }
-
+    
+    /**
+     * @throws Exception
+     */
     private function executeAlarmListCommand(): void
     {
         $items = $this->repository->getMyAlarms($this->getOptions()->getChatId());
@@ -62,7 +80,10 @@ class AlarmService extends BaseCommandService
             )
         );
     }
-
+    
+    /**
+     * @throws Exception
+     */
     private function executeAlarmResetCommand(): void
     {
         $this->repository->delNotifications($this->getOptions()->getChatId());
@@ -79,7 +100,12 @@ class AlarmService extends BaseCommandService
             )
         );
     }
-
+    
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Exception
+     */
     private function executeSetAlarmCommand(): void
     {
         $commands = $this->getOptions()->getPayload();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RepeatBot\Core\ORM\Entities;
 
 use Carbon\Carbon;
@@ -10,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="export", indexes={@ORM\Index(name="export_user_id_index", columns={"user_id"})})
  * @ORM\Entity(repositoryClass="RepeatBot\Core\ORM\Repositories\ExportRepository")
+ *
+ * @package RepeatBot\Core\ORM\Entities
  */
 class Export
 {

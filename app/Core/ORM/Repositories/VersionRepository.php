@@ -8,6 +8,10 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
 use RepeatBot\Core\ORM\Entities\Version;
 
+/**
+ * Class VersionRepository
+ * @package RepeatBot\Core\ORM\Repositories
+ */
 class VersionRepository extends EntityRepository
 {
     /**

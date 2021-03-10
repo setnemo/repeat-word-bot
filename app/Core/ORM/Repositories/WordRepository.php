@@ -6,8 +6,11 @@ namespace RepeatBot\Core\ORM\Repositories;
 
 use Doctrine\ORM\EntityRepository;
 use RepeatBot\Core\ORM\Collections\WordCollection;
-use RepeatBot\Core\ORM\Entities\Word;
 
+/**
+ * Class WordRepository
+ * @package RepeatBot\Core\ORM\Repositories
+ */
 class WordRepository extends EntityRepository
 {
     /**
@@ -30,11 +33,11 @@ class WordRepository extends EntityRepository
         $result = $this->findBy(['collectionId' => $collectionId]);
         shuffle($result);
 
-        $cutted = array_slice($result, 0, 30);
+        $cut = array_slice($result, 0, 30);
 
         $response = [];
 
-        foreach ($cutted as $item) {
+        foreach ($cut as $item) {
             $response = array_merge($response, [$item->getWord()]);
         }
 

@@ -19,6 +19,10 @@ use RepeatBot\Core\ORM\Entities\Training;
 use RepeatBot\Core\ORM\Entities\Word;
 use RepeatBot\Core\ORM\ValueObjects\InactiveUser;
 
+/**
+ * Class TrainingRepository
+ * @package RepeatBot\Core\ORM\Repositories
+ */
 class TrainingRepository extends EntityRepository
 {
     public const ALWAYS_SILENT_MESSAGE = 1;
@@ -35,44 +39,11 @@ class TrainingRepository extends EntityRepository
     }
 
     /**
-     * @param Word   $word
-     * @param string $type
-     * @param int    $userId
-     * @param bool   $push
+     * @param WordCollection $words
+     * @param string         $type
+     * @param int            $userId
      *
-     * @return Training
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function createTraining(
-        Word $word,
-        string $type,
-        int $userId
-    ): Training {
-        $entity = new Training();
-        $entity->setWordId($word->getId());
-        $entity->setUserId($userId);
-        $entity->setType($type);
-        $entity->setWord($word);
-        $entity->setCollectionId($word->getCollectionId());
-        $entity->setStatus('first');
-        $entity->setNext(Carbon::now('Europe/Kiev'));
-        $entity->setCreatedAt(Carbon::now('Europe/Kiev'));
-        $entity->setUpdatedAt(Carbon::now('Europe/Kiev'));
-
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-
-        return $entity;
-    }
-
-    /**
-     * @param Word   $word
-     * @param string $type
-     * @param int    $userId
-     * @param bool   $push
-     *
-     * @return Training
+     * @return int
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -109,12 +80,10 @@ class TrainingRepository extends EntityRepository
     /**
      * @param int    $userId
      * @param string $type
-     * @param bool   $priority
      *
-     * @return Training
-     * @throws EmptyVocabularyException
+     * @return TrainingCollection
      */
-    public function getRandomTraining(int $userId, string $type, bool $priority): Training
+    public function getTrainingsByUserIdAndType(int $userId, string $type): TrainingCollection
     {
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('t')
@@ -130,39 +99,28 @@ class TrainingRepository extends EntityRepository
             ->andWhere('t.next < :next')
             ->setParameter('userId', $userId)
             ->setParameter('type', $type)
-            ->setParameter('next', Carbon::now('Europe/Kiev'))
-        ;
-        $result = new TrainingCollection($query->getQuery()->getResult());
+            ->setParameter('next', Carbon::now('Europe/Kiev'));
 
-        if (!$priority) {
-            $ret = $result->getRandomEntity();
-        } else {
-            $rule = [
-                'first' => 0,
-                'second' => 1,
-                'third' => 2,
-                'fourth' => 3,
-                'fifth' => 4,
-                'sixth' => 5,
-                'never' => 6,
-            ];
-            $ret2 = [];
-            foreach ($result as $item) {
-                $ret2[$rule[$item->getStatus()]][] = $item;
-            }
-            $ret = new TrainingCollection();
-            for ($i = 0; $i < count($ret2); ++$i) {
-                if (!empty($ret)) {
-                    break ;
-                }
-                if (!empty($ret2[$i])) {
-                    foreach ($ret2[$i] as $v) {
-                        $ret->add($v);
-                    }
-                }
-            }
-            $ret = $ret->getRandomEntity();
+        return new TrainingCollection($query->getQuery()->getResult());
+    }
+
+    /**
+     * @param int     $userId
+     * @param ?string $type
+     * @param bool    $priority
+     *
+     * @return Training
+     * @throws EmptyVocabularyException
+     */
+    public function getRandomTraining(int $userId, ?string $type, bool $priority): Training
+    {
+        if (null == $type) {
+            throw new EmptyVocabularyException();
         }
+
+        $result = $this->getTrainingsByUserIdAndType($userId, $type);
+
+        $ret = $this->getRandomEntity($priority, $result);
 
         if (!$ret) {
             throw new EmptyVocabularyException();
@@ -297,7 +255,7 @@ class TrainingRepository extends EntityRepository
                     isset($userNotifications[$record['user_id']]) ?
                         $userNotifications[$record['user_id']]->getSilent() :
                         self::ALWAYS_SILENT_MESSAGE,
-                    $this->getMessageForInactiveUser($record['user_id'])
+                    $this->getMessageForInactiveUser()
                 );
             }
         }
@@ -329,7 +287,7 @@ class TrainingRepository extends EntityRepository
             ->setParameter('type', $type)
         ;
         $result = new TrainingCollection($query->getQuery()->getResult());
-        if (empty($result)) {
+        if ($result->isEmpty()) {
             throw new EmptyVocabularyException();
         }
 
@@ -354,7 +312,7 @@ class TrainingRepository extends EntityRepository
 
     /**
      * @param int    $userId
-     * @param int    $type
+     * @param string $type
      * @param string $status
      *
      * @return TrainingCollection
@@ -365,11 +323,9 @@ class TrainingRepository extends EntityRepository
     }
 
     /**
-     * @param int $userId
-     *
      * @return string
      */
-    private function getMessageForInactiveUser(int $userId): string
+    private function getMessageForInactiveUser(): string
     {
         return "Не останавливайся! Продолжи свою тренировку прямо сейчас!";
     }
@@ -414,5 +370,46 @@ class TrainingRepository extends EntityRepository
                 'repeat' => 24 * 60,
             ],
             };
+    }
+
+    /**
+     * @param bool               $priority
+     * @param TrainingCollection $collection
+     *
+     * @return Training|null
+     */
+    private function getRandomEntity(bool $priority, TrainingCollection $collection): ?Training
+    {
+        if (!$priority) {
+            $entity = $collection->getRandomEntity();
+        } else {
+            $rule = [
+                'first' => 0,
+                'second' => 1,
+                'third' => 2,
+                'fourth' => 3,
+                'fifth' => 4,
+                'sixth' => 5,
+                'never' => 6,
+            ];
+            $tmp = [];
+            foreach ($collection as $item) {
+                $tmp[$rule[$item->getStatus()]][] = $item;
+            }
+            $tmpCollection = new TrainingCollection();
+            for ($i = 0; $i < count($tmp); ++$i) {
+                if (!$tmpCollection->isEmpty()) {
+                    break;
+                }
+                if (!empty($tmp[$i])) {
+                    foreach ($tmp[$i] as $v) {
+                        $tmpCollection->add($v);
+                    }
+                }
+            }
+            $entity = $tmpCollection->getRandomEntity();
+        }
+
+        return $entity;
     }
 }

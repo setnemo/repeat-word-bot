@@ -15,7 +15,6 @@ $logger = Log::getInstance()->init($config)->getLogger();
 $bot = Bot::getInstance();
 $bot->init($config, $logger);
 $metric = Metric::getInstance()->init($config);
-$database = Database::getInstance()->init($config)->getConnection();
 $trainingRepository =  Database::getInstance()
     ->getEntityManager()
     ->getRepository(\RepeatBot\Core\ORM\Entities\Training::class);

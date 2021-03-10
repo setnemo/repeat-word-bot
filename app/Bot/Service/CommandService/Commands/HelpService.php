@@ -4,10 +4,19 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService\Commands;
 
+use Exception;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 
+/**
+ * Class HelpService
+ * @package RepeatBot\Bot\Service\CommandService\Commands
+ */
 class HelpService extends BaseCommandService
 {
+    /**
+     * {@inheritDoc}
+     * @throws Exception
+     */
     public function execute(): CommandInterface
     {
         $this->setResponse(
@@ -25,7 +34,10 @@ class HelpService extends BaseCommandService
 
         return $this;
     }
-
+    
+    /**
+     * @return string
+     */
     private function getText(): string
     {
         return "`Справка по использованию бота:`\n\n" .
@@ -47,6 +59,4 @@ class HelpService extends BaseCommandService
             " - /export ToEnglish first - экспорт всех слов с тренировки ToEnglish в итерации first " .
             "(например не получается нормально запомнить и хочется выписать их отдельно)\n\n";
     }
-    
-    
 }

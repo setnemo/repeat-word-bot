@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace RepeatBot\Core\ORM\ValueObjects;
 
+/**
+ * Class InactiveUser
+ * @package RepeatBot\Core\ORM\ValueObjects
+ */
 class InactiveUser
 {
     /**

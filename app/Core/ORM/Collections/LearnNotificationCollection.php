@@ -8,6 +8,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RepeatBot\Core\ORM\Entities\LearnNotification;
 use RepeatBot\Core\ORM\ValueObjects\InactiveUser;
 
+/**
+ * Class LearnNotificationCollection
+ * @package RepeatBot\Core\ORM\Collections
+ */
 class LearnNotificationCollection extends ArrayCollection
 {
     private array $usersIds = [];

@@ -17,7 +17,6 @@ use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\ORM\Entities\Training;
 use RepeatBot\Core\Exception\EmptyVocabularyException;
 use RepeatBot\Core\ORM\Entities\UserVoice;
-use RepeatBot\Core\ORM\Entities\Word;
 
 /**
  * Class VoiceEnglishCommand
@@ -58,6 +57,7 @@ class VoiceEnglishCommand extends SystemCommand
         $userId = $this->getMessage()->getFrom()->getId();
         $config = App::getInstance()->getConfig();
         $cache = Cache::getInstance()->init($config);
+        /** @psalm-suppress PropertyTypeCoercion */
         $trainingRepository = Database::getInstance()
             ->getEntityManager()
             ->getRepository(Training::class);
@@ -68,7 +68,9 @@ class VoiceEnglishCommand extends SystemCommand
             if ($trainingId) {
                 $training = $trainingRepository->getTraining($trainingId);
                 $word = $training->getWord();
-                $text = mb_strtolower($this->getMessage()->getText(false));
+                $input = $this->getMessage()->getText(true);
+                $prepare = null === $input ? '' : $input;
+                $text = mb_strtolower($prepare);
                 $text = preg_replace('/(ё)/i', 'е', $text);
                 $correct = match($type) {
                     'ToEnglish' => $word->getWord(),
@@ -105,22 +107,26 @@ class VoiceEnglishCommand extends SystemCommand
             $training = $trainingRepository->getRandomTraining($userId, $type, $priority === 1);
             $word = $training->getWord();
         } catch (EmptyVocabularyException $e) {
-            $cache->removeTrainings($userId, $type);
-            $cache->removeTrainingsStatus($userId, $type);
-            try {
-                $training = $trainingRepository->getNearestAvailableTrainingTime($userId, $type);
-                $template = "В тренировке `:training` ближайшее слово для изучения - `:word`, ";
-                $template .= "которое будет доступно `:date`. Вы всегда можете добавить новую коллекцию.";
-                $text = strtr(
-                    $template,
-                    [
-                        ':word' => $word->getWord(),
-                        ':training' => $training->getType(),
-                        ':date' => $training->getNext()->diffForHumans()
-                    ]
-                );
-            } catch (EmptyVocabularyException $e) {
-                $text = 'У вас нет слов для изучения. Зайдите в раздел Коллекции и добавьте себе слова для тренировок';
+            if (null !== $type) {
+                $cache->removeTrainings($userId, $type);
+                $cache->removeTrainingsStatus($userId, $type);
+                try {
+                    $training = $trainingRepository->getNearestAvailableTrainingTime($userId, $type);
+                    $template = "В тренировке `:training` ближайшее слово для изучения - `:word`, ";
+                    $template .= "которое будет доступно `:date`. Вы всегда можете добавить новую коллекцию.";
+                    $text = strtr(
+                        $template,
+                        [
+                            ':word' => $word->getWord(),
+                            ':training' => $training->getType(),
+                            ':date' => $training->getNext()->diffForHumans()
+                        ]
+                    );
+                } catch (EmptyVocabularyException $e) {
+                    $text = 'У вас нет слов для изучения. Зайдите в раздел Коллекции и добавьте себе слова для тренировок';
+                }
+            } else {
+                $text = 'Что-то пошло не так...';
             }
             /** @psalm-suppress TooManyArguments */
             $keyboard = new Keyboard(...BotHelper::getTrainingKeyboard());
@@ -145,15 +151,12 @@ class VoiceEnglishCommand extends SystemCommand
         /** @psalm-suppress TooManyArguments */
         $keyboard = new Keyboard(...BotHelper::getInTrainingKeyboard());
         $keyboard->setResizeKeyboard(true);
+        /** @psalm-suppress PropertyTypeCoercion */
         $userVoiceRepository = Database::getInstance()
             ->getEntityManager()
             ->getRepository(UserVoice::class);
         $voice = $userVoiceRepository->getRandomVoice($userId);
-        if ($voice !== 'default') {
-            $uri = (new GoogleTextToSpeechService($voice))->getMp3($word->getWord());
-        } else {
-            $uri = '/app/words/' . $word->getVoice();
-        }
+        $uri = (new GoogleTextToSpeechService($voice))->getMp3($word->getWord());
         $data = [
             'chat_id' => $chat_id,
             'voice' => Request::encodeFile($uri),
@@ -161,6 +164,7 @@ class VoiceEnglishCommand extends SystemCommand
             'reply_markup' => $keyboard,
             'disable_notification' => 1,
         ];
+
         return Request::sendVoice($data);
     }
 

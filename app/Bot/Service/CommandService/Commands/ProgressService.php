@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService\Commands;
 
+use Exception;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
@@ -11,18 +12,30 @@ use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\ORM\Entities\Training;
 use RepeatBot\Core\ORM\Repositories\TrainingRepository;
 
+/**
+ * Class ProgressService
+ * @package RepeatBot\Bot\Service\CommandService\Commands
+ */
 class ProgressService extends BaseCommandService
 {
     private TrainingRepository $trainingRepository;
     
+    /**
+     * {@inheritDoc}
+     */
     public function __construct(CommandOptions $options)
     {
+        /** @psalm-suppress PropertyTypeCoercion */
         $this->trainingRepository = Database::getInstance()
             ->getEntityManager()
             ->getRepository(Training::class);
         parent::__construct($options);
     }
     
+    /**
+     * {@inheritDoc}
+     * @throws Exception
+     */
     public function execute(): CommandInterface
     {
         $userId = $this->getOptions()->getChatId();
@@ -34,12 +47,12 @@ class ProgressService extends BaseCommandService
                 $flag = true;
                 $status = ucfirst($item['status']);
                 $text .= BotHelper::getAnswer(
-                        "\[{$type}] {$status} итерация: ",
-                        (int)$item['counter']
-                    ) . "\n";
+                    "\[{$type}] {$status} итерация: ",
+                    (int)$item['counter']
+                ) . "\n";
             }
         }
-        
+
         $this->setResponse(
             new ResponseDirector(
                 'sendMessage',
@@ -55,7 +68,10 @@ class ProgressService extends BaseCommandService
 
         return $this;
     }
-
+    
+    /**
+     * @return string
+     */
     private function getText(): string
     {
         return "`Подсказка:`\nFirst итерация: повтор слова через 24 часа\n" .
@@ -69,6 +85,4 @@ class ProgressService extends BaseCommandService
             "Будьте осторожны, сброс не обратим и вам придется начать итерации с начала\n\n" .
             "`Ваша статистика:\n`";
     }
-    
-    
 }

@@ -7,13 +7,8 @@ namespace Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Request;
 use RepeatBot\Bot\Service\CommandService\CommandDirector;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
-use RepeatBot\Core\App;
-use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Metric;
-use RepeatBot\Core\ORM\Entities\Export;
 
 /**
  * Class ExportCommand
@@ -50,19 +45,21 @@ class ExportCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
+        $input = $this->getMessage()->getText(true);
+        $text = null === $input ? '' : $input;
         $director = new CommandDirector(
             new CommandOptions(
                 'export',
-                explode(' ', $this->getMessage()->getText(true)),
+                explode(' ', $text),
                 $this->getMessage()->getChat()->getId(),
             )
         );
         $service = $director->makeService();
-    
+
         if (!$service->hasResponse()) {
             $service->execute();
         }
-    
+
         return $service->postStackMessages()->getResponseMessage();
     }
 }

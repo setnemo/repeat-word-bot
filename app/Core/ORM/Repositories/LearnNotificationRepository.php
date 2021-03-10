@@ -13,6 +13,10 @@ use RepeatBot\Core\ORM\Collections\LearnNotificationCollection;
 use RepeatBot\Core\ORM\Entities\LearnNotification;
 use RepeatBot\Core\ORM\ValueObjects\InactiveUser;
 
+/**
+ * Class LearnNotificationRepository
+ * @package RepeatBot\Core\ORM\Repositories
+ */
 class LearnNotificationRepository extends EntityRepository
 {
     /**

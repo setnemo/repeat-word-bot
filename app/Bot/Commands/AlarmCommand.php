@@ -7,16 +7,9 @@ namespace Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Request;
 use Prometheus\Exception\MetricsRegistrationException;
-use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandDirector;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
-use RepeatBot\Core\App;
-use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Metric;
-use RepeatBot\Core\ORM\Entities\LearnNotificationPersonal;
-use RepeatBot\Core\ORM\Repositories\LearnNotificationPersonalRepository;
 
 /**
  * Class AlarmCommand
@@ -54,10 +47,12 @@ class AlarmCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
+        $input = $this->getMessage()->getText(true);
+        $text = null === $input ? '' : $input;
         $command = new CommandDirector(
             new CommandOptions(
                 'alarm',
-                explode(' ', $this->getMessage()->getText(true)),
+                explode(' ', $text),
                 $this->getMessage()->getChat()->getId()
             )
         );

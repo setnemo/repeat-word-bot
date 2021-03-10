@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RepeatBot\Core\ORM\Entities;
 
 use Carbon\Carbon;
@@ -10,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="learn_notification", indexes={@ORM\Index(name="event_created_index", columns={"created_at"})})
  * @ORM\Entity(repositoryClass="RepeatBot\Core\ORM\Repositories\LearnNotificationRepository")
+ *
+ * @package RepeatBot\Core\ORM\Entities
  */
 class LearnNotification
 {

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace RepeatBot\Core;
 
 use Carbon\Carbon;
-use FaaPz\PDO\Database as DB;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\Message;
@@ -50,7 +49,6 @@ final class Bot extends Singleton
     public function init(Config $config, LoggerInterface $logger): self
     {
         $this->logger = $logger;
-        $this->db = Database::getInstance()->init($config)->getConnection();
         try {
             $bot_api_key = $config->getKey('telegram.token');
             $bot_username = $config->getKey('telegram.bot_name');
@@ -81,7 +79,6 @@ final class Bot extends Singleton
         $this->checkVersion();
         $this->handleNotifications();
         $this->handleNotificationsPersonal();
-    
     }
 
     /**
@@ -108,7 +105,7 @@ final class Bot extends Singleton
      */
     public function runHook(): void
     {
-        $this->register('repeat-webhook1');
+        $this->register('repeat-webhook');
         try {
             $this->telegram->handle();
             Metric::getInstance()->increaseMetric('webhook');
@@ -255,7 +252,7 @@ final class Bot extends Singleton
             }
         }
     }
-    
+
     private function getSetUpdateFilter(): void
     {
         $this->telegram->setUpdateFilter(static function (Update $array) {
@@ -279,9 +276,9 @@ final class Bot extends Singleton
             return $flag;
         });
     }
-    
-    
-    
+
+
+
     /**
      * @param string $prefix
      */
@@ -291,8 +288,9 @@ final class Bot extends Singleton
         $cache = Cache::getInstance()->getRedis();
         $key = $prefix . '_registered1';
         if (!$cache->exists($key)) {
+            $this->telegram->deleteWebhook();
             try {
-                $hook_url = "https://60e8a0217010.ngrok.io/";
+                $hook_url = "https://050b72b4c4a2.ngrok.io/";
                 $result = $this->telegram->setWebhook($hook_url);
                 if ($result->isOk()) {
                     $cache->set($key, $result->getDescription());

@@ -4,10 +4,19 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService\Commands;
 
+use Exception;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 
+/**
+ * Class EmptyCallbackService
+ * @package RepeatBot\Bot\Service\CommandService\Commands
+ */
 class EmptyCallbackService extends BaseCommandService
 {
+    /**
+     * {@inheritDoc}
+     * @throws Exception
+     */
     public function execute(): CommandInterface
     {
         $this->setResponse(

@@ -11,6 +11,10 @@ use Doctrine\ORM\ORMException;
 use RepeatBot\Core\ORM\Collections\ExportCollection;
 use RepeatBot\Core\ORM\Entities\Export;
 
+/**
+ * Class ExportRepository
+ * @package RepeatBot\Core\ORM\Repositories
+ */
 class ExportRepository extends EntityRepository
 {
     /**

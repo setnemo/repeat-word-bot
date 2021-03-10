@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RepeatBot\Core\ORM\Entities;
 
 use Carbon\Carbon;
@@ -10,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="user_notification", uniqueConstraints={@ORM\UniqueConstraint(name="table_name_user_id_uindex", columns={"user_id"})})
  * @ORM\Entity(repositoryClass="RepeatBot\Core\ORM\Repositories\UserNotificationRepository")
+ *
+ * @package RepeatBot\Core\ORM\Entities
  */
 class UserNotification
 {

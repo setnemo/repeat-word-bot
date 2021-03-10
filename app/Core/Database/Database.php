@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace RepeatBot\Core\Database;
 
+use Carbon\Doctrine\CarbonType;
+use Carbon\Doctrine\DateTimeImmutableType;
+use Carbon\Doctrine\DateTimeType;
 use Doctrine\Common\Cache\PredisCache;
 use Doctrine\DBAL\Types\Type;
 use RepeatBot\Common\Config;
 use RepeatBot\Common\Singleton;
-use FaaPz\PDO\Database as DB;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use RepeatBot\Core\Cache as CoreCache;
@@ -20,22 +22,9 @@ use RepeatBot\Core\Cache as CoreCache;
 class Database extends Singleton
 {
     /**
-     * @var DB
-     */
-    protected DB $connection;
-
-    /**
      * @var EntityManager
      */
     protected EntityManager $entityManager;
-
-    /**
-     * @return DB
-     */
-    public function getConnection(): DB
-    {
-        return $this->connection;
-    }
 
     /**
      * @param Config $config
@@ -48,8 +37,6 @@ class Database extends Singleton
         $name = $config->getKey('database.name');
         $user = $config->getKey('database.user');
         $password = $config->getKey('database.password');
-        $this->connection = new DB("mysql:host={$host};dbname={$name};charset=utf8", $user, $password);
-
         $isDevMode = (int)$config->getKey('database.dev_mode') === 1;
         $dbParams = array(
             'driver'   => 'pdo_mysql',
@@ -57,7 +44,7 @@ class Database extends Singleton
             'user'     => $user,
             'password' => $password,
             'dbname'   => $name,
-            'charset'  =>  'UTF8',
+            'charset'  => 'UTF8',
         );
         $paths = [$config->getKey('database.entity_path')];
         $redis = CoreCache::getInstance()->init($config)->getRedis();
@@ -65,9 +52,9 @@ class Database extends Singleton
         $metadataConfiguration = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, null, $redis, false);
         $this->entityManager = EntityManager::create($dbParams, $metadataConfiguration);
         $conn = $this->entityManager->getConnection();
-        Type::overrideType('datetime_immutable', \Carbon\Doctrine\DateTimeImmutableType::class);
-        Type::overrideType('datetime', \Carbon\Doctrine\CarbonType::class);
-        Type::overrideType('time', \Carbon\Doctrine\DateTimeType::class);
+        Type::overrideType('time', DateTimeType::class);
+        Type::overrideType('datetime', CarbonType::class);
+        Type::overrideType('datetime_immutable', DateTimeImmutableType::class);
         $conn->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
         return $this;
     }

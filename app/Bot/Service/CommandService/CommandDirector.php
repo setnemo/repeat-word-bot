@@ -85,12 +85,12 @@ class CommandDirector
     {
         return (new ExportService($options))->validate(new ExportValidator());
     }
-    
+
     private function makeHelpCommand(CommandOptions $options)
     {
         return new HelpService($options);
     }
-    
+
     private function makeProgressCommand(CommandOptions $options)
     {
         return new ProgressService($options);

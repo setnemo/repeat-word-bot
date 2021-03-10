@@ -11,8 +11,14 @@ use Doctrine\ORM\ORMException;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\ORM\Entities\UserVoice;
 
+/**
+ * Class UserVoiceRepository
+ * @package RepeatBot\Core\ORM\Repositories
+ */
 class UserVoiceRepository extends EntityRepository
 {
+    const DEFAULT_VOICE = 'en-US-Wavenet-A';
+
     /**
      * @param int $userId
      *
@@ -28,6 +34,7 @@ class UserVoiceRepository extends EntityRepository
                 $resultVoices[$voice->getVoice()] = $voice->getUsed();
             }
         }
+
         $keys = array_keys($resultVoices);
         /** @var string $voice */
         foreach (BotHelper::getVoices() as $voice) {
@@ -75,7 +82,7 @@ class UserVoiceRepository extends EntityRepository
         $results = $this->findBy(['userId' => $userId, 'used' => 1]);
 
         if ($results === []) {
-            return 'default';
+            return self::DEFAULT_VOICE;
         }
         $random = mt_rand(0, count($results));
 

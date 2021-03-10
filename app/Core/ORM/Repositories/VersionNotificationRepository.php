@@ -8,6 +8,10 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
 use RepeatBot\Core\ORM\Entities\VersionNotification;
 
+/**
+ * Class VersionNotificationRepository
+ * @package RepeatBot\Core\ORM\Repositories
+ */
 class VersionNotificationRepository extends EntityRepository
 {
     /**

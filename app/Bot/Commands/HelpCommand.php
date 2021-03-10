@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace Longman\TelegramBot\Commands\SystemCommand;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Request;
-use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandDirector;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
@@ -56,11 +53,11 @@ class HelpCommand extends SystemCommand
             )
         );
         $service = $command->makeService();
-    
+
         if (!$service->hasResponse()) {
             $service->execute();
         }
-    
+
         return $service->postStackMessages()->getResponseMessage();
     }
 }

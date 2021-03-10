@@ -27,7 +27,7 @@ final class App extends Singleton
      */
     public function init(string $path = null, Config $config = null): self
     {
-        if (is_null($path)) {
+        if (null === $path) {
             $paths = explode('/', __DIR__);
             array_pop($paths);
             array_pop($paths);
@@ -36,10 +36,7 @@ final class App extends Singleton
         $env = Dotenv::createUnsafeImmutable($path . '/');
         $env->load();
 
-        if (is_null($config)) {
-            $config = new Config();
-        }
-        $this->config = $config;
+        $this->config = null === $config ? new Config() : $config;
 
         return $this;
     }

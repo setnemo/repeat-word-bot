@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RepeatBot\Core\ORM\Entities;
 
 use Carbon\Carbon;
@@ -10,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="learn_notification_personal", indexes={@ORM\Index(name="learn_notification_personal_user_id_index", columns={"user_id"})})
  * @ORM\Entity(repositoryClass="RepeatBot\Core\ORM\Repositories\LearnNotificationPersonalRepository")
+ *
+ * @package RepeatBot\Core\ORM\Entities
  */
 class LearnNotificationPersonal
 {
@@ -32,7 +36,7 @@ class LearnNotificationPersonal
     /**
      * @var Carbon
      *
-     * @ORM\Column(name="alarm", type="time", nullable=false)
+     * @ORM\Column(name="alarm", type="datetime", nullable=false)
      */
     private Carbon $alarm;
 
