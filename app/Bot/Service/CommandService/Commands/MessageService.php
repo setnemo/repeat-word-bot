@@ -68,12 +68,12 @@ class MessageService extends BaseCommandService
                 (new OneYearService($trainingRepository))->execute($this->cache->getTrainings($userId, $cacheCommand));
             }
         }
-        
 
-        
+
+
         return $this;
     }
-    
+
     /**
      * @param string $command
      *
@@ -89,14 +89,14 @@ class MessageService extends BaseCommandService
             )
         );
         $service = $director->makeService();
-        
+
         if (!$service->hasResponse()) {
             $service = $service->execute();
         }
-        
+
         return $service;
     }
-    
+
     /**
      * @param string $text
      *
@@ -106,7 +106,7 @@ class MessageService extends BaseCommandService
     {
         return in_array(str_replace(' ', '', $text), BotHelper::getTrainingTypes());
     }
-    
+
     /**
      * @param string $text
      *
@@ -116,7 +116,7 @@ class MessageService extends BaseCommandService
     {
         return $text === 'Остановить';
     }
-    
+
     /**
      * @param string $text
      *
@@ -138,7 +138,7 @@ class MessageService extends BaseCommandService
             'х',
         ]);
     }
-    
+
     private function isOneYear(string $text): bool
     {
         return '1' === $text;
