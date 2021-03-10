@@ -21,7 +21,7 @@ use RepeatBot\Core\ORM\Repositories\UserNotificationRepository;
 class SettingsPriorityService extends BaseCommandService
 {
     private UserNotificationRepository $repository;
-    
+
     /**
      * {@inheritDoc}
      */
@@ -33,7 +33,7 @@ class SettingsPriorityService extends BaseCommandService
             ->getRepository(UserNotification::class);
         parent::__construct($options);
     }
-    
+
     /**
      * {@inheritDoc}
      * @throws Exception

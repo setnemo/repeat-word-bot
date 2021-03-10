@@ -20,7 +20,7 @@ use RepeatBot\Core\ORM\Repositories\TrainingRepository;
 class DelService extends BaseCommandService
 {
     private TrainingRepository $trainingRepository;
-    
+
     /**
      * {@inheritDoc}
      */
@@ -32,7 +32,7 @@ class DelService extends BaseCommandService
             ->getRepository(Training::class);
         parent::__construct($options);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -48,7 +48,7 @@ class DelService extends BaseCommandService
 
         return $this;
     }
-    
+
     /**
      * @throws Exception
      */
@@ -74,7 +74,7 @@ class DelService extends BaseCommandService
 
         $this->setResponse(new ResponseDirector('sendMessage', $data));
     }
-    
+
     /**
      * @param int $num
      *

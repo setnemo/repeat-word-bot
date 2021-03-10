@@ -22,7 +22,7 @@ abstract class BaseCommandService implements CommandInterface
     protected array $stack = [];
 
     protected ?ResponseDirector $response = null;
-    
+
     /**
      * BaseCommandService constructor.
      *
@@ -42,7 +42,7 @@ abstract class BaseCommandService implements CommandInterface
     {
         return $this->options;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -62,7 +62,7 @@ abstract class BaseCommandService implements CommandInterface
 
         return $this;
     }
-    
+
     /**
      * {@inheritDoc}
      * @throws TelegramException
@@ -76,7 +76,7 @@ abstract class BaseCommandService implements CommandInterface
 
         return $this;
     }
-    
+
     /**
      * {@inheritDoc}
      * @throws TelegramException
@@ -101,7 +101,7 @@ abstract class BaseCommandService implements CommandInterface
     {
         $this->stack[] = $response;
     }
-    
+
     /**
      * @return bool
      */

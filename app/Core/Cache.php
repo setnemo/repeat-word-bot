@@ -85,7 +85,7 @@ final class Cache extends Singleton
         $slug = $this->getCacheSlugTrainingStatus($userId, $type);
         $redis->set($slug, 1);
     }
-    
+
     /**
      * @param int    $userId
      * @param string $type
@@ -98,7 +98,7 @@ final class Cache extends Singleton
         $slug = $this->getCacheSlugSkip($userId, $type);
         $redis->set($slug, 1, 'EX', 3600);
     }
-    
+
     /**
      * @param int    $userId
      * @param string $type

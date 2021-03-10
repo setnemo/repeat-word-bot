@@ -15,7 +15,7 @@ use RepeatBot\Core\ORM\Repositories\ExportRepository;
 class ExportService extends BaseCommandService
 {
     private ExportRepository $exportRepository;
-    
+
     /**
      * {@inheritDoc}
      */
@@ -27,7 +27,7 @@ class ExportService extends BaseCommandService
             ->getRepository(Export::class);
         parent::__construct($options);
     }
-    
+
     /**
      * {@inheritDoc}
      * @throws ORMException

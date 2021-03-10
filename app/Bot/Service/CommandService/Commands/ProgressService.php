@@ -19,7 +19,7 @@ use RepeatBot\Core\ORM\Repositories\TrainingRepository;
 class ProgressService extends BaseCommandService
 {
     private TrainingRepository $trainingRepository;
-    
+
     /**
      * {@inheritDoc}
      */
@@ -31,7 +31,7 @@ class ProgressService extends BaseCommandService
             ->getRepository(Training::class);
         parent::__construct($options);
     }
-    
+
     /**
      * {@inheritDoc}
      * @throws Exception
@@ -68,7 +68,7 @@ class ProgressService extends BaseCommandService
 
         return $this;
     }
-    
+
     /**
      * @return string
      */

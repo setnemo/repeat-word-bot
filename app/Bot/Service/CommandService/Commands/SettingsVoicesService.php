@@ -27,7 +27,7 @@ class SettingsVoicesService extends BaseCommandService
 {
     private UserVoiceRepository $userVoiceRepository;
     private UserNotificationRepository $userNotificationRepository;
-    
+
     /**
      * {@inheritDoc}
      */
@@ -40,7 +40,7 @@ class SettingsVoicesService extends BaseCommandService
         $this->userNotificationRepository = $em->getRepository(UserNotification::class);
         parent::__construct($options);
     }
-    
+
     /**
      * {@inheritDoc}
      * @throws Exception
@@ -61,7 +61,7 @@ class SettingsVoicesService extends BaseCommandService
 
         return $this;
     }
-    
+
     /**
      * @throws Exception
      */
@@ -83,7 +83,7 @@ class SettingsVoicesService extends BaseCommandService
 
         $this->setResponse(new ResponseDirector('editMessageText', $data));
     }
-    
+
     /**
      * @param $num
      *
@@ -108,7 +108,7 @@ class SettingsVoicesService extends BaseCommandService
             'cache_time' => 3,
         ]));
     }
-    
+
     /**
      * @throws ORMException
      * @throws OptimisticLockException
@@ -125,7 +125,7 @@ class SettingsVoicesService extends BaseCommandService
 
         $this->setResponse(new ResponseDirector('editMessageText', $data));
     }
-    
+
     /**
      * @param int $num
      * @param int $switcher

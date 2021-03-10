@@ -27,7 +27,7 @@ class CollectionService extends BaseCommandService
     private WordRepository $wordRepository;
 
     private TrainingRepository $trainingRepository;
-    
+
     /**
      * {@inheritDoc}
      */
@@ -43,7 +43,7 @@ class CollectionService extends BaseCommandService
 
         parent::__construct($options);
     }
-    
+
     /**
      * {@inheritDoc}
      * @throws Exception
@@ -53,7 +53,7 @@ class CollectionService extends BaseCommandService
         $this->executeCollectionCommand([] !== $this->getOptions()->getPayload());
         return $this;
     }
-    
+
     /**
      * @param bool $edit
      *
@@ -86,7 +86,7 @@ class CollectionService extends BaseCommandService
                 );
         }
     }
-    
+
     /**
      * @param int $id
      *
@@ -129,7 +129,7 @@ class CollectionService extends BaseCommandService
             )
         );
     }
-    
+
     /**
      * @param int $id
      *
@@ -145,7 +145,7 @@ class CollectionService extends BaseCommandService
 
         return 'Слова добавлены';
     }
-    
+
     /**
      * @param int $id
      *
@@ -167,7 +167,7 @@ class CollectionService extends BaseCommandService
 
         return '';
     }
-    
+
     /**
      * @param int $id
      *
@@ -189,7 +189,7 @@ class CollectionService extends BaseCommandService
 
         return '';
     }
-    
+
     /**
      * @param int $id
      *
@@ -220,7 +220,7 @@ class CollectionService extends BaseCommandService
 
         return '';
     }
-    
+
     /**
      * @param TrainingRepository $trainingRepository
      * @param WordCollection     $words

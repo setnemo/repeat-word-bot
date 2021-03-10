@@ -20,7 +20,7 @@ use RepeatBot\Core\ORM\Repositories\LearnNotificationPersonalRepository;
 class AlarmService extends BaseCommandService
 {
     private LearnNotificationPersonalRepository $repository;
-    
+
     /**
      * {@inheritDoc}
      */
@@ -33,7 +33,7 @@ class AlarmService extends BaseCommandService
 
         parent::__construct($options);
     }
-    
+
     /**
      * {@inheritDoc}
      * @throws Exception
@@ -51,7 +51,7 @@ class AlarmService extends BaseCommandService
 
         return $this;
     }
-    
+
     /**
      * @throws Exception
      */
@@ -80,7 +80,7 @@ class AlarmService extends BaseCommandService
             )
         );
     }
-    
+
     /**
      * @throws Exception
      */
@@ -100,7 +100,7 @@ class AlarmService extends BaseCommandService
             )
         );
     }
-    
+
     /**
      * @throws ORMException
      * @throws OptimisticLockException

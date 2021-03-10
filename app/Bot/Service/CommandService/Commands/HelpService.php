@@ -34,7 +34,7 @@ class HelpService extends BaseCommandService
 
         return $this;
     }
-    
+
     /**
      * @return string
      */
