@@ -12,7 +12,4 @@
             <directory name="vendor"/>
         </ignoreFiles>
     </projectFiles>
-    <plugins>
-        <plugin filename="vendor/omentes/doctrine-psalm-plugin/src/ReturnTypeProvider/GetRepositoryReturnTypeProvider.php"></plugin>
-    </plugins>
 </psalm>
