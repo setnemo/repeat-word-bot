@@ -21,7 +21,7 @@ abstract class DatabaseTestCase extends TestCase
      * @var EntityManager
      */
     private EntityManager $entityManager;
-    
+
     final public function getConnection(): EntityManager
     {
         if (null === $this->entityManager) {
