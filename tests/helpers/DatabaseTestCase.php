@@ -18,11 +18,11 @@ use RepeatBot\Core\Cache as CoreCache;
 abstract class DatabaseTestCase extends TestCase
 {
     /**
-     * @var EntityManager
+     * @var ?EntityManager
      */
-    private EntityManager $entityManager;
+    private ?EntityManager $entityManager = null;
 
-    final public function getConnection(): EntityManager
+    final public function getEntityManager(): EntityManager
     {
         if (null === $this->entityManager) {
             $config = App::getInstance()->init()->getConfig();

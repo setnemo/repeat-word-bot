@@ -15,7 +15,7 @@ final class DatabaseConnectionTest extends DatabaseTestCase
 {
     public function testConnection(): void
     {
-        $repo = $this->getConnection()->getRepository(User::class);
+        $repo = $this->getEntityManager()->getRepository(User::class);
         $this->assertEquals(2, 1 + 1);
     }
 }
