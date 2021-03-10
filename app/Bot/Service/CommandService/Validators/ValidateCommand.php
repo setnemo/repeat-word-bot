@@ -8,5 +8,10 @@ use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 interface ValidateCommand
 {
-    public function validate(CommandOptions $options);
+    /**
+     * @param CommandOptions $options
+     *
+     * @return array
+     */
+    public function validate(CommandOptions $options): array;
 }

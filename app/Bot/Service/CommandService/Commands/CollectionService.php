@@ -230,7 +230,7 @@ class CollectionService extends BaseCommandService
      * @throws OptimisticLockException
      * @throws Exception
      */
-    public function addNewWords(
+    private function addNewWords(
         TrainingRepository $trainingRepository,
         WordCollection $words,
         int $userId

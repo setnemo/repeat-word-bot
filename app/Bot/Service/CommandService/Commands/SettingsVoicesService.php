@@ -33,7 +33,7 @@ class SettingsVoicesService extends BaseCommandService
      */
     public function __construct(CommandOptions $options)
     {
-        $em =  Database::getInstance()->getEntityManager();
+        $em = Database::getInstance()->getEntityManager();
         /** @psalm-suppress PropertyTypeCoercion */
         $this->userVoiceRepository = $em->getRepository(UserVoice::class);
         /** @psalm-suppress PropertyTypeCoercion */

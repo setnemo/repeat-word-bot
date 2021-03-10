@@ -14,10 +14,10 @@ use RepeatBot\Core\ORM\Entities\Training;
 use RepeatBot\Core\ORM\Repositories\TrainingRepository;
 
 /**
- * Class DelService
+ * Class ResetService
  * @package RepeatBot\Bot\Service\CommandService\Commands
  */
-class DelService extends BaseCommandService
+class ResetService extends BaseCommandService
 {
     private TrainingRepository $trainingRepository;
 
@@ -42,9 +42,9 @@ class DelService extends BaseCommandService
         $array = $this->getOptions()->getPayload();
 
         if (['my', 'progress'] === $array) {
-            $this->executeDelMyProgressCommand();
+            $this->executeResetMyProgressCommand();
         } elseif ('collection' === $array[0]) {
-            $this->executeDelCollectionCommand(intval($array[1]));
+            $this->executeResetCollectionCommand(intval($array[1]));
         }
 
         return $this;
@@ -53,20 +53,20 @@ class DelService extends BaseCommandService
     /**
      * @throws Exception
      */
-    private function executeDelMyProgressCommand(): void
+    private function executeResetMyProgressCommand(): void
     {
         $userId = $this->getOptions()->getChatId();
         foreach (BotHelper::getTrainingTypes() as $type) {
             $this->cache->removeTrainings($userId, $type);
             $this->cache->removeTrainingsStatus($userId, $type);
         }
-        $this->trainingRepository->removeAllTrainings($userId);
+        $this->trainingRepository->resetAllTrainings($userId);
         /** @psalm-suppress TooManyArguments */
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $data = [
             'chat_id' => $userId,
-            'text' => 'Ваш прогресс был удалён.',
+            'text' => 'Ваш прогресс был сброшен.',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,
@@ -81,20 +81,20 @@ class DelService extends BaseCommandService
      *
      * @throws Exception
      */
-    private function executeDelCollectionCommand(int $num): void
+    private function executeResetCollectionCommand(int $num): void
     {
         $userId = $this->getOptions()->getChatId();
         foreach (BotHelper::getTrainingTypes() as $type) {
             $this->cache->removeTrainings($userId, $type);
             $this->cache->removeTrainingsStatus($userId, $type);
         }
-        $this->trainingRepository->removeTrainings($userId, $num);
+        $this->trainingRepository->resetTrainings($userId, $num);
         /** @psalm-suppress TooManyArguments */
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $data = [
             'chat_id' => $userId,
-            'text' => "Ваш прогресс по коллекции {$num} был удалён.",
+            'text' => "Ваш прогресс по коллекции {$num} был сброшен.",
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,

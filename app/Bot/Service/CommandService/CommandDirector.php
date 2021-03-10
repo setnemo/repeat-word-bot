@@ -12,12 +12,15 @@ use RepeatBot\Bot\Service\CommandService\Commands\EmptyCallbackService;
 use RepeatBot\Bot\Service\CommandService\Commands\ExportService;
 use RepeatBot\Bot\Service\CommandService\Commands\HelpService;
 use RepeatBot\Bot\Service\CommandService\Commands\ProgressService;
+use RepeatBot\Bot\Service\CommandService\Commands\ResetService;
 use RepeatBot\Bot\Service\CommandService\Commands\SettingsPriorityService;
+use RepeatBot\Bot\Service\CommandService\Commands\SettingsService;
 use RepeatBot\Bot\Service\CommandService\Commands\SettingsSilentService;
 use RepeatBot\Bot\Service\CommandService\Commands\SettingsVoicesService;
 use RepeatBot\Bot\Service\CommandService\Validators\AlarmValidator;
-use RepeatBot\Bot\Service\CommandService\Validators\DelValidator;
+use RepeatBot\Bot\Service\CommandService\Validators\DelProgressValidator;
 use RepeatBot\Bot\Service\CommandService\Validators\ExportValidator;
+use RepeatBot\Bot\Service\CommandService\Validators\ResetProgressValidator;
 
 class CommandDirector
 {
@@ -34,8 +37,9 @@ class CommandDirector
     {
         return match($this->getOptions()->getCommand()) {
             'alarm'             => $this->makeAlarmCommand($this->getOptions()),
-            'collection'        => $this->makeCollectionCommand($this->getOptions()),
+            'collections'       => $this->makeCollectionCommand($this->getOptions()),
             'empty'             => $this->makeEmptyCommand($this->getOptions()),
+            'settings'          => $this->makeSettingsCommand($this->getOptions()),
             'settings_voices'   => $this->makeSettingsVoicesCommand($this->getOptions()),
             'settings_silent'   => $this->makeSettingsSilentCommand($this->getOptions()),
             'settings_priority' => $this->makeSettingsPriorityCommand($this->getOptions()),
@@ -43,6 +47,7 @@ class CommandDirector
             'export'            => $this->makeExportCommand($this->getOptions()),
             'help'              => $this->makeHelpCommand($this->getOptions()),
             'progress'          => $this->makeProgressCommand($this->getOptions()),
+            'reset'             => $this->makeResetCommand($this->getOptions()),
         };
     }
 
@@ -59,6 +64,11 @@ class CommandDirector
     private function makeEmptyCommand(CommandOptions $options)
     {
         return new EmptyCallbackService($options);
+    }
+
+    private function makeSettingsCommand(CommandOptions $options)
+    {
+        return new SettingsService($options);
     }
 
     private function makeSettingsVoicesCommand(CommandOptions $options)
@@ -78,7 +88,7 @@ class CommandDirector
 
     private function makeDelCommand(CommandOptions $options)
     {
-        return (new DelService($options))->validate(new DelValidator());
+        return (new DelService($options))->validate(new DelProgressValidator());
     }
 
     private function makeExportCommand(CommandOptions $options)
@@ -94,5 +104,10 @@ class CommandDirector
     private function makeProgressCommand(CommandOptions $options)
     {
         return new ProgressService($options);
+    }
+
+    private function makeResetCommand(CommandOptions $options)
+    {
+        return (new ResetService($options))->validate(new ResetProgressValidator());
     }
 }

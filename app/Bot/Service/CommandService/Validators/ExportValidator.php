@@ -10,10 +10,17 @@ use RepeatBot\Core\Database\Database;
 use RepeatBot\Core\ORM\Entities\Export;
 use RepeatBot\Core\ORM\Repositories\ExportRepository;
 
+/**
+ * Class ExportValidator
+ * @package RepeatBot\Bot\Service\CommandService\Validators
+ */
 class ExportValidator implements ValidateCommand
 {
     private ExportRepository $exportRepository;
 
+    /**
+     * ExportValidator constructor.
+     */
     public function __construct()
     {
         /** @psalm-suppress PropertyTypeCoercion */
@@ -22,6 +29,9 @@ class ExportValidator implements ValidateCommand
             ->getRepository(Export::class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function validate(CommandOptions $options): array
     {
         if ($this->exportRepository->userHaveExport($options->getChatId())) {

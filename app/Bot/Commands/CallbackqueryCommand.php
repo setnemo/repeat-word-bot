@@ -44,7 +44,7 @@ class CallbackqueryCommand extends SystemCommand
         $service = $command->makeService();
 
         if (!$service->hasResponse()) {
-            $service->execute();
+            $service = $service->execute();
         }
 
         return $service->postStackMessages()->getResponseMessage();

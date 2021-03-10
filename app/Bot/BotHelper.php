@@ -53,8 +53,8 @@ class BotHelper
     public static function getCommands(): array
     {
         return [
-            'Коллекции слов' => 'Collections',
-            'Мой прогресс' => 'Progress',
+            'Коллекции слов' => 'collections',
+            'Мой прогресс' => 'progress',
             'From English' => 'VoiceEnglish',
             'FromEnglish' => 'VoiceEnglish',
             'To English' => 'VoiceEnglish',

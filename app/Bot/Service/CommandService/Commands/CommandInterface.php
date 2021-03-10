@@ -12,17 +12,17 @@ interface CommandInterface
      *
      * @return $this
      */
-    public function validate(?ValidateCommand $validator): self;
+    public function validate(?ValidateCommand $validator): CommandInterface;
 
     /**
      * @return $this
      */
-    public function execute(): self;
+    public function execute(): CommandInterface;
 
     /**
      * @return $this
      */
-    public function postStackMessages(): self;
+    public function postStackMessages(): CommandInterface;
 
     /**
      * @return ServerResponse

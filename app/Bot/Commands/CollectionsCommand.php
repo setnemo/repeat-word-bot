@@ -47,7 +47,7 @@ class CollectionsCommand extends SystemCommand
     {
         $director = new CommandDirector(
             new CommandOptions(
-                'collection',
+                'collections',
                 [],
                 $this->getMessage()->getChat()->getId(),
             )
@@ -55,7 +55,7 @@ class CollectionsCommand extends SystemCommand
         $service = $director->makeService();
 
         if (!$service->hasResponse()) {
-            $service->execute();
+            $service = $service->execute();
         }
 
         return $service->postStackMessages()->getResponseMessage();

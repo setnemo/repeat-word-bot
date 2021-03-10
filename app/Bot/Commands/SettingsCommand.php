@@ -5,15 +5,9 @@ declare(strict_types=1);
 namespace Longman\TelegramBot\Commands\SystemCommand;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Request;
-use RepeatBot\Bot\BotHelper;
-use RepeatBot\Core\App;
-use RepeatBot\Core\Cache;
-use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\ORM\Entities\UserNotification;
+use RepeatBot\Bot\Service\CommandService\CommandDirector;
+use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 /**
  * Class SettingsCommand
@@ -46,43 +40,22 @@ class SettingsCommand extends SystemCommand
      * Command execute method
      *
      * @return ServerResponse
-     * @throws TelegramException
      */
     public function execute(): ServerResponse
     {
-        $userId = $this->getMessage()->getFrom()->getId();
-        /** @psalm-suppress PropertyTypeCoercion */
-        $userNotificationRepository = Database::getInstance()
-            ->getEntityManager()
-            ->getRepository(UserNotification::class);
-        $silent = $userNotificationRepository->getOrCreateUserNotification(
-            $userId
-        )->getSilent();
-        $config = App::getInstance()->getConfig();
-        $cache = Cache::getInstance()->init($config);
-        $priority = $cache->getPriority($userId);
-        $symbolSilent = $silent === 1 ? '✅' : '❌';
-        $symbolPriority = $priority === 1 ? '✅' : '❌';
-        $chat_id = $this->getMessage()->getChat()->getId();
-        $textSilent = "Тихий режим сообщений: {$symbolSilent}";
-        $texPriority = "Приоритет меньших итераций: {$symbolPriority}";
-        $texVoices = "Выбрать голоса для тренировок";
-        /** @psalm-suppress TooManyArguments */
-        $keyboard = new InlineKeyboard(...BotHelper::getSettingsKeyboard(
-            $textSilent,
-            $texPriority,
-            $texVoices,
-            $silent === 1 ? 0 : 1,
-            $priority === 1 ? 0 : 1,
-        ));
-        $data = [
-            'chat_id' => $chat_id,
-            'text' => BotHelper::getSettingsText(),
-            'parse_mode' => 'markdown',
-            'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
-        ];
-        return Request::sendMessage($data);
+        $director = new CommandDirector(
+            new CommandOptions(
+                'settings',
+                [],
+                $this->getMessage()->getChat()->getId(),
+            )
+        );
+        $service = $director->makeService();
+
+        if (!$service->hasResponse()) {
+            $service = $service->execute();
+        }
+
+        return $service->postStackMessages()->getResponseMessage();
     }
 }

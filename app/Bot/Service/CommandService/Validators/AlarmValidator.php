@@ -10,6 +10,9 @@ use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 
 class AlarmValidator implements ValidateCommand
 {
+    /**
+     * {@inheritDoc}
+     */
     public function validate(CommandOptions $options): array
     {
         $payload = $options->getPayload();
@@ -32,6 +35,11 @@ class AlarmValidator implements ValidateCommand
         return [];
     }
 
+    /**
+     * @param array $commands
+     *
+     * @return bool
+     */
     private function isBrokenTime(array $commands): bool
     {
         if (empty($commands[0])) {
@@ -55,6 +63,9 @@ class AlarmValidator implements ValidateCommand
         return false;
     }
 
+    /**
+     * @return string
+     */
     private function getErrorText(): string
     {
         return "Чтобы создать напоминание на 9 утра - воспользуйтесь командой `/alarm 9:00`. " .

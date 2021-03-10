@@ -199,13 +199,14 @@ class TrainingRepository extends EntityRepository
     {
         $query = $this->getEntityManager()->createQueryBuilder()
             ->update('RepeatBot\Core\ORM\Entities\Training', 't')
-            ->set('t.status', 'first')
+            ->set('t.status', '?0')
             ->set('t.next', '?1')
             ->set('t.updatedAt', '?2')
             ->where('t.userId = :userId')
             ->andWhere('t.collectionId = :collectionId')
             ->setParameter('userId', $userId)
             ->setParameter('collectionId', $collectionId)
+            ->setParameter(0, 'first')
             ->setParameter(1, Carbon::now('Europe/Kiev'))
             ->setParameter(2, Carbon::now('Europe/Kiev'));
 

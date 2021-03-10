@@ -5,16 +5,10 @@ declare(strict_types=1);
 namespace Longman\TelegramBot\Commands\SystemCommand;
 
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Request;
-use RepeatBot\Bot\BotHelper;
-use RepeatBot\Core\App;
-use RepeatBot\Core\Cache;
-use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Metric;
-use RepeatBot\Core\ORM\Entities\Training;
+use RepeatBot\Bot\Service\CommandService\CommandDirector;
+use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 /**
  * Class ResetCommand
@@ -51,52 +45,21 @@ class ResetCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        $config = App::getInstance()->getConfig();
-        $metric = Metric::getInstance()->init($config);
-        $metric->increaseMetric('usage');
-
-        $flag = false;
-        $chat_id = $this->getMessage()->getChat()->getId();
-        $userId = $this->getMessage()->getFrom()->getId();
         $input = $this->getMessage()->getText(true);
         $text = null === $input ? '' : $input;
-        /** @psalm-suppress PropertyTypeCoercion */
-        $trainingRepository = Database::getInstance()
-            ->getEntityManager()
-            ->getRepository(Training::class);
-        $config = App::getInstance()->getConfig();
-        $cache = Cache::getInstance()->init($config);
-        if ($text === 'my progress') {
-            foreach (BotHelper::getTrainingTypes() as $type) {
-                $cache->removeTrainings($this->getMessage()->getFrom()->getId(), $type);
-                $cache->removeTrainingsStatus($this->getMessage()->getFrom()->getId(), $type);
-            }
-            $trainingRepository->resetAllTrainings($userId);
-            $flag = true;
-        }
-        $array = explode(' ', $text);
-        if ($array[0] === 'collection' && intval($array[1]) > 0 && intval($array[1]) < 37) {
-            foreach (BotHelper::getTrainingTypes() as $type) {
-                $cache->removeTrainings($this->getMessage()->getFrom()->getId(), $type);
-                $cache->removeTrainingsStatus($this->getMessage()->getFrom()->getId(), $type);
-            }
-            $trainingRepository->resetTrainings($userId, intval($array[1]));
-            $flag = true;
-        }
-        /** @psalm-suppress TooManyArguments */
-        $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
-        $keyboard->setResizeKeyboard(true);
-        $data = [
-            'chat_id' => $chat_id,
-            'text' => $flag ?
-                'Ваш прогресс был удалён' :
-                "`Сброс прогресса:`\nИспользуйте команду `/reset collection <number>` или `/reset collection <number>`. Будьте осторожны, сброс не обратим и вам придется начать итерации с начала",
-            'parse_mode' => 'markdown',
-            'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
-        ];
+        $director = new CommandDirector(
+            new CommandOptions(
+                'reset',
+                explode(' ', $text),
+                $this->getMessage()->getChat()->getId(),
+            )
+        );
+        $service = $director->makeService();
 
-        return Request::sendMessage($data);
+        if (!$service->hasResponse()) {
+            $service = $service->execute();
+        }
+
+        return $service->postStackMessages()->getResponseMessage();
     }
 }

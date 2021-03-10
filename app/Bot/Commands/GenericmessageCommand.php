@@ -83,30 +83,4 @@ class GenericmessageCommand extends SystemCommand
         return $this->telegram->executeCommand((string)$command);
     }
 
-    /**
-     * @param string $text
-     *
-     * @return bool
-     */
-    private function isDontKnow(string $text): bool
-    {
-        return in_array(mb_strtolower($text), [
-            'я не знаю',
-            'не знаю',
-            'i don’t know',
-            'i don\'t know',
-            'don’t know',
-            'don\'t know',
-            'dont know',
-            'i dont know',
-            '.',
-            'p',
-            'х',
-        ]);
-    }
-
-    private function isOneYear(string $text): bool
-    {
-        return '1' === $text;
-    }
 }

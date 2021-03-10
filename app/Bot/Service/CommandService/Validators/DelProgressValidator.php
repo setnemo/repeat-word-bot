@@ -9,8 +9,11 @@ use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 
-class DelValidator implements ValidateCommand
+class DelProgressValidator implements ValidateCommand
 {
+    /**
+     * {@inheritDoc}
+     */
     public function validate(CommandOptions $options): array
     {
         $payload = $options->getPayload();
@@ -41,7 +44,7 @@ class DelValidator implements ValidateCommand
     /**
      * @return string
      */
-    private function getErrorText(): string
+    protected function getErrorText(): string
     {
         return "`Сброс прогресса:`\nИспользуйте команду `/del collection <number>` " .
             "или `/del my progress`. Будьте осторожны: сброс не обратим";
