@@ -8,6 +8,10 @@ use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 
+/**
+ * Class ResponseDirector
+ * @package RepeatBot\Bot\Service\CommandService
+ */
 class ResponseDirector
 {
     private const SUPPORT_TYPES = [

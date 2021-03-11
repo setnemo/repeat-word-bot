@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService;
 
+/**
+ * Class CommandOptions
+ * @package RepeatBot\Bot\Service\CommandService
+ */
 class CommandOptions
 {
     protected string $command = '';
@@ -11,7 +15,16 @@ class CommandOptions
     protected int $chatId = 0;
     protected int $messageId = 0;
     protected int $callbackQueryId = 0;
-
+    
+    /**
+     * CommandOptions constructor.
+     *
+     * @param string $command
+     * @param array  $payload
+     * @param int    $chatId
+     * @param int    $messageId
+     * @param int    $callbackQueryId
+     */
     public function __construct(
         string $command = '',
         array $payload = [],

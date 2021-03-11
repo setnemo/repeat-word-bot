@@ -10,6 +10,10 @@ use Google\Cloud\TextToSpeech\V1\SynthesisInput;
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 
+/**
+ * Class GoogleTextToSpeechService
+ * @package RepeatBot\Bot\Service
+ */
 class GoogleTextToSpeechService
 {
     /**

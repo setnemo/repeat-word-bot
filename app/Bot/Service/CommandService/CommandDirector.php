@@ -24,15 +24,26 @@ use RepeatBot\Bot\Service\CommandService\Validators\ResetProgressValidator;
 
 class CommandDirector
 {
+    /**
+     * CommandDirector constructor.
+     *
+     * @param CommandOptions $options
+     */
     public function __construct(protected CommandOptions $options)
     {
     }
-
+    
+    /**
+     * @return CommandOptions
+     */
     public function getOptions(): CommandOptions
     {
         return $this->options;
     }
-
+    
+    /**
+     * @return CommandInterface
+     */
     public function makeService(): CommandInterface
     {
         return match($this->getOptions()->getCommand()) {
@@ -50,63 +61,123 @@ class CommandDirector
             'reset'             => $this->makeResetCommand($this->getOptions()),
         };
     }
-
+    
+    /**
+     * @param CommandOptions $options
+     *
+     * @return CommandInterface
+     */
     private function makeAlarmCommand(CommandOptions $options): CommandInterface
     {
         return (new AlarmService($options))->validate(new AlarmValidator());
     }
-
+    
+    /**
+     * @param CommandOptions $options
+     *
+     * @return CommandInterface
+     */
     private function makeCollectionCommand(CommandOptions $options): CommandInterface
     {
         return new CollectionService($options);
     }
-
-    private function makeEmptyCommand(CommandOptions $options)
+    
+    /**
+     * @param CommandOptions $options
+     *
+     * @return CommandInterface
+     */
+    private function makeEmptyCommand(CommandOptions $options): CommandInterface
     {
         return new EmptyCallbackService($options);
     }
-
-    private function makeSettingsCommand(CommandOptions $options)
+    
+    /**
+     * @param CommandOptions $options
+     *
+     * @return CommandInterface
+     */
+    private function makeSettingsCommand(CommandOptions $options): CommandInterface
     {
         return new SettingsService($options);
     }
-
-    private function makeSettingsVoicesCommand(CommandOptions $options)
+    
+    /**
+     * @param CommandOptions $options
+     *
+     * @return CommandInterface
+     */
+    private function makeSettingsVoicesCommand(CommandOptions $options): CommandInterface
     {
         return new SettingsVoicesService($options);
     }
-
-    private function makeSettingsSilentCommand(CommandOptions $options)
+    
+    /**
+     * @param CommandOptions $options
+     *
+     * @return CommandInterface
+     */
+    private function makeSettingsSilentCommand(CommandOptions $options): CommandInterface
     {
         return new SettingsSilentService($options);
     }
-
-    private function makeSettingsPriorityCommand(CommandOptions $options)
+    
+    /**
+     * @param CommandOptions $options
+     *
+     * @return CommandInterface
+     */
+    private function makeSettingsPriorityCommand(CommandOptions $options): CommandInterface
     {
         return new SettingsPriorityService($options);
     }
-
-    private function makeDelCommand(CommandOptions $options)
+    
+    /**
+     * @param CommandOptions $options
+     *
+     * @return CommandInterface
+     */
+    private function makeDelCommand(CommandOptions $options): CommandInterface
     {
         return (new DelService($options))->validate(new DelProgressValidator());
     }
-
-    private function makeExportCommand(CommandOptions $options)
+    
+    /**
+     * @param CommandOptions $options
+     *
+     * @return CommandInterface
+     */
+    private function makeExportCommand(CommandOptions $options): CommandInterface
     {
         return (new ExportService($options))->validate(new ExportValidator());
     }
-
-    private function makeHelpCommand(CommandOptions $options)
+    
+    /**
+     * @param CommandOptions $options
+     *
+     * @return CommandInterface
+     */
+    private function makeHelpCommand(CommandOptions $options): CommandInterface
     {
         return new HelpService($options);
     }
-
-    private function makeProgressCommand(CommandOptions $options)
+    
+    /**
+     * @param CommandOptions $options
+     *
+     * @return CommandInterface
+     */
+    private function makeProgressCommand(CommandOptions $options): CommandInterface
     {
         return new ProgressService($options);
     }
-
-    private function makeResetCommand(CommandOptions $options)
+    
+    /**
+     * @param CommandOptions $options
+     *
+     * @return CommandInterface
+     */
+    private function makeResetCommand(CommandOptions $options): CommandInterface
     {
         return (new ResetService($options))->validate(new ResetProgressValidator());
     }

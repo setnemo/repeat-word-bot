@@ -28,22 +28,15 @@ class ExportValidator implements ValidateCommand
             ->getEntityManager()
             ->getRepository(Export::class);
     }
-
+    
     /**
      * {@inheritDoc}
+     * @throws \Exception
      */
     public function validate(CommandOptions $options): array
     {
         if ($this->exportRepository->userHaveExport($options->getChatId())) {
-            $data = [
-                'chat_id' => $options->getChatId(),
-                'text' => $this->getHaveExportErrorText(),
-                'parse_mode' => 'markdown',
-                'disable_notification' => 1,
-            ];
-            return [
-                new ResponseDirector('sendMessage', $data)
-            ];
+            return $this->createUserHaveExportResponse($options);
         }
 
         $payload = $options->getPayload();
@@ -55,16 +48,7 @@ class ExportValidator implements ValidateCommand
             ) ||
             count($payload) > 2
         ) {
-            $data = [
-                'chat_id' => $options->getChatId(),
-                'text' => $this->getInvalidPayloadErrorText(),
-                'parse_mode' => 'markdown',
-                'disable_web_page_preview' => true,
-                'disable_notification' => 1,
-            ];
-            return [
-                new ResponseDirector('sendMessage', $data)
-            ];
+            return $this->createInvalidPayloadReponse($options);
         }
 
         return [];
@@ -81,4 +65,45 @@ class ExportValidator implements ValidateCommand
             " - /export ToEnglish second\n\n Где первое слово режим без пробела, а второе название итерации. " .
             "Посмотреть сколько у вас слов в какой итерации можно командой /progress";
     }
+    
+    /**
+     * @param CommandOptions $options
+     *
+     * @return ResponseDirector[]
+     * @throws \Exception
+     */
+    private function createUserHaveExportResponse(CommandOptions $options): array
+    {
+        $data = [
+            'chat_id' => $options->getChatId(),
+            'text' => $this->getHaveExportErrorText(),
+            'parse_mode' => 'markdown',
+            'disable_notification' => 1,
+        ];
+        
+        return [
+            new ResponseDirector('sendMessage', $data)
+        ];
+}
+    
+    /**
+     * @param CommandOptions $options
+     *
+     * @return ResponseDirector[]
+     * @throws \Exception
+     */
+    private function createInvalidPayloadReponse(CommandOptions $options): array
+    {
+        $data = [
+            'chat_id' => $options->getChatId(),
+            'text' => $this->getInvalidPayloadErrorText(),
+            'parse_mode' => 'markdown',
+            'disable_web_page_preview' => true,
+            'disable_notification' => 1,
+        ];
+        
+        return [
+            new ResponseDirector('sendMessage', $data)
+        ];
+}
 }

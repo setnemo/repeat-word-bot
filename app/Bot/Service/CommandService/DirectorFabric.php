@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService;
 
+/**
+ * Class DirectorFabric
+ * @package RepeatBot\Bot\Service\CommandService
+ */
 class DirectorFabric
 {
     private string $query;
@@ -11,7 +15,15 @@ class DirectorFabric
     private int $messageId;
     private int $callbackQueryId;
     private array $payload;
-
+    
+    /**
+     * DirectorFabric constructor.
+     *
+     * @param string $query
+     * @param int    $chatId
+     * @param int    $messageId
+     * @param int    $callbackQueryId
+     */
     public function __construct(
         string $query = '',
         int $chatId = 0,
@@ -25,7 +37,10 @@ class DirectorFabric
 
         $this->payload = explode('_', $this->query);
     }
-
+    
+    /**
+     * @return CommandDirector
+     */
     public function getCommandDirector(): CommandDirector
     {
         $command = $this->payload[0];
@@ -36,7 +51,10 @@ class DirectorFabric
         default           => $this->makeEmptyCallback(),
         };
     }
-
+    
+    /**
+     * @return CommandDirector
+     */
     private function makeSettingsCommand(): CommandDirector
     {
         $command = $this->payload[1];
@@ -48,32 +66,52 @@ class DirectorFabric
         default        => $this->makeEmptyCallback(),
         };
     }
-
+    
+    /**
+     * @return CommandDirector
+     */
     private function makeCollectionCommand(): CommandDirector
     {
         return $this->makeDirector('collection');
     }
-
+    
+    /**
+     * @return CommandDirector
+     */
     private function makeEmptyCallback(): CommandDirector
     {
         return $this->makeDirector('empty');
     }
-
-    private function makeSettingsVoicesCommand()
+    
+    /**
+     * @return CommandDirector
+     */
+    private function makeSettingsVoicesCommand(): CommandDirector
     {
         return $this->makeDirector('settings_voices');
     }
-
-    private function makeSettingsSilentCommand()
+    
+    /**
+     * @return CommandDirector
+     */
+    private function makeSettingsSilentCommand(): CommandDirector
     {
         return $this->makeDirector('settings_silent');
     }
-
-    private function makeSettingsPriorityCommand()
+    
+    /**
+     * @return CommandDirector
+     */
+    private function makeSettingsPriorityCommand(): CommandDirector
     {
         return $this->makeDirector('settings_priority');
     }
-
+    
+    /**
+     * @param string $command
+     *
+     * @return CommandDirector
+     */
     private function makeDirector(string $command): CommandDirector
     {
         return new CommandDirector(
