@@ -47,9 +47,8 @@ class HelpCommand extends SystemCommand
     {
         $command = new CommandDirector(
             new CommandOptions(
-                'help',
-                [],
-                $this->getMessage()->getChat()->getId()
+                command: 'help',
+                chatId: $this->getMessage()->getChat()->getId(),
             )
         );
         $service = $command->makeService();

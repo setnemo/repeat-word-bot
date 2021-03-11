@@ -11,6 +11,7 @@ namespace RepeatBot\Bot\Service\CommandService;
 class CommandOptions
 {
     protected string $command = '';
+    protected string $text;
     protected array $payload = [];
     protected int $chatId = 0;
     protected int $messageId = 0;
@@ -20,6 +21,7 @@ class CommandOptions
      * CommandOptions constructor.
      *
      * @param string $command
+     * @param string $text
      * @param array  $payload
      * @param int    $chatId
      * @param int    $messageId
@@ -27,6 +29,7 @@ class CommandOptions
      */
     public function __construct(
         string $command = '',
+        string $text = '',
         array $payload = [],
         int $chatId = 0,
         int $messageId = 0,
@@ -36,6 +39,7 @@ class CommandOptions
         $this->messageId = $messageId;
         $this->chatId = $chatId;
         $this->payload = $payload;
+        $this->text = $text;
         $this->command = $command;
     }
 
@@ -69,6 +73,14 @@ class CommandOptions
     public function getCommand(): string
     {
         return $this->command;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getText(): string
+    {
+        return $this->text;
     }
 
     /**

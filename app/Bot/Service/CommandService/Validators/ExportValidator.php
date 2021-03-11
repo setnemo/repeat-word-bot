@@ -28,7 +28,7 @@ class ExportValidator implements ValidateCommand
             ->getEntityManager()
             ->getRepository(Export::class);
     }
-    
+
     /**
      * {@inheritDoc}
      * @throws \Exception
@@ -65,7 +65,7 @@ class ExportValidator implements ValidateCommand
             " - /export ToEnglish second\n\n Где первое слово режим без пробела, а второе название итерации. " .
             "Посмотреть сколько у вас слов в какой итерации можно командой /progress";
     }
-    
+
     /**
      * @param CommandOptions $options
      *
@@ -80,12 +80,12 @@ class ExportValidator implements ValidateCommand
             'parse_mode' => 'markdown',
             'disable_notification' => 1,
         ];
-        
+
         return [
             new ResponseDirector('sendMessage', $data)
         ];
-}
-    
+    }
+
     /**
      * @param CommandOptions $options
      *
@@ -101,9 +101,9 @@ class ExportValidator implements ValidateCommand
             'disable_web_page_preview' => true,
             'disable_notification' => 1,
         ];
-        
+
         return [
             new ResponseDirector('sendMessage', $data)
         ];
-}
+    }
 }

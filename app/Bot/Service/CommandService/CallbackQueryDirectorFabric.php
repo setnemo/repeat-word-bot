@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace RepeatBot\Bot\Service\CommandService;
 
 /**
- * Class DirectorFabric
- * @package RepeatBot\Bot\Service\CommandService
+ * Class CallbackQueryDirectorFabric
+ * @package RepeatBot\Bot\Service\CommandService\Commands
  */
-class DirectorFabric
+class CallbackQueryDirectorFabric
 {
     private string $query;
     private int $chatId;
     private int $messageId;
     private int $callbackQueryId;
     private array $payload;
-    
+
     /**
      * DirectorFabric constructor.
      *
@@ -37,7 +37,7 @@ class DirectorFabric
 
         $this->payload = explode('_', $this->query);
     }
-    
+
     /**
      * @return CommandDirector
      */
@@ -51,7 +51,7 @@ class DirectorFabric
         default           => $this->makeEmptyCallback(),
         };
     }
-    
+
     /**
      * @return CommandDirector
      */
@@ -66,15 +66,15 @@ class DirectorFabric
         default        => $this->makeEmptyCallback(),
         };
     }
-    
+
     /**
      * @return CommandDirector
      */
     private function makeCollectionCommand(): CommandDirector
     {
-        return $this->makeDirector('collection');
+        return $this->makeDirector('collections');
     }
-    
+
     /**
      * @return CommandDirector
      */
@@ -82,7 +82,7 @@ class DirectorFabric
     {
         return $this->makeDirector('empty');
     }
-    
+
     /**
      * @return CommandDirector
      */
@@ -90,7 +90,7 @@ class DirectorFabric
     {
         return $this->makeDirector('settings_voices');
     }
-    
+
     /**
      * @return CommandDirector
      */
@@ -98,7 +98,7 @@ class DirectorFabric
     {
         return $this->makeDirector('settings_silent');
     }
-    
+
     /**
      * @return CommandDirector
      */
@@ -106,7 +106,7 @@ class DirectorFabric
     {
         return $this->makeDirector('settings_priority');
     }
-    
+
     /**
      * @param string $command
      *
@@ -117,6 +117,7 @@ class DirectorFabric
         return new CommandDirector(
             new CommandOptions(
                 $command,
+                '',
                 explode('_', $this->query),
                 $this->chatId,
                 $this->messageId,

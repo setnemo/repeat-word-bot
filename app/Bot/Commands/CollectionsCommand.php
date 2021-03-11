@@ -47,9 +47,8 @@ class CollectionsCommand extends SystemCommand
     {
         $director = new CommandDirector(
             new CommandOptions(
-                'collections',
-                [],
-                $this->getMessage()->getChat()->getId(),
+                command: 'collections',
+                chatId: $this->getMessage()->getChat()->getId(),
             )
         );
         $service = $director->makeService();

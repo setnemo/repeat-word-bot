@@ -47,9 +47,8 @@ class ProgressCommand extends SystemCommand
     {
         $command = new CommandDirector(
             new CommandOptions(
-                'progress',
-                [],
-                $this->getMessage()->getChat()->getId()
+                command: 'progress',
+                chatId: $this->getMessage()->getChat()->getId(),
             )
         );
         $service = $command->makeService();

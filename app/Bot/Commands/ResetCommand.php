@@ -49,9 +49,9 @@ class ResetCommand extends SystemCommand
         $text = null === $input ? '' : $input;
         $director = new CommandDirector(
             new CommandOptions(
-                'reset',
-                explode(' ', $text),
-                $this->getMessage()->getChat()->getId(),
+                command: 'reset',
+                payload: explode(' ', $text),
+                chatId: $this->getMessage()->getChat()->getId(),
             )
         );
         $service = $director->makeService();

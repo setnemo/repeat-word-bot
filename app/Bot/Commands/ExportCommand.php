@@ -49,9 +49,9 @@ class ExportCommand extends SystemCommand
         $text = null === $input ? '' : $input;
         $director = new CommandDirector(
             new CommandOptions(
-                'export',
-                explode(' ', $text),
-                $this->getMessage()->getChat()->getId(),
+                command: 'export',
+                payload: explode(' ', $text),
+                chatId: $this->getMessage()->getChat()->getId(),
             )
         );
         $service = $director->makeService();

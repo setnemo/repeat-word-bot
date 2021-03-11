@@ -49,9 +49,9 @@ class DelCommand extends SystemCommand
         $text = null === $input ? '' : $input;
         $director = new CommandDirector(
             new CommandOptions(
-                'del',
-                explode(' ', $text),
-                $this->getMessage()->getChat()->getId(),
+                command: 'del',
+                payload: explode(' ', $text),
+                chatId: $this->getMessage()->getChat()->getId(),
             )
         );
         $service = $director->makeService();

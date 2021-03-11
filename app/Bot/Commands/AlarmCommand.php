@@ -20,14 +20,6 @@ class AlarmCommand extends SystemCommand
     /**
      * @var string
      */
-    protected $name = 'alarm';
-    /**
-     * @var string
-     */
-    protected $description = 'Alarm command';
-    /**
-     * @var string
-     */
     protected $usage = '/alarm';
     /**
      * @var string
@@ -51,9 +43,9 @@ class AlarmCommand extends SystemCommand
         $text = null === $input ? '' : $input;
         $command = new CommandDirector(
             new CommandOptions(
-                'alarm',
-                explode(' ', $text),
-                $this->getMessage()->getChat()->getId()
+                command: 'alarm',
+                payload: explode(' ', $text),
+                chatId: $this->getMessage()->getChat()->getId(),
             )
         );
         $service = $command->makeService();

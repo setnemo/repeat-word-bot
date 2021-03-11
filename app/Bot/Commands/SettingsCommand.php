@@ -45,9 +45,8 @@ class SettingsCommand extends SystemCommand
     {
         $director = new CommandDirector(
             new CommandOptions(
-                'settings',
-                [],
-                $this->getMessage()->getChat()->getId(),
+                command: 'settings',
+                chatId: $this->getMessage()->getChat()->getId()
             )
         );
         $service = $director->makeService();

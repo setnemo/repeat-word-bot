@@ -55,14 +55,14 @@ class BotHelper
         return [
             'Коллекции слов' => 'collections',
             'Мой прогресс' => 'progress',
-            'From English' => 'VoiceEnglish',
-            'FromEnglish' => 'VoiceEnglish',
-            'To English' => 'VoiceEnglish',
-            'ToEnglish' => 'VoiceEnglish',
-            'Настройки' => 'Settings',
-            'Тренировка' => 'Training',
-            'Справка' => 'Help',
-            'Назад' => 'Start',
+            'From English' => 'translate_training',
+            'To English' => 'translate_training',
+            'Настройки' => 'settings',
+            'Тренировка' => 'training',
+            'Остановить' => 'training',
+            'Я не знаю' => 'training',
+            'Справка' => 'help',
+            'Назад' => 'start',
         ];
     }
 
@@ -184,9 +184,10 @@ class BotHelper
 
     public static function getCollectionPagination(int $collectionNum, bool $exist): array
     {
+
         $result = [];
-        $result = array_merge($result, BotHelper::getPaginationFw($collectionNum));
-        $result = array_merge($result, BotHelper::getPaginationNums($collectionNum));
+        $result[] = BotHelper::getPaginationFw($collectionNum);
+        $result[] = BotHelper::getPaginationNums($collectionNum);
         $addRemove = $exist ?
             [
                 'text' => "🚫 Удалить",
@@ -205,10 +206,11 @@ class BotHelper
                 'text' => " ",
                 'callback_data' => 'empty',
             ];
-        $result = array_merge($result, [
+
+        $result[] = [
             $progress,
             $addRemove,
-        ]);
+        ];
 
         return $result;
     }

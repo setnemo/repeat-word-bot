@@ -18,6 +18,10 @@ class TrainingCollection extends ArrayCollection
      */
     public function getRandomEntity(): ?Training
     {
-        return $this->get(mt_rand(0, $this->count()));
+        $r = mt_rand(0, $this->count());
+        $a = $this->get($r);
+        var_export([$r, $this->count()]);
+    
+        return $a;
     }
 }
