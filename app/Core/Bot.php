@@ -109,7 +109,7 @@ final class Bot extends Singleton
         try {
             $this->telegram->handle();
             Metric::getInstance()->increaseMetric('webhook');
-        } catch (TelegramException $e) {
+        } catch (\Throwable $e) {
             Log::getInstance()->getLogger()->error($e->getMessage(), $e->getTrace());
         }
     }
