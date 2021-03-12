@@ -14,7 +14,7 @@ return [
         'name' => '',
         'path' =>  getenv('LOG_PATH') ?? '/app/logs/app/',
         'filename' => 'bot.log',
-        'level' => '100',
+        'level' => '400',
     ],
     'telegram' => [
         'token' => getenv('TG_API'),

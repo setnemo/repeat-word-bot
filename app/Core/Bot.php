@@ -286,7 +286,7 @@ final class Bot extends Singleton
     {
         /** @var Client $cache */
         $cache = Cache::getInstance()->getRedis();
-        $key = $prefix . '_registered_';
+        $key = $prefix . '_registered';
         if (!$cache->exists($key)) {
             $this->telegram->deleteWebhook();
             try {
