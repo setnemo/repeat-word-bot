@@ -131,9 +131,10 @@ class BotHelper
             $key =  self::VOICES[$it]['text'];
             $switcher = $switchers[$key] == 1 ? '✅' : '❌';
             $switcherNum = $switchers[$key] == 1 ? 0 : 1;
+            $voiceName = str_replace('-', ' ', str_replace('en-US-', '', $key));
             $result[] = [
                 [
-                    'text' => "{$key} {$switcher}",
+                    'text' => "{$voiceName} {$switcher}",
                     'callback_data' => "settings_voices_{$it}_{$switcherNum}"
                 ],
                 [

@@ -138,10 +138,10 @@ class SettingsVoicesService extends BaseCommandService
     {
         $userId = $this->getOptions()->getChatId();
         /** @psalm-suppress TooManyArguments */
+        $this->userVoiceRepository->updateUserVoice($userId, BotHelper::getVoices()[$num], $switcher);
         $keyboard = new InlineKeyboard(...BotHelper::getSettingsVoicesKeyboard(
             $this->userVoiceRepository->getFormattedVoices($userId)
         ));
-        $this->userVoiceRepository->updateUserVoice($userId, BotHelper::getVoices()[$num], $switcher);
         $data = [
             'chat_id' => $userId,
             'text' => BotHelper::getSettingsText(),
@@ -150,6 +150,13 @@ class SettingsVoicesService extends BaseCommandService
             'disable_notification' => 1,
             'reply_markup' => $keyboard,
         ];
-        $this->setResponse(new ResponseDirector('editMessageText', $data));
+        $this->addStackMessage(new ResponseDirector('editMessageText', $data));
+
+        $this->setResponse(new ResponseDirector('answerCallbackQuery', [
+            'callback_query_id' => $this->getOptions()->getCallbackQueryId(),
+            'text' => '',
+            'show_alert' => true,
+            'cache_time' => 3,
+        ]));
     }
 }
