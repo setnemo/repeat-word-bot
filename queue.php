@@ -24,7 +24,6 @@ $exportRepository = Database::getInstance()
 $service = new ExportQueueService($trainingRepository, $exportRepository);
 while (true) {
     try {
-        $bot->botNotify();
         $bot->queue($exportRepository, $service);
         $metric->increaseMetric('queue');
         usleep(500000);
