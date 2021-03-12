@@ -246,15 +246,15 @@ class TrainingRepository extends EntityRepository
         $ret = [];
         foreach ($result as $record) {
             if (strtotime($record['max']) < strtotime('-1 day')) {
-                if (isset($userNotifications[$record['user_id']])) {
-                    if ($userNotifications[$record['user_id']]->getDeleted() == 1) {
+                if (isset($userNotifications[$record['t_userId']])) {
+                    if ($userNotifications[$record['t_userId']]->getDeleted() == 1) {
                         continue;
                     }
                 }
-                $ret[$record['user_id']] =  new InactiveUser(
-                    (int)$record['user_id'],
-                    isset($userNotifications[$record['user_id']]) ?
-                        $userNotifications[$record['user_id']]->getSilent() :
+                $ret[$record['t_userId']] =  new InactiveUser(
+                    (int)$record['t_userId'],
+                    isset($userNotifications[$record['t_userId']]) ?
+                        $userNotifications[$record['t_userId']]->getSilent() :
                         self::ALWAYS_SILENT_MESSAGE,
                     $this->getMessageForInactiveUser()
                 );
