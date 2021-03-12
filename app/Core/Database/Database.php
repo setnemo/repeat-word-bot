@@ -47,7 +47,7 @@ class Database extends Singleton
             'charset'  => 'UTF8',
         );
         $paths = [$config->getKey('database.entity_path')];
-        $redis = CoreCache::getInstance()->init($config)->getRedis();
+        $redis = CoreCache::getInstance()->init($config)->getRedisSecond();
         $redis = new PredisCache($redis);
         $metadataConfiguration = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, null, $redis, false);
         $this->entityManager = EntityManager::create($dbParams, $metadataConfiguration);
