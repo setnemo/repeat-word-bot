@@ -6,7 +6,9 @@ return [
         'host' => getenv('DB_HOST') ?? 'mysql',
         'name' => getenv('DB_NAME') ?? 'test_db',
         'user' => getenv('DB_USERNAME') ?? 'root',
-        'password' => getenv('DB_PASSWORD') ?? 'password'
+        'dev_mode' => getenv('DB_DEV_MODE') ?? '0',
+        'password' => getenv('DB_PASSWORD') ?? 'password',
+        'entity_path' => getenv('DB_ENTITY_PATH') ?? '/app/app/Core/ORM/Entities/'
     ],
     'logger' => [
         'name' => '',
@@ -24,5 +26,6 @@ return [
         'host' => getenv('REDIS_HOST'),
         'port' => (string) getenv('REDIS_PORT'),
         'database' => getenv('REDIS_DB'),
+        'database2' => '2',
     ],
 ];

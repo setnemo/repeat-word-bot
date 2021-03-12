@@ -1,11 +1,9 @@
 <?php
 
-use RepeatBot\Bot\Service\ExportService;
+use RepeatBot\Bot\Service\ExportQueueService;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Bot;
 use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Database\Repository\ExportRepository;
-use RepeatBot\Core\Database\Repository\TrainingRepository;
 use RepeatBot\Core\Log;
 use RepeatBot\Core\Metric;
 
@@ -17,10 +15,13 @@ $logger = Log::getInstance()->init($config)->getLogger();
 $bot = Bot::getInstance();
 $bot->init($config, $logger);
 $metric = Metric::getInstance()->init($config);
-$database = Database::getInstance()->init($config)->getConnection();
-$trainingRepository = new TrainingRepository($database);
-$exportRepository = new ExportRepository($database);
-$service = new ExportService($trainingRepository, $exportRepository);
+$trainingRepository =  Database::getInstance()
+    ->getEntityManager()
+    ->getRepository(\RepeatBot\Core\ORM\Entities\Training::class);
+$exportRepository = Database::getInstance()
+    ->getEntityManager()
+    ->getRepository(\RepeatBot\Core\ORM\Entities\Export::class);
+$service = new ExportQueueService($trainingRepository, $exportRepository);
 while (true) {
     try {
         $bot->botNotify();

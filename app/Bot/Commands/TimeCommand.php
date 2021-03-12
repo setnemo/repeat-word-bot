@@ -10,6 +10,8 @@ use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
+use RepeatBot\Bot\Service\CommandService\CommandDirector;
+use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Metric;
 
@@ -48,31 +50,18 @@ class TimeCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        $config = App::getInstance()->getConfig();
-        $metric = Metric::getInstance()->init($config);
-        $metric->increaseMetric('usage');
+        $director = new CommandDirector(
+            new CommandOptions(
+                command: 'time',
+                chatId: $this->getMessage()->getChat()->getId(),
+            )
+        );
+        $service = $director->makeService();
 
-        $chat_id = $this->getMessage()->getChat()->getId();
-        /** @psalm-suppress TooManyArguments */
-        $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
-        $keyboard->setResizeKeyboard(true);
-        $text = "Список поддерживаемых аббривиатур для выбора часового пояса в персональных напоминаниях:\n\n";
-        $timezones = BotHelper::getTimeZones();
-        foreach ($timezones as $timezone) {
-            $text .= strtr("`:abbr:` :text\n", [
-                ':abbr' => $timezone['abbr'],
-                ':text' => $timezone['text'],
-            ]);
+        if (!$service->hasResponse()) {
+            $service = $service->execute();
         }
-        $text .= "\nДля напоминаний используйте буквенный код, например MSK (Moscow), тогда команда будет /alarm MSK 9:00";
-        $data = [
-            'chat_id' => $chat_id,
-            'text' => $text,
-            'parse_mode' => 'markdown',
-            'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
-        ];
-        return Request::sendMessage($data);
+
+        return $service->postStackMessages()->getResponseMessage();
     }
 }

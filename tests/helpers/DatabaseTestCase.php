@@ -4,31 +4,53 @@ declare(strict_types=1);
 
 namespace Tests\Helpers;
 
+use Carbon\Doctrine\CarbonType;
+use Carbon\Doctrine\DateTimeImmutableType;
+use Carbon\Doctrine\DateTimeType;
+use Doctrine\Common\Cache\PredisCache;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
 use PHPUnit\Framework\TestCase;
-use FaaPz\PDO\Database as DB;
 use RepeatBot\Core\App;
+use RepeatBot\Core\Cache as CoreCache;
 
 abstract class DatabaseTestCase extends TestCase
 {
     /**
-     * @var DB|null
+     * @var ?EntityManager
      */
-    private ?DB $conn = null;
+    private ?EntityManager $entityManager = null;
 
-    /**
-     * @return DB
-     */
-    final public function getConnection(): DB
+    final public function getEntityManager(): EntityManager
     {
-        if ($this->conn === null) {
+        if (null === $this->entityManager) {
             $config = App::getInstance()->init()->getConfig();
             $host = $config->getKey('database.host');
             $name = $config->getKey('database.name');
             $user = $config->getKey('database.user');
             $password = $config->getKey('database.password');
-            $this->conn = new DB("mysql:host={$host};dbname={$name};charset=utf8", $user, $password);
+            $isDevMode = (int)$config->getKey('database.dev_mode') === 1;
+            $dbParams = array(
+                'driver'   => 'pdo_mysql',
+                'host'     => $host,
+                'user'     => $user,
+                'password' => $password,
+                'dbname'   => $name,
+                'charset'  => 'UTF8',
+            );
+            $paths = [$config->getKey('database.entity_path')];
+            $redis = CoreCache::getInstance()->init($config)->getRedis();
+            $redis = new PredisCache($redis);
+            $metadataConfiguration = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, null, $redis, false);
+            $this->entityManager = EntityManager::create($dbParams, $metadataConfiguration);
+            $conn = $this->entityManager->getConnection();
+            Type::overrideType('time', DateTimeType::class);
+            Type::overrideType('datetime', CarbonType::class);
+            Type::overrideType('datetime_immutable', DateTimeImmutableType::class);
+            $conn->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
         }
 
-        return $this->conn;
+        return $this->entityManager;
     }
 }

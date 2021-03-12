@@ -26,6 +26,7 @@ services:
     container_name: 'repeat-bot-php'
     restart: always
     volumes:
+      - ${MP3_PATH}:/app/words
       - .:/app/
     networks:
       - tier
@@ -47,7 +48,11 @@ services:
     logging:
       options:
         max-size: "10m"
-        max-file: "3"
+volumes:
+  filters:
+    driver: local
+  proxy-profiles:
+    driver: local
 
 networks:
   tier:

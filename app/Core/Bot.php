@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RepeatBot\Core;
 
+use Carbon\Carbon;
 use Longman\TelegramBot\Entities\Chat;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\Message;
@@ -15,19 +16,13 @@ use Longman\TelegramBot\TelegramLog;
 use Predis\Client;
 use Psr\Log\LoggerInterface;
 use RepeatBot\Bot\BotHelper;
-use RepeatBot\Bot\Service\ExportService;
+use RepeatBot\Bot\Service\ExportQueueService;
 use RepeatBot\Common\Config;
 use RepeatBot\Common\Singleton;
 use RepeatBot\Core\Database\Database;
-use RepeatBot\Core\Database\Model\LearnNotification;
-use RepeatBot\Core\Database\Model\LearnNotificationPersonal;
-use RepeatBot\Core\Database\Repository\ExportRepository;
-use RepeatBot\Core\Database\Repository\LearnNotificationPersonalRepository;
-use RepeatBot\Core\Database\Repository\LearnNotificationRepository;
-use RepeatBot\Core\Database\Repository\TrainingRepository;
-use RepeatBot\Core\Database\Repository\UserNotificationRepository;
-use RepeatBot\Core\Database\Repository\VersionNotificationRepository;
-use RepeatBot\Core\Database\Repository\VersionRepository;
+use RepeatBot\Core\ORM\Entities\LearnNotification;
+use RepeatBot\Core\ORM\Entities\VersionNotification;
+use RepeatBot\Core\ORM\Repositories\ExportRepository;
 
 /**
  * Class Bot
@@ -44,9 +39,7 @@ final class Bot extends Singleton
      * @var LoggerInterface
      */
     private LoggerInterface $logger;
-    private $db;
-    
-    
+
     /**
      * @param Config          $config
      * @param LoggerInterface $logger
@@ -56,7 +49,6 @@ final class Bot extends Singleton
     public function init(Config $config, LoggerInterface $logger): self
     {
         $this->logger = $logger;
-        $this->db = Database::getInstance()->init($config)->getConnection();
         try {
             $bot_api_key = $config->getKey('telegram.token');
             $bot_username = $config->getKey('telegram.bot_name');
@@ -87,21 +79,24 @@ final class Bot extends Singleton
         $this->checkVersion();
         $this->handleNotifications();
         $this->handleNotificationsPersonal();
-    
     }
 
     /**
      * @param ExportRepository   $exportRepository
-     * @param ExportService      $service
+     * @param ExportQueueService $service
      *
      * @throws TelegramException
      * @throws \Mpdf\MpdfException
      */
-    public function queue(ExportRepository $exportRepository, ExportService $service): void
+    public function queue(ExportRepository $exportRepository, ExportQueueService $service): void
     {
         $exports = $exportRepository->getExports();
         foreach ($exports as $export) {
-            $service->execute($export);
+            try {
+                $service->execute($export);
+            } catch (\Throwable $t) {
+                echo $t->getMessage();
+            }
         }
     }
 
@@ -132,9 +127,12 @@ final class Bot extends Singleton
      */
     private function checkVersion(): void
     {
-        $repositoryVersion = new VersionRepository($this->db);
+        $repositoryVersion = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(ORM\Entities\Version::class);
+
         $version = $repositoryVersion->getNewLatestVersion();
-        if (!$version->isEmpty()) {
+        if ($version) {
             /** @psalm-suppress TooManyArguments */
             $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
             $keyboard->setResizeKeyboard(true);
@@ -154,7 +152,9 @@ final class Bot extends Singleton
                     'users' => true,
                 ]
             );
-            $repositoryNotification = new VersionNotificationRepository($this->db);
+            $repositoryNotification = Database::getInstance()
+                ->getEntityManager()
+                ->getRepository(ORM\Entities\VersionNotification::class);
             foreach ($results as $result) {
                 if ($result->isOk()) {
                     /** @var Message $message */
@@ -164,11 +164,11 @@ final class Bot extends Singleton
                         /** @var Chat $chat */
                         $chatId = $chat->getId();
                         try {
-                            $model = $repositoryNotification->getNewModel([
-                                'chat_id' => $chatId,
-                                'version_id' => $version->getId(),
-                            ]);
-                            $repositoryNotification->saveVersionNotification($model);
+                            $entity = new VersionNotification();
+                            $entity->setChatId($chatId);
+                            $entity->setVersionId($version->getId());
+                            $entity->setCreatedAt(Carbon::now('Europe/Kiev'));
+                            $repositoryNotification->saveVersionNotification($entity);
                         } catch (\Throwable $e) {
                             Log::getInstance()->getLogger()->error($e->getMessage(), $e->getTrace());
                         }
@@ -184,10 +184,19 @@ final class Bot extends Singleton
      */
     private function handleNotifications(): void
     {
-        $database = $this->db;
-        $learnNotificationRepository = new LearnNotificationRepository($database);
-        $trainingRepository = new TrainingRepository($database);
-        $userNotificationRepository = new UserNotificationRepository($database);
+        $learnNotificationRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(ORM\Entities\LearnNotification::class);
+
+        $trainingRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(ORM\Entities\Training::class);
+
+        $userNotificationRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(ORM\Entities\UserNotification::class);
+
+
         $userNotifications = $userNotificationRepository->getUserNotifications();
         $inactiveUser = $trainingRepository->getInactiveUsers($userNotifications);
         $newNotifications = $learnNotificationRepository->filterNotifications($inactiveUser);
@@ -209,12 +218,17 @@ final class Bot extends Singleton
 
     private function handleNotificationsPersonal(): void
     {
-        $database = $this->db;
-        $learnNotificationRepository = new LearnNotificationPersonalRepository($database);
+        $learnNotificationRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(ORM\Entities\LearnNotificationPersonal::class);
+
         $notifications = $learnNotificationRepository->getNotifications();
-        $userNotificationRepository = new UserNotificationRepository($database);
+        $userNotificationRepository = Database::getInstance()
+            ->getEntityManager()
+            ->getRepository(ORM\Entities\UserNotification::class);
         $tzs = BotHelper::getTimeZones();
-        /** @var LearnNotificationPersonal $notification */
+
+        /** @var ORM\Entities\LearnNotificationPersonal $notification */
         foreach ($notifications as $notification) {
             $currentTz = $notification->getTimezone();
             $tmp = array_filter($tzs, function (array $item) use ($currentTz) {
@@ -225,7 +239,7 @@ final class Bot extends Singleton
                 $new = $item;
             }
             date_default_timezone_set($new['utc'][0]);
-            if (strtotime($notification->getAlarm()) < time()) {
+            if ($notification->getAlarm()->getTimestamp() < time()) {
                 $silent = $userNotificationRepository->getOrCreateUserNotification(
                     $notification->getUserId()
                 )->getSilent();
@@ -238,7 +252,7 @@ final class Bot extends Singleton
             }
         }
     }
-    
+
     private function getSetUpdateFilter(): void
     {
         $this->telegram->setUpdateFilter(static function (Update $array) {
@@ -262,9 +276,9 @@ final class Bot extends Singleton
             return $flag;
         });
     }
-    
-    
-    
+
+
+
     /**
      * @param string $prefix
      */
@@ -272,10 +286,11 @@ final class Bot extends Singleton
     {
         /** @var Client $cache */
         $cache = Cache::getInstance()->getRedis();
-        $key = $prefix . '_registered';
+        $key = $prefix . '_registered_';
         if (!$cache->exists($key)) {
+            $this->telegram->deleteWebhook();
             try {
-                $hook_url = "https://repeat.webhook.pp.ua";
+                $hook_url = "https://71e79c34658a.ngrok.io/";
                 $result = $this->telegram->setWebhook($hook_url);
                 if ($result->isOk()) {
                     $cache->set($key, $result->getDescription());

@@ -25,14 +25,14 @@ services:
       - ./tests/_data/dump.sql:/docker-entrypoint-initdb.d/dump.sql
     networks:
       - repeat-bot-tests-network
-#
-#  redis:
-#    container_name: 'repeat-bot-tests-redis'
-#    image: redis:3.2
-#    ports:
-#      - "127.0.0.1:6379:6379/tcp"
-#    networks:
-#      - repeat-bot-tests-network
+
+  redis:
+    container_name: 'repeat-bot-tests-redis'
+    image: redis:3.2
+    ports:
+      - "127.0.0.1:6379:6379/tcp"
+    networks:
+      - repeat-bot-tests-network
 
 networks:
   repeat-bot-tests-network:
