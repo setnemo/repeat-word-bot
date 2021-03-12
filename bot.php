@@ -17,7 +17,6 @@ $bot->init($config, $logger);
 
 $metric = Metric::getInstance()->init($config);
 
-$bot->botBefore();
 while (true) {
     $bot->botNotify();
     usleep(500000);
