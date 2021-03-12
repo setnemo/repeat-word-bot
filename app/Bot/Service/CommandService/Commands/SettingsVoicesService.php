@@ -137,8 +137,8 @@ class SettingsVoicesService extends BaseCommandService
     private function executeSettingsVoicesSwitcherCommand(int $num, int $switcher): void
     {
         $userId = $this->getOptions()->getChatId();
-        /** @psalm-suppress TooManyArguments */
         $this->userVoiceRepository->updateUserVoice($userId, BotHelper::getVoices()[$num], $switcher);
+        /** @psalm-suppress TooManyArguments */
         $keyboard = new InlineKeyboard(...BotHelper::getSettingsVoicesKeyboard(
             $this->userVoiceRepository->getFormattedVoices($userId)
         ));
