@@ -64,8 +64,10 @@ final class Bot extends Singleton
                     'database' => $config->getKey('database.name'),
                 ]
             );
-            $this->telegram->enableLimiter();
-//            $this->getSetUpdateFilter();
+            /**
+             *   $this->telegram->enableLimiter();
+             *   $this->getSetUpdateFilter();
+             */
         } catch (TelegramException $e) {
             $logger->error($e->getMessage(), $e->getTrace());
         }

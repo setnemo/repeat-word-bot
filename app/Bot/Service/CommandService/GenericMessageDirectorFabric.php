@@ -76,22 +76,22 @@ class GenericMessageDirectorFabric
                     return $this->makeDirector($command);
                 }
             }
-        }
+        } else {
+            if ($this->isStopCommand($text)) {
+                $this->cache->removeTrainings($userId, $cacheCommand);
+                $this->cache->removeTrainingsStatus($userId, $cacheCommand);
+                return $this->makeDirector('training');
+            }
 
-        if ($this->isStopCommand($text)) {
-            $this->cache->removeTrainings($userId, $cacheCommand);
-            $this->cache->removeTrainingsStatus($userId, $cacheCommand);
-            return $this->makeDirector('training');
-        }
+            if ($this->isDontKnow($text)) {
+                $this->cache->skipTrainings($userId, $cacheCommand);
+            }
 
-        if ($this->isDontKnow($text)) {
-            $this->cache->skipTrainings($userId, $cacheCommand);
-        }
-
-        if ($this->isOneYear($text)) {
-            $this->cache->saveOneYear($userId, $cacheCommand);
-            /** @psalm-suppress ArgumentTypeCoercion */
-            (new OneYearService($this->trainingRepository))->execute($this->cache->getTrainings($userId, $cacheCommand));
+            if ($this->isOneYear($text)) {
+                $this->cache->saveOneYear($userId, $cacheCommand);
+                /** @psalm-suppress ArgumentTypeCoercion */
+                (new OneYearService($this->trainingRepository))->execute($this->cache->getTrainings($userId, $cacheCommand));
+            }
         }
 
         return $this->makeDirector('translate_training');

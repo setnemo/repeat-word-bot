@@ -46,22 +46,23 @@ class TranslateTrainingService extends BaseCommandService
         $userId = $this->getOptions()->getChatId();
         $answer = '';
         $type = $this->cache->checkTrainingsStatus($userId);
-        if ($type) {
+        if (null !== $type) {
             $trainingId = $this->cache->getTrainings($userId, $type);
             if ($trainingId) {
                 $answer = $this->getAnswer($trainingId, $type, $userId);
             }
-        }
-        try {
-            $this->newTrainingWord($type, $answer, $userId);
-        } catch (EmptyVocabularyException $e) {
-            $this->clearTraining($userId, $type);
             try {
-                $text = $this->getNearestText($userId, $type, $answer);
+                $this->newTrainingWord($type, $answer, $userId);
             } catch (EmptyVocabularyException $e) {
                 $text = 'У вас нет слов для изучения. Зайдите в раздел Коллекции и добавьте себе слова для тренировок';
+                try {
+                    $text = $this->getNearestText($userId, $type, $answer);
+                } catch (EmptyVocabularyException $e) {
+                } finally {
+                    $this->clearTraining($userId, $type);
+                    $this->saveTextMessage($userId, $text);
+                }
             }
-            $this->saveTextMessage($userId, $text);
         }
 
         return $this;
@@ -179,10 +180,10 @@ class TranslateTrainingService extends BaseCommandService
     }
 
     /**
-     * @param int         $userId
-     * @param string|null $type
+     * @param int    $userId
+     * @param string $type
      */
-    private function clearTraining(int $userId, ?string $type): void
+    private function clearTraining(int $userId, string $type): void
     {
         $this->cache->removeTrainings($userId, $type);
         $this->cache->removeTrainingsStatus($userId, $type);

@@ -298,7 +298,7 @@ final class Cache extends Singleton
     {
         return $this->getCacheSlug("{$userId}_priority");
     }
-    
+
     /**
      * @return Client
      */
