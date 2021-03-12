@@ -290,7 +290,7 @@ final class Bot extends Singleton
         if (!$cache->exists($key)) {
             $this->telegram->deleteWebhook();
             try {
-                $hook_url = "https://71e79c34658a.ngrok.io/";
+                $hook_url = "https://repeat.webhook.pp.ua";
                 $result = $this->telegram->setWebhook($hook_url);
                 if ($result->isOk()) {
                     $cache->set($key, $result->getDescription());
