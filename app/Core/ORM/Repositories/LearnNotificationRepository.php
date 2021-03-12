@@ -84,10 +84,11 @@ class LearnNotificationRepository extends EntityRepository
             )->orderBy('ln.createdAt', 'DESC');
 
         $learnNotificationCollection = new LearnNotificationCollection($query->getQuery()->getResult());
-        $inactiveUsers->filter(static function (InactiveUser $current) use ($learnNotificationCollection) {
-            return !$learnNotificationCollection->hasUser($current);
-        });
-
+        $inactiveUsers = $inactiveUsers->filter(
+            static function (InactiveUser $current) use ($learnNotificationCollection) {
+                return !$learnNotificationCollection->hasUser($current);
+            }
+        );
         return $inactiveUsers->convertToLearnNotification();
     }
 
