@@ -12,7 +12,6 @@ use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 use RepeatBot\Bot\Service\CommandService\Validators\ValidateCommand;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
-use RepeatBot\Core\Metric;
 
 abstract class BaseCommandService implements CommandInterface
 {
