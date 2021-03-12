@@ -16,7 +16,7 @@ class CommandOptions
     protected int $chatId = 0;
     protected int $messageId = 0;
     protected int $callbackQueryId = 0;
-    
+
     /**
      * CommandOptions constructor.
      *
@@ -74,7 +74,7 @@ class CommandOptions
     {
         return $this->command;
     }
-    
+
     /**
      * @return string
      */

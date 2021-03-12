@@ -24,7 +24,7 @@ class GenericMessageDirectorFabric
     private int $callbackQueryId;
     protected Cache $cache;
     protected TrainingRepository $trainingRepository;
-    
+
     /**
      * DirectorFabric constructor.
      *
@@ -113,8 +113,8 @@ class GenericMessageDirectorFabric
             )
         );
     }
-    
-    
+
+
     /**
      * @param string $text
      *
@@ -124,7 +124,7 @@ class GenericMessageDirectorFabric
     {
         return in_array($this->getStrReplaceStartCommand($text), BotHelper::getTrainingTypes());
     }
-    
+
     /**
      * @param string $text
      *
@@ -134,7 +134,7 @@ class GenericMessageDirectorFabric
     {
         return $text === 'Остановить';
     }
-    
+
     /**
      * @param string $text
      *
@@ -156,12 +156,12 @@ class GenericMessageDirectorFabric
             'х',
         ]);
     }
-    
+
     private function isOneYear(string $text): bool
     {
         return '1' === $text;
     }
-    
+
     /**
      * @param string $text
      *
@@ -170,5 +170,5 @@ class GenericMessageDirectorFabric
     private function getStrReplaceStartCommand(string $text): string
     {
         return str_replace(' ', '', $text);
-}
+    }
 }

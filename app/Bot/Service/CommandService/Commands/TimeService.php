@@ -33,7 +33,7 @@ class TimeService extends BaseCommandService
             'reply_markup' => $keyboard,
             'disable_notification' => 1,
         ];
-        
+
         $this->setResponse(new ResponseDirector('sendMessage', $data));
 
         return $this;

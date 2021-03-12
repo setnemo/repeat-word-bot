@@ -84,7 +84,7 @@ class UserVoiceRepository extends EntityRepository
         if ($results === []) {
             return self::DEFAULT_VOICE;
         }
-        $random = mt_rand(0, count($results));
+        $random = mt_rand(0, count($results) - 1);
 
         return $results[$random]->getVoice();
     }

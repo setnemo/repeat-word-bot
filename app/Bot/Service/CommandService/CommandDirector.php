@@ -209,7 +209,7 @@ class CommandDirector
     {
         return (new TranslateTrainingService($options));
     }
-    
+
     /**
      * @param CommandOptions $options
      *
@@ -219,7 +219,7 @@ class CommandDirector
     {
         return (new StartService($options));
     }
-    
+
     /**
      * @param CommandOptions $options
      *

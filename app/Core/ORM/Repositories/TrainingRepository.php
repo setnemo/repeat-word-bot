@@ -397,7 +397,7 @@ class TrainingRepository extends EntityRepository
             foreach ($collection as $item) {
                 $tmp[$rule[$item->getStatus()]][] = $item;
             }
-    
+
             $tmpCollection = new TrainingCollection();
             for ($i = 0; $i < count($rule); ++$i) {
                 if (!$tmpCollection->isEmpty()) {

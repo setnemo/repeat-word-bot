@@ -55,11 +55,11 @@ class StartCommand extends SystemCommand
             )
         );
         $service = $director->makeService();
-    
+
         if (!$service->hasResponse()) {
             $service = $service->execute();
         }
-    
+
         return $service->postStackMessages()->getResponseMessage();
     }
 }

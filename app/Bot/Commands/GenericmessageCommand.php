@@ -33,13 +33,13 @@ class GenericmessageCommand extends SystemCommand
             $text,
             $this->getMessage()->getFrom()->getId(),
         ))->getCommandDirector();
-    
+
         $service = $command->makeService();
-    
+
         if (!$service->hasResponse()) {
             $service = $service->execute();
         }
-    
+
         return $service->postStackMessages()->getResponseMessage();
     }
 }

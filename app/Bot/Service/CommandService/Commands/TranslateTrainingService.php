@@ -44,48 +44,25 @@ class TranslateTrainingService extends BaseCommandService
     public function execute(): CommandInterface
     {
         $userId = $this->getOptions()->getChatId();
-        $question = '';
+        $answer = '';
         $type = $this->cache->checkTrainingsStatus($userId);
         if ($type) {
             $trainingId = $this->cache->getTrainings($userId, $type);
             if ($trainingId) {
-                $question = $this->getAnswer($trainingId, $type, $userId);
+                $answer = $this->getAnswer($trainingId, $type, $userId);
             }
         }
-        $text = 'Что-то пошло не так...';
         try {
-            $this->newTrainingWord($type, $question, $userId);
+            $this->newTrainingWord($type, $answer, $userId);
         } catch (EmptyVocabularyException $e) {
             $this->clearTraining($userId, $type);
             try {
-                $availableTraining = $this->trainingRepository->getNearestAvailableTrainingTime($userId, $type);
-                $template = "В тренировке `:training` ближайшее слово для изучения - `:word`, ";
-                $template .= "которое будет доступно `:date`. Вы всегда можете добавить новую коллекцию.";
-                $text = strtr(
-                    $template,
-                    [
-                        ':word' => $availableTraining->getWord()->getWord(),
-                        ':training' => $availableTraining->getType(),
-                        ':date' => $availableTraining->getNext()->diffForHumans()
-                    ]
-                );
+                $text = $this->getNearestText($userId, $type, $answer);
             } catch (EmptyVocabularyException $e) {
                 $text = 'У вас нет слов для изучения. Зайдите в раздел Коллекции и добавьте себе слова для тренировок';
             }
+            $this->saveTextMessage($userId, $text);
         }
-        /** @psalm-suppress TooManyArguments */
-        $keyboard = new Keyboard(...BotHelper::getTrainingKeyboard());
-        $keyboard->setResizeKeyboard(true);
-        $data = [
-            'chat_id' => $userId,
-            'text' => $text,
-            'parse_mode' => 'markdown',
-            'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
-        ];
-        
-        $this->addStackMessage(new ResponseDirector('sendMessage', $data));
 
         return $this;
     }
@@ -104,21 +81,21 @@ class TranslateTrainingService extends BaseCommandService
                 $result = true;
             }
         }
-        
+
         return $result;
     }
-    
+
     /**
      * @return string
      */
     private function getFormattedText(): string
     {
-        $text = mb_strtolower( $this->getOptions()->getText());
+        $text = mb_strtolower($this->getOptions()->getText());
         $text = preg_replace('/(ё)/i', 'е', $text);
-        
+
         return $text;
     }
-    
+
     /**
      * @param int    $trainingId
      * @param string $type
@@ -145,20 +122,20 @@ class TranslateTrainingService extends BaseCommandService
         };
         if ($this->cache->checkSkipTrainings($userId, $type)) {
             $this->cache->removeSkipTrainings($userId, $type);
-            $question = "Слово пропущено! Ответ на {$oldQuestion}: {$correct}\n\n";
+            $text = "Слово пропущено! Ответ на {$oldQuestion}: {$correct}\n\n";
         } elseif ($this->cache->checkOneYear($userId, $type)) {
             $this->cache->removeOneYear($userId, $type);
-            $question = "Слово пропущено на 1 год! Ответ на {$oldQuestion}: {$correct}\n\n";
+            $text = "Слово пропущено на 1 год! Ответ на {$oldQuestion}: {$correct}\n\n";
         } else {
             if ($result) {
                 $this->trainingRepository->upStatusTraining($training);
             }
-            $question = $result ? "Правильно!\n\n" : "Неправильно! Ответ: {$correct}\n\n";
+            $text = $result ? "Правильно!\n\n" : "Неправильно! Ответ: {$correct}\n\n";
         }
-        
-        return $question;
+
+        return $text;
     }
-    
+
     /**
      * @param string $type
      * @param string      $question
@@ -200,7 +177,7 @@ class TranslateTrainingService extends BaseCommandService
         ];
         $this->setResponse(new ResponseDirector('sendVoice', $data));
     }
-    
+
     /**
      * @param int         $userId
      * @param string|null $type
@@ -209,5 +186,52 @@ class TranslateTrainingService extends BaseCommandService
     {
         $this->cache->removeTrainings($userId, $type);
         $this->cache->removeTrainingsStatus($userId, $type);
+    }
+
+    /**
+     * @param int    $userId
+     * @param string $type
+     * @param string $text
+     *
+     * @return string
+     * @throws EmptyVocabularyException
+     */
+    private function getNearestText(int $userId, string $type, string $text): string
+    {
+        $availableTraining = $this->trainingRepository->getNearestAvailableTrainingTime($userId, $type);
+        $template = "В тренировке `:training` ближайшее слово для изучения - `:word`, ";
+        $template .= "которое будет доступно `:date`. Вы всегда можете добавить новую коллекцию.";
+
+        return $text . strtr(
+            $template,
+            [
+                ':word' => $availableTraining->getWord()->getWord(),
+                ':training' => $availableTraining->getType(),
+                ':date' => $availableTraining->getNext()->diffForHumans()
+            ]
+        );
+    }
+
+    /**
+     * @param int    $userId
+     * @param string $text
+     *
+     * @throws Exception
+     */
+    private function saveTextMessage(int $userId, string $text): void
+    {
+        /** @psalm-suppress TooManyArguments */
+        $keyboard = new Keyboard(...BotHelper::getTrainingKeyboard());
+        $keyboard->setResizeKeyboard(true);
+        $data = [
+            'chat_id' => $userId,
+            'text' => $text,
+            'parse_mode' => 'markdown',
+            'disable_web_page_preview' => true,
+            'reply_markup' => $keyboard,
+            'disable_notification' => 1,
+        ];
+
+        $this->addStackMessage(new ResponseDirector('sendMessage', $data));
     }
 }

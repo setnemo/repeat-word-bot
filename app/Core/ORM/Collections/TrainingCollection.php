@@ -21,7 +21,7 @@ class TrainingCollection extends ArrayCollection
         $r = mt_rand(0, $this->count());
         $a = $this->get($r);
         var_export([$r, $this->count()]);
-    
+
         return $a;
     }
 }
