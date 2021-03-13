@@ -21,7 +21,7 @@ use RepeatBot\Core\ORM\Repositories\TrainingRepository;
  * Class TranslateTrainingService
  * @package RepeatBot\Bot\Service\CommandService\Commands
  */
-class TranslateTrainingService extends BaseCommandService
+class TranslateTrainingServiceDefault extends BaseDefaultCommandService
 {
     private TrainingRepository $trainingRepository;
 

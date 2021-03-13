@@ -19,7 +19,6 @@ use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\ExportQueueService;
 use RepeatBot\Common\Config;
 use RepeatBot\Common\Singleton;
-use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\LearnNotification;
 use RepeatBot\Core\ORM\Entities\VersionNotification;
 use RepeatBot\Core\ORM\Repositories\ExportRepository;
@@ -288,11 +287,11 @@ final class Bot extends Singleton
     {
         /** @var Client $cache */
         $cache = Cache::getInstance()->getRedis();
-        $key = $prefix . '_registered';
+        $key = $prefix . '_registereda';
         if (!$cache->exists($key)) {
             $this->telegram->deleteWebhook();
             try {
-                $hook_url = "https://repeat.webhook.pp.ua";
+                $hook_url = "https://64c752e7e702.ngrok.io/";
                 $result = $this->telegram->setWebhook($hook_url);
                 if ($result->isOk()) {
                     $cache->set($key, $result->getDescription());

@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService;
 
-use RepeatBot\Bot\Service\CommandService\Commands\AlarmService;
-use RepeatBot\Bot\Service\CommandService\Commands\CollectionService;
+use RepeatBot\Bot\Service\CommandService\Commands\AlarmServiceDefault;
+use RepeatBot\Bot\Service\CommandService\Commands\CollectionServiceDefault;
 use RepeatBot\Bot\Service\CommandService\Commands\CommandInterface;
-use RepeatBot\Bot\Service\CommandService\Commands\DelService;
-use RepeatBot\Bot\Service\CommandService\Commands\EmptyCallbackService;
-use RepeatBot\Bot\Service\CommandService\Commands\ExportService;
-use RepeatBot\Bot\Service\CommandService\Commands\HelpService;
-use RepeatBot\Bot\Service\CommandService\Commands\ProgressService;
-use RepeatBot\Bot\Service\CommandService\Commands\ResetService;
-use RepeatBot\Bot\Service\CommandService\Commands\SettingsPriorityService;
-use RepeatBot\Bot\Service\CommandService\Commands\SettingsService;
-use RepeatBot\Bot\Service\CommandService\Commands\SettingsSilentService;
-use RepeatBot\Bot\Service\CommandService\Commands\SettingsVoicesService;
-use RepeatBot\Bot\Service\CommandService\Commands\StartService;
-use RepeatBot\Bot\Service\CommandService\Commands\TimeService;
-use RepeatBot\Bot\Service\CommandService\Commands\TrainingService;
-use RepeatBot\Bot\Service\CommandService\Commands\TranslateTrainingService;
+use RepeatBot\Bot\Service\CommandService\Commands\DelServiceDefault;
+use RepeatBot\Bot\Service\CommandService\Commands\EmptyCallbackServiceDefault;
+use RepeatBot\Bot\Service\CommandService\Commands\ExportServiceDefault;
+use RepeatBot\Bot\Service\CommandService\Commands\HelpServiceDefault;
+use RepeatBot\Bot\Service\CommandService\Commands\ProgressServiceDefault;
+use RepeatBot\Bot\Service\CommandService\Commands\ResetServiceDefault;
+use RepeatBot\Bot\Service\CommandService\Commands\SettingsPriorityServiceDefault;
+use RepeatBot\Bot\Service\CommandService\Commands\SettingsServiceDefault;
+use RepeatBot\Bot\Service\CommandService\Commands\SettingsSilentServiceDefault;
+use RepeatBot\Bot\Service\CommandService\Commands\SettingsVoicesServiceDefault;
+use RepeatBot\Bot\Service\CommandService\Commands\StartServiceDefault;
+use RepeatBot\Bot\Service\CommandService\Commands\TimeServiceDefault;
+use RepeatBot\Bot\Service\CommandService\Commands\TrainingServiceDefault;
+use RepeatBot\Bot\Service\CommandService\Commands\TranslateTrainingServiceDefault;
 use RepeatBot\Bot\Service\CommandService\Validators\AlarmValidator;
 use RepeatBot\Bot\Service\CommandService\Validators\DelProgressValidator;
 use RepeatBot\Bot\Service\CommandService\Validators\ExportValidator;
@@ -77,7 +77,7 @@ class CommandDirector
      */
     private function makeAlarmCommand(CommandOptions $options): CommandInterface
     {
-        return (new AlarmService($options))->validate(new AlarmValidator());
+        return (new AlarmServiceDefault($options))->validate(new AlarmValidator());
     }
 
     /**
@@ -87,7 +87,7 @@ class CommandDirector
      */
     private function makeCollectionCommand(CommandOptions $options): CommandInterface
     {
-        return new CollectionService($options);
+        return new CollectionServiceDefault($options);
     }
 
     /**
@@ -97,7 +97,7 @@ class CommandDirector
      */
     private function makeEmptyCommand(CommandOptions $options): CommandInterface
     {
-        return new EmptyCallbackService($options);
+        return new EmptyCallbackServiceDefault($options);
     }
 
     /**
@@ -107,7 +107,7 @@ class CommandDirector
      */
     private function makeSettingsCommand(CommandOptions $options): CommandInterface
     {
-        return new SettingsService($options);
+        return new SettingsServiceDefault($options);
     }
 
     /**
@@ -117,7 +117,7 @@ class CommandDirector
      */
     private function makeSettingsVoicesCommand(CommandOptions $options): CommandInterface
     {
-        return new SettingsVoicesService($options);
+        return new SettingsVoicesServiceDefault($options);
     }
 
     /**
@@ -127,7 +127,7 @@ class CommandDirector
      */
     private function makeSettingsSilentCommand(CommandOptions $options): CommandInterface
     {
-        return new SettingsSilentService($options);
+        return new SettingsSilentServiceDefault($options);
     }
 
     /**
@@ -137,7 +137,7 @@ class CommandDirector
      */
     private function makeSettingsPriorityCommand(CommandOptions $options): CommandInterface
     {
-        return new SettingsPriorityService($options);
+        return new SettingsPriorityServiceDefault($options);
     }
 
     /**
@@ -147,7 +147,7 @@ class CommandDirector
      */
     private function makeDelCommand(CommandOptions $options): CommandInterface
     {
-        return (new DelService($options))->validate(new DelProgressValidator());
+        return (new DelServiceDefault($options))->validate(new DelProgressValidator());
     }
 
     /**
@@ -157,7 +157,7 @@ class CommandDirector
      */
     private function makeExportCommand(CommandOptions $options): CommandInterface
     {
-        return (new ExportService($options))->validate(new ExportValidator());
+        return (new ExportServiceDefault($options))->validate(new ExportValidator());
     }
 
     /**
@@ -167,7 +167,7 @@ class CommandDirector
      */
     private function makeHelpCommand(CommandOptions $options): CommandInterface
     {
-        return new HelpService($options);
+        return new HelpServiceDefault($options);
     }
 
     /**
@@ -177,7 +177,7 @@ class CommandDirector
      */
     private function makeProgressCommand(CommandOptions $options): CommandInterface
     {
-        return new ProgressService($options);
+        return new ProgressServiceDefault($options);
     }
 
     /**
@@ -187,7 +187,7 @@ class CommandDirector
      */
     private function makeResetCommand(CommandOptions $options): CommandInterface
     {
-        return (new ResetService($options))->validate(new ResetProgressValidator());
+        return (new ResetServiceDefault($options))->validate(new ResetProgressValidator());
     }
 
     /**
@@ -197,7 +197,7 @@ class CommandDirector
      */
     private function makeTrainingCommand(CommandOptions $options): CommandInterface
     {
-        return (new TrainingService($options));
+        return (new TrainingServiceDefault($options));
     }
 
     /**
@@ -207,7 +207,7 @@ class CommandDirector
      */
     private function makeTranslateTrainingCommand(CommandOptions $options): CommandInterface
     {
-        return (new TranslateTrainingService($options));
+        return (new TranslateTrainingServiceDefault($options));
     }
 
     /**
@@ -217,7 +217,7 @@ class CommandDirector
      */
     private function makeStartCommand(CommandOptions $options): CommandInterface
     {
-        return (new StartService($options));
+        return (new StartServiceDefault($options));
     }
 
     /**
@@ -227,6 +227,6 @@ class CommandDirector
      */
     private function makeTimeCommand(CommandOptions $options): CommandInterface
     {
-        return (new TimeService($options));
+        return (new TimeServiceDefault($options));
     }
 }

@@ -11,7 +11,7 @@ use RepeatBot\Bot\Service\CommandService\ResponseDirector;
  * Class HelpService
  * @package RepeatBot\Bot\Service\CommandService\Commands
  */
-class HelpService extends BaseCommandService
+class HelpServiceDefault extends BaseDefaultCommandService
 {
     /**
      * {@inheritDoc}

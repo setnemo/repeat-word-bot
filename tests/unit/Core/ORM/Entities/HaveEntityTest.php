@@ -11,6 +11,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\TransactionRequiredException;
+use RepeatBot\Core\ORM\Entities\LearnNotification;
+use RepeatBot\Core\ORM\Entities\LearnNotificationPersonal;
 use RepeatBot\Core\ORM\Entities\Training;
 use RepeatBot\Core\ORM\Entities\UserNotification;
 use RepeatBot\Core\ORM\Entities\UserVoice;
@@ -186,6 +188,74 @@ final class HaveEntityTest extends Unit
         $this->tester->assertEquals($type, $training->getType());
         $this->tester->assertEquals($status, $training->getStatus());
         $this->tester->assertEquals($next, $training->getNext());
+        $this->tester->assertEquals($created, $training->getCreatedAt());
+        $this->tester->assertEquals($updated, $training->getUpdatedAt());
+    }
+
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws TransactionRequiredException
+     */
+    public function testHaveLearnNotificationPersonal(): void
+    {
+        $userId = 42;
+        $alarm = Carbon::now();
+        $message = 'message';
+        $tz = 'FDT';
+        $created = Carbon::now();
+        $updated = Carbon::now();
+
+        $entity = new LearnNotificationPersonal();
+        $entity->setUserId($userId);
+        $entity->setMessage($message);
+        $entity->setTimezone($tz);
+        $entity->setAlarm($alarm);
+        $entity->setCreatedAt($created);
+        $entity->setUpdatedAt($updated);
+
+        $this->tester->haveLearnNotificationPersonalInDatabase($entity);
+
+        $training = $this->em->find(LearnNotificationPersonal::class, $entity->getId());
+
+        $this->tester->assertEquals($userId, $training->getUserId());
+        $this->tester->assertEquals($alarm, $training->getAlarm());
+        $this->tester->assertEquals($message, $training->getMessage());
+        $this->tester->assertEquals($tz, $training->getTimezone());
+        $this->tester->assertEquals($created, $training->getCreatedAt());
+        $this->tester->assertEquals($updated, $training->getUpdatedAt());
+    }
+
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws TransactionRequiredException
+     */
+    public function testHaveLearnNotification(): void
+    {
+        $userId = 42;
+        $alarm = Carbon::now();
+        $message = 'message';
+        $tz = 'FDT';
+        $created = Carbon::now();
+        $updated = Carbon::now();
+
+        $entity = new LearnNotification();
+        $entity->setUserId($userId);
+        $entity->setMessage($message);
+        $entity->setTimezone($tz);
+        $entity->setAlarm($alarm);
+        $entity->setCreatedAt($created);
+        $entity->setUpdatedAt($updated);
+
+        $this->tester->haveLearnNotificationInDatabase($entity);
+
+        $training = $this->em->find(LearnNotification::class, $entity->getId());
+
+        $this->tester->assertEquals($userId, $training->getUserId());
+        $this->tester->assertEquals($alarm, $training->getAlarm());
+        $this->tester->assertEquals($message, $training->getMessage());
+        $this->tester->assertEquals($tz, $training->getTimezone());
         $this->tester->assertEquals($created, $training->getCreatedAt());
         $this->tester->assertEquals($updated, $training->getUpdatedAt());
     }

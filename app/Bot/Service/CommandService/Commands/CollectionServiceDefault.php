@@ -20,7 +20,7 @@ use RepeatBot\Core\ORM\Repositories\CollectionRepository;
 use RepeatBot\Core\ORM\Repositories\TrainingRepository;
 use RepeatBot\Core\ORM\Repositories\WordRepository;
 
-class CollectionService extends BaseCommandService
+class CollectionServiceDefault extends BaseDefaultCommandService
 {
     private CollectionRepository $collectionRepository;
 

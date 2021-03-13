@@ -17,7 +17,7 @@ use RepeatBot\Core\ORM\Repositories\TrainingRepository;
  * Class DelService
  * @package RepeatBot\Bot\Service\CommandService\Commands
  */
-class DelService extends BaseCommandService
+class DelServiceDefault extends BaseDefaultCommandService
 {
     private TrainingRepository $trainingRepository;
 

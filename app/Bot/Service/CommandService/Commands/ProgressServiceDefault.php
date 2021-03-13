@@ -16,7 +16,7 @@ use RepeatBot\Core\ORM\Repositories\TrainingRepository;
  * Class ProgressService
  * @package RepeatBot\Bot\Service\CommandService\Commands
  */
-class ProgressService extends BaseCommandService
+class ProgressServiceDefault extends BaseDefaultCommandService
 {
     private TrainingRepository $trainingRepository;
 

@@ -15,10 +15,10 @@ use RepeatBot\Core\ORM\Entities\UserNotification;
 use RepeatBot\Core\ORM\Repositories\UserNotificationRepository;
 
 /**
- * Class SettingsPriorityService
+ * Class SettingsSilentService
  * @package RepeatBot\Bot\Service\CommandService\Commands
  */
-class SettingsPriorityService extends BaseCommandService
+class SettingsSilentServiceDefault extends BaseDefaultCommandService
 {
     private UserNotificationRepository $repository;
 
@@ -36,17 +36,21 @@ class SettingsPriorityService extends BaseCommandService
 
     /**
      * {@inheritDoc}
-     * @throws Exception
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Exception
      */
     public function execute(): CommandInterface
     {
         $userId = $this->getOptions()->getChatId();
-        $priority = intval($this->getOptions()->getPayload()[2] ?? 0);
-        $this->cache->setPriority($userId, $priority);
-        $silent = $this->repository->getOrCreateUserNotification($userId)->getSilent();
+        $silent = intval($this->getOptions()->getPayload()[2] ?? 0);
+        $this->repository->createOdUpdateNotification(
+            $userId,
+            $silent
+        );
+        $priority = $this->cache->getPriority($userId);
         $data = BotHelper::editMainMenuSettings($silent, $priority, $userId, $this->getOptions()->getMessageId());
+
 
         $this->setResponse(new ResponseDirector('editMessageText', $data));
 

@@ -7,6 +7,7 @@ namespace Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use RepeatBot\Bot\Service\CommandService\CallbackQueryDirectorFabric;
+use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 /**
  * Class CallbackqueryCommand
@@ -35,10 +36,12 @@ class CallbackqueryCommand extends SystemCommand
     public function execute(): ServerResponse
     {
         $command = (new CallbackQueryDirectorFabric(
-            $this->getCallbackQuery()->getData(),
-            $this->getCallbackQuery()->getMessage()->getChat()->getId(),
-            $this->getCallbackQuery()->getMessage()->getMessageId(),
-            intval($this->getCallbackQuery()->getId())
+            new CommandOptions(
+                payload: explode('_', $this->getCallbackQuery()->getData()),
+                chatId: $this->getCallbackQuery()->getMessage()->getChat()->getId(),
+                messageId: $this->getCallbackQuery()->getMessage()->getMessageId(),
+                callbackQueryId: intval($this->getCallbackQuery()->getId())
+            )
         ))->getCommandDirector();
 
         $service = $command->makeService();
