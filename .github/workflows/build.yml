@@ -52,25 +52,25 @@ jobs:
           docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/codecept build
           docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/codecept run --coverage-xml --xml
 
-        #SONAR
-        - name: Setup sonarqube
-          uses: warchant/setup-sonar-scanner@v3
-        # Analyse PR
-        - name: Run sonarqube (analyse PR)
-          if: ${{ github.event_name == 'pull_request' }}
-          run: sonar-scanner
-            -Dsonar.organization=omentes
-            -Dsonar.host.url=https://sonarcloud.io/
-            -Dsonar.projectKey=DA
-            -Dsonar.exlusions=vendor
-            -Dsonar.pullrequest.branch=${{ github.head_ref }}
-            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
-            -Dsonar.pullrequest.base=${{ github.base_ref }}
-        # Analyse branch
-        - name: Run sonarqube (analyse branch)
-          if: ${{ github.event_name == 'push' }}
-          run: sonar-scanner
-            -Dsonar.organization=pdffiller
-            -Dsonar.host.url=https://sonarcloud.io/
-            -Dsonar.projectKey=DA
-            -Dsonar.exlusions=vendor
+      #SONAR
+      - name: Setup sonarqube
+        uses: warchant/setup-sonar-scanner@v3
+      # Analyse PR
+      - name: Run sonarqube (analyse PR)
+        if: ${{ github.event_name == 'pull_request' }}
+        run: sonar-scanner
+          -Dsonar.organization=omentes
+          -Dsonar.host.url=https://sonarcloud.io/
+          -Dsonar.projectKey=DA
+          -Dsonar.exlusions=vendor
+          -Dsonar.pullrequest.branch=${{ github.head_ref }}
+          -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+          -Dsonar.pullrequest.base=${{ github.base_ref }}
+      # Analyse branch
+      - name: Run sonarqube (analyse branch)
+        if: ${{ github.event_name == 'push' }}
+        run: sonar-scanner
+          -Dsonar.organization=pdffiller
+          -Dsonar.host.url=https://sonarcloud.io/
+          -Dsonar.projectKey=DA
+          -Dsonar.exlusions=vendor
