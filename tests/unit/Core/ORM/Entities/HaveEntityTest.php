@@ -100,7 +100,7 @@ final class HaveEntityTest extends Unit
         $entity->setUsed($used);
         $entity->setCreatedAt($created);
         $entity->setUpdatedAt($updated);
-        $this->tester->haveVersionNotificationInDatabase($entity);
+        $this->tester->haveUserVoiceInDatabase($entity);
 
         $version = $this->em->find(UserVoice::class, $entity->getId());
 

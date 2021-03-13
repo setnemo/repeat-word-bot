@@ -26,37 +26,38 @@ class Unit extends \Codeception\Module
         return HaveInDatabase::getInstance()->haveVersionNotificationEntity($entity);
     }
     
-    public function haveUserVoiceEntity(UserVoice $entity): UserVoice
+    public function haveUserVoiceInDatabase(UserVoice $entity): UserVoice
     {
         return HaveInDatabase::getInstance()->haveUserVoiceEntity($entity);
     }
     
-    public function haveUserNotificationEntity(UserNotification $entity): UserNotification
+    public function haveUserNotificationInDatabase(UserNotification $entity): UserNotification
     {
         return HaveInDatabase::getInstance()->haveUserNotificationEntity($entity);
     }
     
-    public function haveTrainingEntity(Training $entity): Training
+    public function haveTrainingInDatabase(Training $entity): Training
     {
         return HaveInDatabase::getInstance()->haveTrainingEntity($entity);
     }
     
-    public function haveLearnNotificationPersonalEntity(LearnNotificationPersonal $entity): LearnNotificationPersonal
+    public function haveLearnNotificationPersonalInDatabase(LearnNotificationPersonal $entity):
+    LearnNotificationPersonal
     {
         return HaveInDatabase::getInstance()->haveLearnNotificationPersonalEntity($entity);
     }
     
-    public function haveLearnNotificationEntity(LearnNotification $entity): LearnNotification
+    public function haveLearnNotificationInDatabase(LearnNotification $entity): LearnNotification
     {
         return HaveInDatabase::getInstance()->haveLearnNotificationEntity($entity);
     }
     
-    public function haveExportEntity(Export $entity): Export
+    public function haveExportInDatabase(Export $entity): Export
     {
         return HaveInDatabase::getInstance()->haveExportEntity($entity);
     }
     
-    public function haveCollectionEntity(Collection $entity): Collection
+    public function haveCollectionInDatabase(Collection $entity): Collection
     {
         return HaveInDatabase::getInstance()->haveCollectionEntity($entity);
     }
