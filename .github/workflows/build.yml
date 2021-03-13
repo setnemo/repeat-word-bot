@@ -59,20 +59,20 @@ jobs:
       - name: Run sonarqube (analyse PR)
         if: ${{ github.event_name == 'pull_request' }}
         run: sonar-scanner
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          -Dsonar.organization=omentes
-          -Dsonar.host.url=https://sonarcloud.io/
-          -Dsonar.projectKey=omentes_repeat-word-bot
-          -Dsonar.exlusions=vendor
-          -Dsonar.pullrequest.branch=${{ github.head_ref }}
-          -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
-          -Dsonar.pullrequest.base=${{ github.base_ref }}
+          sonar.login=${{ secrets.SONAR_TOKEN }}
+          sonar.organization=omentes
+          sonar.host.url=https://sonarcloud.io/
+          sonar.projectKey=omentes_repeat-word-bot
+          sonar.exlusions=vendor
+          sonar.pullrequest.branch=${{ github.head_ref }}
+          sonar.pullrequest.key=${{ github.event.pull_request.number }}
+          sonar.pullrequest.base=${{ github.base_ref }}
       # Analyse branch
       - name: Run sonarqube (analyse branch)
         if: ${{ github.event_name == 'push' }}
         run: sonar-scanner
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          -Dsonar.organization=omentes
-          -Dsonar.host.url=https://sonarcloud.io/
-          -Dsonar.projectKey=omentes_repeat-word-bot
-          -Dsonar.exlusions=vendor
+          sonar.login=${{ secrets.SONAR_TOKEN }}
+          sonar.organization=omentes
+          sonar.host.url=https://sonarcloud.io/
+          sonar.projectKey=omentes_repeat-word-bot
+          sonar.exlusions=vendor
