@@ -53,7 +53,7 @@ jobs:
       - name: Prepare rports
         run: |
           ls -la ./tests/_output/
-          sed -i 's!/app/!/github/workspace/!g' $(find ./tests/_output/ -type f)
+          sed -i 's!/app/!/github/workspace/!g' $(find ./tests/_output/ -type f) | true
 
       #SONAR
       - name: SonarCloud Scan
