@@ -50,11 +50,9 @@ jobs:
           docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:generate-proxies 2> /dev/null | true
           docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept build 2> /dev/null | true
           docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept run --coverage-xml --xml
-          sleep 5 | true
-          sed -i 's!/app/!/github/workspace/!g' /app/tests/_output/report.xml
-          sleep 5 | true
-          ls -la /app/tests/_output/
-          sed -i 's!/app/!/github/workspace/!g' /app/tests/_output/coverage.xml
+          echo "Waiting 10 sec..." | true
+          sleep 10 | true
+          sed -i 's!/app/!/github/workspace/!g' $(find /app/tests/_output/ -type f)
 
 
       #SONAR
