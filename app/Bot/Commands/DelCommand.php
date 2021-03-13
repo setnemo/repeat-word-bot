@@ -27,12 +27,14 @@ class DelCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        return (new CommandService())->execute(
+        $command = new CommandService(
             options: new CommandOptions(
                 command: 'del',
                 payload: explode(' ', BotHelper::getTextFromInput($this->getMessage()->getText(true))),
                 chatId: $this->getMessage()->getChat()->getId(),
             )
         );
+    
+        return $command->executeCommand($command->makeService());
     }
 }

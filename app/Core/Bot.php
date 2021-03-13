@@ -168,7 +168,7 @@ final class Bot extends Singleton
                             $entity = new VersionNotification();
                             $entity->setChatId($chatId);
                             $entity->setVersionId($version->getId());
-                            $entity->setCreatedAt(Carbon::now('Europe/Kiev'));
+                            $entity->setCreatedAt(Carbon::now(Database::DEFAULT_TZ));
                             $repositoryNotification->saveVersionNotification($entity);
                         } catch (\Throwable $e) {
                             Log::getInstance()->getLogger()->error($e->getMessage(), $e->getTrace());

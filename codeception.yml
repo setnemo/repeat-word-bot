@@ -1,14 +1,14 @@
 suites:
-    unit:
-        path: ./unit/
-        actor: UnitTester
-        modules:
-          enabled:
-            - Asserts
-            - \Helper\Unit
-            - Doctrine2:
-                connection_callback: [ Helper\ORM, getEntityManager ]
-          step_decorators: ~
+  unit:
+    path: ./unit/
+    actor: UnitTester
+    modules:
+      enabled:
+        - Asserts
+        - \Helper\Unit
+        - Doctrine2:
+            connection_callback: [ Helper\ORM, getEntityManager ]
+      step_decorators: ~
 settings:
     shuffle: true
     lint: true
@@ -17,4 +17,11 @@ paths:
     output: tests/_output
     support: tests/_support
     data: tests
-     
+coverage:
+  enabled: true
+  remote: false
+  include:
+    - app/*
+  exclude:
+    - tests/*
+    - vendor/*

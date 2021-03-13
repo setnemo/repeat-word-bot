@@ -6,7 +6,6 @@ namespace Longman\TelegramBot\Commands\SystemCommand;
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Exception\TelegramException;
 use RepeatBot\Bot\Service\CommandService;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
@@ -25,11 +24,13 @@ class HelpCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        return (new CommandService())->execute(
+        $command = new CommandService(
             options: new CommandOptions(
                 command: 'help',
                 chatId: $this->getMessage()->getChat()->getId(),
             )
         );
+    
+        return $command->executeCommand($command->makeService());
     }
 }

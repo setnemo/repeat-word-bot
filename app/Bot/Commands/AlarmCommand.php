@@ -6,8 +6,6 @@ namespace Longman\TelegramBot\Commands\SystemCommand;
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Exception\TelegramException;
-use Prometheus\Exception\MetricsRegistrationException;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
@@ -27,12 +25,13 @@ class AlarmCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        return (new CommandService())->execute(
+        $command = new CommandService(
             options: new CommandOptions(
                 command: 'alarm',
                 payload: explode(' ', BotHelper::getTextFromInput($this->getMessage()->getText(true))),
                 chatId: $this->getMessage()->getChat()->getId(),
-            )
-        );
+        ));
+
+        return $command->executeCommand($command->makeService());
     }
 }

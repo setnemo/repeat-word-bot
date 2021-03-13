@@ -129,6 +129,14 @@ test-all:
 	docker-compose -f docker-compose.github.actions.yml exec repeatt vendor/bin/codecept build
 	docker-compose -f docker-compose.github.actions.yml exec repeatt vendor/bin/codecept run
 
+.PHONY: test-all-coverage
+test-all-coverage:
+	docker-compose -f docker-compose.github.actions.yml exec repeatt vendor/bin/doctrine orm:clear-cache:metadata
+	docker-compose -f docker-compose.github.actions.yml exec repeatt vendor/bin/doctrine orm:clear-cache:query
+	docker-compose -f docker-compose.github.actions.yml exec repeatt vendor/bin/doctrine orm:clear-cache:result
+	docker-compose -f docker-compose.github.actions.yml exec repeatt vendor/bin/codecept build
+	docker-compose -f docker-compose.github.actions.yml exec repeatt vendor/bin/codecept run --coverage-xml --xml
+
 .PHONY: test-run
 test-run:
 	docker-compose -f docker-compose.github.actions.yml exec repeatt vendor/bin/doctrine orm:clear-cache:metadata

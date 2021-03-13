@@ -17,47 +17,47 @@ use RepeatBot\Bot\Service\CommandService\GenericMessageDirectorFabric;
  */
 class CommandService
 {
+    public function __construct(protected CommandOptions $options, protected string $type = '')
+    {
+    }
+    
     /**
-     * @param string         $type
-     * @param CommandOptions $options
+     * @return CommandInterface
+     */
+    public function makeService(): CommandInterface
+    {
+        return match ($this->getType()) {
+            'query' => $this->makeQueryService($this->getOptions()),
+            'generic' => $this->makeGenericService($this->getOptions()),
+        default => $this->makeDefaultService($this->getOptions()),
+        };
+    }
+    
+    
+    /**
+     * @param CommandInterface $service
      *
      * @return ServerResponse
      */
-public function execute(CommandOptions $options, string $type = ''): ServerResponse
-{
-    $service = match ($type) {
-        'query' => $this->makeQueryService($options),
-        'generic' => $this->makeGenericService($options),
-    default => $this->makeService($options),
-    };
-
-        return $this->makeCommand($service);
+    public function executeCommand(CommandInterface $service): ServerResponse
+    {
+        if (!$service->hasResponse()) {
+            $service = $service->execute();
         }
+        
+        return $service->postStackMessages()->getResponseMessage();
+    }
 
     /**
      * @param CommandOptions $options
      *
      * @return CommandInterface
      */
-    private function makeService(CommandOptions $options): CommandInterface
+    private function makeDefaultService(CommandOptions $options): CommandInterface
     {
         $command = new CommandDirector($options);
 
         return $command->makeService();
-    }
-
-    /**
-     * @param CommandInterface $service
-     *
-     * @return ServerResponse
-     */
-    private function makeCommand(CommandInterface $service): ServerResponse
-    {
-        if (!$service->hasResponse()) {
-            $service = $service->execute();
-        }
-
-        return $service->postStackMessages()->getResponseMessage();
     }
 
     /**
@@ -82,5 +82,21 @@ public function execute(CommandOptions $options, string $type = ''): ServerRespo
         $command = (new GenericMessageDirectorFabric($options))->getCommandDirector();
 
         return $command->makeService();
+    }
+    
+    /**
+     * @return CommandOptions
+     */
+    public function getOptions(): CommandOptions
+    {
+        return $this->options;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
     }
 }

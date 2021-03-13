@@ -10,6 +10,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\Expr\Join;
 use RepeatBot\Bot\BotHelper;
+use RepeatBot\Core\Database;
 use RepeatBot\Core\Exception\EmptyVocabularyException;
 use RepeatBot\Core\ORM\Collections\InactiveUserCollection;
 use RepeatBot\Core\ORM\Collections\TrainingCollection;
@@ -63,9 +64,9 @@ class TrainingRepository extends EntityRepository
                 $entity->setWord($word);
                 $entity->setCollectionId($word->getCollectionId());
                 $entity->setStatus('first');
-                $entity->setNext(Carbon::now('Europe/Kiev'));
-                $entity->setCreatedAt(Carbon::now('Europe/Kiev'));
-                $entity->setUpdatedAt(Carbon::now('Europe/Kiev'));
+                $entity->setNext(Carbon::now(Database::DEFAULT_TZ));
+                $entity->setCreatedAt(Carbon::now(Database::DEFAULT_TZ));
+                $entity->setUpdatedAt(Carbon::now(Database::DEFAULT_TZ));
                 $this->getEntityManager()->persist($entity);
 
                 ++$i;
@@ -99,7 +100,7 @@ class TrainingRepository extends EntityRepository
             ->andWhere('t.next < :next')
             ->setParameter('userId', $userId)
             ->setParameter('type', $type)
-            ->setParameter('next', Carbon::now('Europe/Kiev'));
+            ->setParameter('next', Carbon::now(Database::DEFAULT_TZ));
 
         return new TrainingCollection($query->getQuery()->getResult());
     }
@@ -155,8 +156,8 @@ class TrainingRepository extends EntityRepository
         $newStatus = $this->getNewStatus($training, $never);
 
         $training->setStatus($newStatus['status']);
-        $training->setNext(Carbon::now('Europe/Kiev')->addMinutes($newStatus['repeat']));
-        $training->setUpdatedAt(Carbon::now('Europe/Kiev'));
+        $training->setNext(Carbon::now(Database::DEFAULT_TZ)->addMinutes($newStatus['repeat']));
+        $training->setUpdatedAt(Carbon::now(Database::DEFAULT_TZ));
         $this->getEntityManager()->persist($training);
         $this->getEntityManager()->flush();
 
@@ -207,8 +208,8 @@ class TrainingRepository extends EntityRepository
             ->setParameter('userId', $userId)
             ->setParameter('collectionId', $collectionId)
             ->setParameter(0, 'first')
-            ->setParameter(1, Carbon::now('Europe/Kiev'))
-            ->setParameter(2, Carbon::now('Europe/Kiev'));
+            ->setParameter(1, Carbon::now(Database::DEFAULT_TZ))
+            ->setParameter(2, Carbon::now(Database::DEFAULT_TZ));
 
         $query->getQuery()->execute();
     }
@@ -226,8 +227,8 @@ class TrainingRepository extends EntityRepository
             ->where('t.userId = :userId')
             ->setParameter('userId', $userId)
             ->setParameter(0, 'first')
-            ->setParameter(1, Carbon::now('Europe/Kiev'))
-            ->setParameter(2, Carbon::now('Europe/Kiev'));
+            ->setParameter(1, Carbon::now(Database::DEFAULT_TZ))
+            ->setParameter(2, Carbon::now(Database::DEFAULT_TZ));
 
         $query->getQuery()->execute();
     }

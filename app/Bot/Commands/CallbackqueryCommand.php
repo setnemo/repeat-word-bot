@@ -6,6 +6,8 @@ namespace Longman\TelegramBot\Commands\SystemCommand;
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
+use RepeatBot\Bot\BotHelper;
+use RepeatBot\Bot\Service\CommandService;
 use RepeatBot\Bot\Service\CommandService\CallbackQueryDirectorFabric;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
@@ -35,21 +37,13 @@ class CallbackqueryCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        $command = (new CallbackQueryDirectorFabric(
-            new CommandOptions(
-                payload: explode('_', $this->getCallbackQuery()->getData()),
-                chatId: $this->getCallbackQuery()->getMessage()->getChat()->getId(),
-                messageId: $this->getCallbackQuery()->getMessage()->getMessageId(),
-                callbackQueryId: intval($this->getCallbackQuery()->getId())
-            )
-        ))->getCommandDirector();
-
-        $service = $command->makeService();
-
-        if (!$service->hasResponse()) {
-            $service = $service->execute();
-        }
-
-        return $service->postStackMessages()->getResponseMessage();
+        $command = new CommandService(options: new CommandOptions(
+            payload: explode('_', $this->getCallbackQuery()->getData()),
+            chatId: $this->getCallbackQuery()->getMessage()->getChat()->getId(),
+            messageId: $this->getCallbackQuery()->getMessage()->getMessageId(),
+            callbackQueryId: intval($this->getCallbackQuery()->getId())
+        ), type: 'query');
+    
+        return $command->executeCommand($command->makeService());
     }
 }

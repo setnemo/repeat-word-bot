@@ -59,14 +59,14 @@ class UserVoiceRepository extends EntityRepository
         $entity = $this->findOneBy(['voice' => $voice, 'userId' => $userId]);
         if ($entity) {
             $entity->setUsed($used);
-            $entity->setUpdatedAt(Carbon::now('Europe/Kiev'));
+            $entity->setUpdatedAt(Carbon::now(\RepeatBot\Core\Database::DEFAULT_TZ));
         } else {
             $entity = new UserVoice();
             $entity->setUserId($userId);
             $entity->setVoice($voice);
             $entity->setUsed($used);
-            $entity->setCreatedAt(Carbon::now('Europe/Kiev'));
-            $entity->setUpdatedAt(Carbon::now('Europe/Kiev'));
+            $entity->setCreatedAt(Carbon::now(\RepeatBot\Core\Database::DEFAULT_TZ));
+            $entity->setUpdatedAt(Carbon::now(\RepeatBot\Core\Database::DEFAULT_TZ));
         }
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();

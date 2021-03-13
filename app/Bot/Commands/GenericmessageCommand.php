@@ -4,10 +4,8 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
-use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
-use RepeatBot\Bot\Service\CommandService\GenericMessageDirectorFabric;
 
 class GenericmessageCommand extends SystemCommand
 {
@@ -16,12 +14,14 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        return (new CommandService())->execute(
+        $command = new CommandService(
             options: new CommandOptions(
                 text: $this->getMessage()->getText(false) ?? '',
                 chatId: $this->getMessage()->getFrom()->getId()
             ),
             type: 'generic'
         );
+    
+        return $command->executeCommand($command->makeService());
     }
 }

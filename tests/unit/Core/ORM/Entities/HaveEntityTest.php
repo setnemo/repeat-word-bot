@@ -11,6 +11,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\TransactionRequiredException;
+use RepeatBot\Core\ORM\Entities\Collection;
+use RepeatBot\Core\ORM\Entities\Export;
 use RepeatBot\Core\ORM\Entities\LearnNotification;
 use RepeatBot\Core\ORM\Entities\LearnNotificationPersonal;
 use RepeatBot\Core\ORM\Entities\Training;
@@ -37,6 +39,34 @@ final class HaveEntityTest extends Unit
     {
         $this->em = $this->getModule('Doctrine2')->em;
         parent::_setUp();
+    }
+
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws TransactionRequiredException
+     */
+    public function testHaveWord(): void
+    {
+        $word = 'wordddd';
+        $translate = 'translateeee';
+        $collectionId = 37;
+        $created = Carbon::now();
+
+        $entity = new Word();
+        $entity->setWord($word);
+        $entity->setCollectionId($collectionId);
+        $entity->setTranslate($translate);
+        $entity->setCreatedAt($created);
+
+        $this->tester->haveWordInDatabase($entity);
+
+        $version = $this->em->find(Word::class, $entity->getId());
+
+        $this->tester->assertEquals($word, $version->getWord());
+        $this->tester->assertEquals($translate, $version->getTranslate());
+        $this->tester->assertEquals($collectionId, $version->getCollectionId());
+        $this->tester->assertEquals($created, $version->getCreatedAt());
     }
 
     /**
@@ -258,5 +288,61 @@ final class HaveEntityTest extends Unit
         $this->tester->assertEquals($used, $learnNotification->getUsed());
         $this->tester->assertEquals($created, $learnNotification->getCreatedAt());
         $this->tester->assertEquals($updated, $learnNotification->getUpdatedAt());
+    }
+
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws TransactionRequiredException
+     */
+    public function testHaveExport(): void
+    {
+        $userId = 42;
+        $chatId = 42;
+        $wordType = 'FromEnglish_first';
+        $used = 0;
+        $created = Carbon::now();
+        $updated = Carbon::now();
+
+        $entity = new Export();
+        $entity->setUserId($userId);
+        $entity->setChatId($chatId);
+        $entity->setWordType($wordType);
+        $entity->setUsed($used);
+        $entity->setCreatedAt($created);
+        $entity->setUpdatedAt($updated);
+
+        $this->tester->haveExportInDatabase($entity);
+
+        $export = $this->em->find(Export::class, $entity->getId());
+
+        $this->tester->assertEquals($userId, $export->getUserId());
+        $this->tester->assertEquals($chatId, $export->getChatId());
+        $this->tester->assertEquals($wordType, $export->getWordType());
+        $this->tester->assertEquals($used, $export->getUsed());
+        $this->tester->assertEquals($created, $export->getCreatedAt());
+        $this->tester->assertEquals($updated, $export->getUpdatedAt());
+    }
+
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws TransactionRequiredException
+     */
+    public function testHaveCollection(): void
+    {
+        $name = 'Collection';
+        $created = Carbon::now();
+
+        $entity = new Collection();
+        $entity->setName($name);
+        $entity->setCreatedAt($created);
+
+        $this->tester->haveCollectionInDatabase($entity);
+
+        $export = $this->em->find(Collection::class, $entity->getId());
+
+        $this->tester->assertEquals($name, $export->getName());
+        $this->tester->assertEquals($created, $export->getCreatedAt());
     }
 }

@@ -21,6 +21,7 @@ use RepeatBot\Core\Cache as CoreCache;
  */
 class Database extends Singleton
 {
+    public const DEFAULT_TZ = 'Europe/Kiev';
     /**
      * @var EntityManager
      */

@@ -695,7 +695,6 @@ return [
                 'Europe/Bucharest',
                 'Europe/Chisinau',
                 'Europe/Helsinki',
-                'Europe/Kiev',
                 'Europe/Mariehamn',
                 'Europe/Nicosia',
                 'Europe/Riga',

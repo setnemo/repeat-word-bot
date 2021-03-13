@@ -6,6 +6,7 @@ namespace RepeatBot\Core\ORM\Collections;
 
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
+use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\LearnNotification;
 use RepeatBot\Core\ORM\ValueObjects\InactiveUser;
 
@@ -24,7 +25,7 @@ class InactiveUserCollection extends ArrayCollection
             $learnNotification->setUserId($inactiveUser->getUserId());
             $learnNotification->setMessage($inactiveUser->getMessage());
             $learnNotification->setSilent($inactiveUser->getSilent());
-            $learnNotification->setCreatedAt(Carbon::now('Europe/Kiev'));
+            $learnNotification->setCreatedAt(Carbon::now(Database::DEFAULT_TZ));
             $learnNotificationCollection->add($learnNotification);
         }
 

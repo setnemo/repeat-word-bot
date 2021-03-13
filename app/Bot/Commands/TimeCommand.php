@@ -24,11 +24,13 @@ class TimeCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        return (new CommandService())->execute(
+        $command = new CommandService(
             options: new CommandOptions(
                 command: 'time',
                 chatId: $this->getMessage()->getChat()->getId(),
             )
         );
+    
+        return $command->executeCommand($command->makeService());
     }
 }

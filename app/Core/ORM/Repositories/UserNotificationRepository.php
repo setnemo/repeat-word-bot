@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Collections\UserNotificationCollection;
 use RepeatBot\Core\ORM\Entities\UserNotification;
 
@@ -37,7 +38,7 @@ class UserNotificationRepository extends EntityRepository
     {
         $entity = $this->getOrCreateUserNotification($userId);
         $entity->setDeleted(1);
-        $entity->setDeletedAt(Carbon::now('Europe/Kiev'));
+        $entity->setDeletedAt(Carbon::now(Database::DEFAULT_TZ));
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
     }
