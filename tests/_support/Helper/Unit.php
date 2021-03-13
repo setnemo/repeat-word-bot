@@ -1,4 +1,5 @@
 <?php
+
 namespace Helper;
 
 // here you can define custom actions
@@ -31,38 +32,38 @@ class Unit extends \Codeception\Module
     {
         return HaveInDatabase::getInstance()->haveVersionNotificationEntity($entity);
     }
-    
+
     public function haveUserVoiceInDatabase(UserVoice $entity): UserVoice
     {
         return HaveInDatabase::getInstance()->haveUserVoiceEntity($entity);
     }
-    
+
     public function haveUserNotificationInDatabase(UserNotification $entity): UserNotification
     {
         return HaveInDatabase::getInstance()->haveUserNotificationEntity($entity);
     }
-    
+
     public function haveTrainingInDatabase(Training $entity): Training
     {
         return HaveInDatabase::getInstance()->haveTrainingEntity($entity);
     }
-    
+
     public function haveLearnNotificationPersonalInDatabase(LearnNotificationPersonal $entity):
     LearnNotificationPersonal
     {
         return HaveInDatabase::getInstance()->haveLearnNotificationPersonalEntity($entity);
     }
-    
+
     public function haveLearnNotificationInDatabase(LearnNotification $entity): LearnNotification
     {
         return HaveInDatabase::getInstance()->haveLearnNotificationEntity($entity);
     }
-    
+
     public function haveExportInDatabase(Export $entity): Export
     {
         return HaveInDatabase::getInstance()->haveExportEntity($entity);
     }
-    
+
     public function haveCollectionInDatabase(Collection $entity): Collection
     {
         return HaveInDatabase::getInstance()->haveCollectionEntity($entity);

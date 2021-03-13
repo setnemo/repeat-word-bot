@@ -109,7 +109,7 @@ abstract class BaseCommandService implements CommandInterface
     {
         return [] !== $this->stack || null !== $this->response;
     }
-    
+
     /**
      * {@inheritDoc}
      */

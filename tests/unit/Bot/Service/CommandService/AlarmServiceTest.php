@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace Tests\Unit\Bot\Service\CommandService;
 
@@ -16,7 +17,7 @@ use UnitTester;
 class AlarmServiceTest extends Unit
 {
     protected UnitTester $tester;
-    
+
     public function testAlarmValidator()
     {
         $options = new CommandOptions(
@@ -38,7 +39,7 @@ class AlarmServiceTest extends Unit
             'disable_notification' => 1,
         ], $error->getData());
     }
-    
+
     public function testAlarmList()
     {
 //        $options = new CommandOptions(

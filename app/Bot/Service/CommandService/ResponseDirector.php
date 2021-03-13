@@ -53,7 +53,7 @@ class ResponseDirector
             'answerCallbackQuery' => Request::answerCallbackQuery($data),
         };
     }
-    
+
     /**
      * @return string
      */
@@ -61,7 +61,7 @@ class ResponseDirector
     {
         return $this->type;
     }
-    
+
     /**
      * @return array
      */

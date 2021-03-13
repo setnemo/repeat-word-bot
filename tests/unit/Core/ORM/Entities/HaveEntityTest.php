@@ -27,7 +27,7 @@ final class HaveEntityTest extends Unit
 {
     protected UnitTester $tester;
     protected EntityManager $em;
-    
+
     /**
      * @throws ModuleException
      */
@@ -36,7 +36,7 @@ final class HaveEntityTest extends Unit
         $this->em = $this->getModule('Doctrine2')->em;
         parent::_setUp();
     }
-    
+
     /**
      * @throws ORMException
      * @throws OptimisticLockException
@@ -63,7 +63,7 @@ final class HaveEntityTest extends Unit
         $this->tester->assertEquals($created, $version->getCreatedAt());
         $this->tester->assertEquals($description, $version->getDescription());
     }
-    
+
     /**
      * @throws ORMException
      * @throws OptimisticLockException
@@ -87,7 +87,7 @@ final class HaveEntityTest extends Unit
         $this->tester->assertEquals($chatId, $versionNotification->getChatId());
         $this->tester->assertEquals($created, $versionNotification->getCreatedAt());
     }
-    
+
     /**
      * @throws ORMException
      * @throws OptimisticLockException
@@ -117,7 +117,7 @@ final class HaveEntityTest extends Unit
         $this->tester->assertEquals($created, $userVoice->getCreatedAt());
         $this->tester->assertEquals($updated, $userVoice->getUpdatedAt());
     }
-    
+
     /**
      * @throws ORMException
      * @throws OptimisticLockException
@@ -144,7 +144,7 @@ final class HaveEntityTest extends Unit
         $this->tester->assertEquals($deleted, $userNotification->getDeleted());
         $this->tester->assertEquals($deletedAt, $userNotification->getDeletedAt());
     }
-    
+
     /**
      * @throws ORMException
      * @throws OptimisticLockException
@@ -157,7 +157,7 @@ final class HaveEntityTest extends Unit
         $word->setCollectionId(37);
         $word->setTranslate('tmp');
         $this->tester->haveWordInDatabase($word);
-    
+
         $userId = 42;
         $collectionId = 1;
         $type = 'FromEnglish';
