@@ -20,9 +20,17 @@ class Poll
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="bigint", nullable=false, options={"unsigned"=true,"comment"="Unique poll identifier"})
+     * @ORM\Column(name="primary_id", type="bigint", nullable=false, options={"unsigned"=true,"comment"="Unique
+ * identifier for this query"})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private int $primaryId;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false, options={"unsigned"=true,"comment"="Unique poll identifier"})
      */
     private $id;
 

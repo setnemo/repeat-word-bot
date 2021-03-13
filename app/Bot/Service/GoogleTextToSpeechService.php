@@ -51,7 +51,7 @@ class GoogleTextToSpeechService
             ->setPitch(-4.40)
             ->setSpeakingRate(0.89)
         ;
-        $this->synthesisInputText = (new SynthesisInput());
+        $this->synthesisInputText = new SynthesisInput();
     }
 
     public function getMp3(string $text): string

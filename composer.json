@@ -1,41 +1,44 @@
 {
-  "name": "omentes/repeat-word-bot",
-  "description": "Telegram bot that will help you repeat new English words",
-  "minimum-stability": "stable",
-  "authors": [
-    {
-      "name": "omentes",
-      "email": "setnemo@gmail.com"
+    "name": "omentes/repeat-word-bot",
+    "description": "Telegram bot that will help you repeat new English words",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "omentes",
+            "email": "setnemo@gmail.com"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "vlucas/phpdotenv": "^5.3",
+        "monolog/monolog": "^2.2",
+        "predis/predis": "^1.1",
+        "longman/telegram-bot": "^0.70.1",
+        "adbario/php-dot-notation": "^2.2",
+        "nesbot/carbon": "^2.45",
+        "carbon-cli/carbon-cli": "^1.2",
+        "promphp/prometheus_client_php": "^2.2",
+        "mpdf/mpdf": "8.0.10",
+        "google/cloud-text-to-speech": "^1.2",
+        "doctrine/orm": "^2.8"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.5",
+        "vimeo/psalm": "4.6.1",
+        "codeception/codeception": "^4.1",
+        "codeception/module-asserts": "^1.0.0",
+        "codeception/module-doctrine2": "^1.1",
+        "codeception/module-db": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "RepeatBot\\": "app/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Unit\\": "tests/unit/",
+            "Tests\\Helpers\\": "tests/helpers/"
+        }
     }
-  ],
-  "license": "MIT",
-  "require": {
-    "vlucas/phpdotenv": "^5.3",
-    "monolog/monolog": "^2.2",
-    "predis/predis": "^1.1",
-    "longman/telegram-bot": "^0.70.1",
-    "adbario/php-dot-notation": "^2.2",
-    "nesbot/carbon": "^2.45",
-    "carbon-cli/carbon-cli": "^1.2",
-    "promphp/prometheus_client_php": "^2.2",
-    "mpdf/mpdf": "8.0.10",
-    "google/cloud-text-to-speech": "^1.2",
-    "doctrine/orm": "^2.8"
-  },
-  "require-dev": {
-    "squizlabs/php_codesniffer": "^3.5",
-    "vimeo/psalm": "4.6.1",
-    "phpunit/phpunit": "^9.5"
-  },
-  "autoload": {
-    "psr-4": {
-      "RepeatBot\\": "app/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\Unit\\": "tests/unit/",
-      "Tests\\Helpers\\": "tests/helpers/"
-    }
-  }
 }

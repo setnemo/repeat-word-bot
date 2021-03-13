@@ -2,7 +2,7 @@
 
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use RepeatBot\Core\App;
-use RepeatBot\Core\Database\Database;
+use RepeatBot\Core\Database;
 
 require __DIR__ . '/vendor/autoload.php';
 

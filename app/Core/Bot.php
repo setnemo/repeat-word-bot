@@ -19,7 +19,7 @@ use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\ExportQueueService;
 use RepeatBot\Common\Config;
 use RepeatBot\Common\Singleton;
-use RepeatBot\Core\Database\Database;
+use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\LearnNotification;
 use RepeatBot\Core\ORM\Entities\VersionNotification;
 use RepeatBot\Core\ORM\Repositories\ExportRepository;

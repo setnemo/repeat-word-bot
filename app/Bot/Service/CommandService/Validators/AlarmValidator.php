@@ -7,6 +7,7 @@ namespace RepeatBot\Bot\Service\CommandService\Validators;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use RepeatBot\Bot\Service\CommandService\Validators\Messages\AlarmMessage;
 
 class AlarmValidator implements ValidateCommand
 {
@@ -68,13 +69,6 @@ class AlarmValidator implements ValidateCommand
      */
     private function getErrorText(): string
     {
-        return "Чтобы создать напоминание на 9 утра - воспользуйтесь командой `/alarm 9:00`. " .
-            "Чтобы создать напоминание на 9 вечера - воспользуйтесь командой `/alarm 21:00`.\n\n" .
-            "По умолчанию используется часовой пояс FLE Standard Time (Kyiv), то есть по сути команды выше на самом деле " .
-            "можно отправить с кодом FDT `/alarm FDT 9:00` и результат будет тот же. Если же вам нужно получать " .
-            "оповещения по другому часовому поясу, например MSK, то нужно писать так `/alarm MSK 9:00`\n\n" .
-            "Посмотреть все коды часовых поясов можно командой /time\n\n" .
-            "Посмотреть свои напоминания /alarm list\n\n" .
-            "Удалить свои напоминания /alarm reset";
+        return AlarmMessage::ERROR_TEXT;
     }
 }

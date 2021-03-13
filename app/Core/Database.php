@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RepeatBot\Core\Database;
+namespace RepeatBot\Core;
 
 use Carbon\Doctrine\CarbonType;
 use Carbon\Doctrine\DateTimeImmutableType;

@@ -12,7 +12,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
       - name: Get Composer Cache Directory
         id: composer-cache
         run: |
@@ -35,11 +34,32 @@ jobs:
         run: |
           cp .env.github.actions .env
       - name: Build the docker-compose stack
-        run: docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests up -d
+        run: docker-compose -f docker-compose.github.actions.yml up -d
       - name: Sleep
         uses: jakejarvis/wait-action@master
         with:
           time: '30s'
+      - name: Build test suite
+        run: |
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept build
       - name: Run test suite
-        run: docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec -T worker vendor/bin/phpunit tests
+        run: |
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:clear-cache:metadata 2> /dev/null | true
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:clear-cache:query 2> /dev/null | true
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:clear-cache:result 2> /dev/null | true
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:generate-proxies 2> /dev/null | true
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept build 2> /dev/null | true
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept run --coverage-xml --xml
 
+      #SONAR
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=omentes
+            -Dsonar.host.url=https://sonarcloud.io/
+            -Dsonar.projectKey=omentes_repeat-word-bot
+            -Dsonar.exlusions=vendor

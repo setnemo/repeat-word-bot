@@ -13,7 +13,7 @@ use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
-use RepeatBot\Core\Database\Database;
+use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\UserNotification;
 use RepeatBot\Core\ORM\Entities\UserVoice;
 use RepeatBot\Core\ORM\Repositories\UserNotificationRepository;
@@ -137,11 +137,11 @@ class SettingsVoicesService extends BaseCommandService
     private function executeSettingsVoicesSwitcherCommand(int $num, int $switcher): void
     {
         $userId = $this->getOptions()->getChatId();
+        $this->userVoiceRepository->updateUserVoice($userId, BotHelper::getVoices()[$num], $switcher);
         /** @psalm-suppress TooManyArguments */
         $keyboard = new InlineKeyboard(...BotHelper::getSettingsVoicesKeyboard(
             $this->userVoiceRepository->getFormattedVoices($userId)
         ));
-        $this->userVoiceRepository->updateUserVoice($userId, BotHelper::getVoices()[$num], $switcher);
         $data = [
             'chat_id' => $userId,
             'text' => BotHelper::getSettingsText(),
@@ -150,6 +150,13 @@ class SettingsVoicesService extends BaseCommandService
             'disable_notification' => 1,
             'reply_markup' => $keyboard,
         ];
-        $this->setResponse(new ResponseDirector('editMessageText', $data));
+        $this->addStackMessage(new ResponseDirector('editMessageText', $data));
+
+        $this->setResponse(new ResponseDirector('answerCallbackQuery', [
+            'callback_query_id' => $this->getOptions()->getCallbackQueryId(),
+            'text' => '',
+            'show_alert' => true,
+            'cache_time' => 3,
+        ]));
     }
 }

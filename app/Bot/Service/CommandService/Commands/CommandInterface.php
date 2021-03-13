@@ -33,4 +33,9 @@ interface CommandInterface
      * @return bool
      */
     public function hasResponse(): bool;
+
+    /**
+     * @return array
+     */
+    public function showResponses(): array;
 }
