@@ -7,7 +7,7 @@ namespace Tests\Unit\Bot\Service\CommandService;
 use Carbon\Carbon;
 use Codeception\Test\Unit;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
-use RepeatBot\Bot\Service\CommandService\Commands\AlarmServiceDefault;
+use RepeatBot\Bot\Service\CommandService\Commands\AlarmService;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 use RepeatBot\Bot\Service\CommandService\Validators\AlarmValidator;
 use RepeatBot\Bot\Service\CommandService\Validators\Messages\AlarmMessage;
@@ -25,7 +25,7 @@ class AlarmServiceTest extends Unit
             payload: explode(' ', ''),
             chatId: 42,
         );
-        $service = (new AlarmServiceDefault($options))->validate(new AlarmValidator());
+        $service = (new AlarmService($options))->validate(new AlarmValidator());
         $response = $service->showResponses();
         /** @var ResponseDirector $error */
         $error = $response[0];

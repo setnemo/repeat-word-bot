@@ -13,7 +13,7 @@ use RepeatBot\Bot\Service\CommandService\ResponseDirector;
  * Class StartService
  * @package RepeatBot\Bot\Service\CommandService\Commands
  */
-class StartServiceDefault extends BaseDefaultCommandService
+class StartService extends BaseDefaultCommandService
 {
     /**
      * {@inheritDoc}

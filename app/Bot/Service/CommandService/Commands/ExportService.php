@@ -12,7 +12,7 @@ use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\Export;
 use RepeatBot\Core\ORM\Repositories\ExportRepository;
 
-class ExportServiceDefault extends BaseDefaultCommandService
+class ExportService extends BaseDefaultCommandService
 {
     private ExportRepository $exportRepository;
 

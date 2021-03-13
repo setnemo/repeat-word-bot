@@ -17,7 +17,7 @@ use RepeatBot\Core\ORM\Repositories\TrainingRepository;
  * Class ResetService
  * @package RepeatBot\Bot\Service\CommandService\Commands
  */
-class ResetServiceDefault extends BaseDefaultCommandService
+class ResetService extends BaseDefaultCommandService
 {
     private TrainingRepository $trainingRepository;
 

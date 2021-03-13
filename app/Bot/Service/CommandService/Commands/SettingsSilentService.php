@@ -18,7 +18,7 @@ use RepeatBot\Core\ORM\Repositories\UserNotificationRepository;
  * Class SettingsSilentService
  * @package RepeatBot\Bot\Service\CommandService\Commands
  */
-class SettingsSilentServiceDefault extends BaseDefaultCommandService
+class SettingsSilentService extends BaseDefaultCommandService
 {
     private UserNotificationRepository $repository;
 

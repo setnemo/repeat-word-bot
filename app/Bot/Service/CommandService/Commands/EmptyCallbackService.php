@@ -11,7 +11,7 @@ use RepeatBot\Bot\Service\CommandService\ResponseDirector;
  * Class EmptyCallbackService
  * @package RepeatBot\Bot\Service\CommandService\Commands
  */
-class EmptyCallbackServiceDefault extends BaseDefaultCommandService
+class EmptyCallbackService extends BaseDefaultCommandService
 {
     /**
      * {@inheritDoc}

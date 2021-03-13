@@ -234,29 +234,29 @@ final class HaveEntityTest extends Unit
     public function testHaveLearnNotification(): void
     {
         $userId = 42;
-        $alarm = Carbon::now();
         $message = 'message';
-        $tz = 'FDT';
+        $used = 0;
+        $silent = 0;
         $created = Carbon::now();
         $updated = Carbon::now();
 
         $entity = new LearnNotification();
         $entity->setUserId($userId);
         $entity->setMessage($message);
-        $entity->setTimezone($tz);
-        $entity->setAlarm($alarm);
+        $entity->setUsed($used);
+        $entity->setSilent($silent);
         $entity->setCreatedAt($created);
         $entity->setUpdatedAt($updated);
 
         $this->tester->haveLearnNotificationInDatabase($entity);
 
-        $training = $this->em->find(LearnNotification::class, $entity->getId());
+        $learnNotification = $this->em->find(LearnNotification::class, $entity->getId());
 
-        $this->tester->assertEquals($userId, $training->getUserId());
-        $this->tester->assertEquals($alarm, $training->getAlarm());
-        $this->tester->assertEquals($message, $training->getMessage());
-        $this->tester->assertEquals($tz, $training->getTimezone());
-        $this->tester->assertEquals($created, $training->getCreatedAt());
-        $this->tester->assertEquals($updated, $training->getUpdatedAt());
+        $this->tester->assertEquals($userId, $learnNotification->getUserId());
+        $this->tester->assertEquals($message, $learnNotification->getMessage());
+        $this->tester->assertEquals($silent, $learnNotification->getSilent());
+        $this->tester->assertEquals($used, $learnNotification->getUsed());
+        $this->tester->assertEquals($created, $learnNotification->getCreatedAt());
+        $this->tester->assertEquals($updated, $learnNotification->getUpdatedAt());
     }
 }
