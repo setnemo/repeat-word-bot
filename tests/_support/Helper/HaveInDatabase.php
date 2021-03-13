@@ -66,7 +66,7 @@ class HaveInDatabase extends ORM
     {
         return $this->updateEntity($entity);
     }
-    
+
     /**
      * @param object $entity
      *
@@ -79,7 +79,7 @@ class HaveInDatabase extends ORM
         $em = self::getEntityManager();
         $em->persist($entity);
         $em->flush();
-        
+
         return $entity;
-}
+    }
 }
