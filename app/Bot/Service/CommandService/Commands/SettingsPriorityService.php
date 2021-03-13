@@ -18,7 +18,7 @@ use RepeatBot\Core\ORM\Repositories\UserNotificationRepository;
  * Class SettingsPriorityService
  * @package RepeatBot\Bot\Service\CommandService\Commands
  */
-class SettingsPriorityService extends BaseCommandService
+class SettingsPriorityService extends BaseDefaultCommandService
 {
     private UserNotificationRepository $repository;
 

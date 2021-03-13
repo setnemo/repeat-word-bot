@@ -23,7 +23,7 @@ use RepeatBot\Core\ORM\Repositories\UserVoiceRepository;
  * Class SettingsService
  * @package RepeatBot\Bot\Service\CommandService\Commands
  */
-class SettingsService extends BaseCommandService
+class SettingsService extends BaseDefaultCommandService
 {
     private UserVoiceRepository $userVoiceRepository;
     private UserNotificationRepository $userNotificationRepository;

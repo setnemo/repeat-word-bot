@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Collections\InactiveUserCollection;
 use RepeatBot\Core\ORM\Collections\LearnNotificationCollection;
 use RepeatBot\Core\ORM\Entities\LearnNotification;
@@ -62,7 +63,7 @@ class LearnNotificationRepository extends EntityRepository
     public function updateNotification(LearnNotification $entity): void
     {
         $entity->setUsed(1);
-        $entity->setUpdatedAt(Carbon::now('Europe/Kiev'));
+        $entity->setUpdatedAt(Carbon::now(Database::DEFAULT_TZ));
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
     }
@@ -80,7 +81,7 @@ class LearnNotificationRepository extends EntityRepository
             ->where('ln.createdAt > :created')
             ->setParameter(
                 'created',
-                Carbon::now('Europe/Kiev')->subDays()->addMinutes()
+                Carbon::now(Database::DEFAULT_TZ)->subDays()->addMinutes()
             )->orderBy('ln.createdAt', 'DESC');
 
         $learnNotificationCollection = new LearnNotificationCollection($query->getQuery()->getResult());

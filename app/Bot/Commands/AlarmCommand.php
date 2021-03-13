@@ -6,9 +6,8 @@ namespace Longman\TelegramBot\Commands\SystemCommand;
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Exception\TelegramException;
-use Prometheus\Exception\MetricsRegistrationException;
-use RepeatBot\Bot\Service\CommandService\CommandDirector;
+use RepeatBot\Bot\BotHelper;
+use RepeatBot\Bot\Service\CommandService;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 /**
@@ -17,43 +16,23 @@ use RepeatBot\Bot\Service\CommandService\CommandOptions;
  */
 class AlarmCommand extends SystemCommand
 {
-    /**
-     * @var string
-     */
     protected $usage = '/alarm';
-    /**
-     * @var string
-     */
-    protected $version = '1.0.0';
-    /**
-     * @var bool
-     */
-    protected $private_only = true;
 
     /**
      * Command execute method
      *
      * @return ServerResponse
-     * @throws TelegramException
-     * @throws MetricsRegistrationException
      */
     public function execute(): ServerResponse
     {
-        $input = $this->getMessage()->getText(true);
-        $text = null === $input ? '' : $input;
-        $command = new CommandDirector(
-            new CommandOptions(
+        $command = new CommandService(
+            options: new CommandOptions(
                 command: 'alarm',
-                payload: explode(' ', $text),
+                payload: explode(' ', BotHelper::getTextFromInput($this->getMessage()->getText(true))),
                 chatId: $this->getMessage()->getChat()->getId(),
             )
         );
-        $service = $command->makeService();
 
-        if (!$service->hasResponse()) {
-            $service = $service->execute();
-        }
-
-        return $service->postStackMessages()->getResponseMessage();
+        return $command->executeCommand($command->makeService());
     }
 }

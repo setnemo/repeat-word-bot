@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Collections\LearnNotificationPersonalCollection;
 use RepeatBot\Core\ORM\Entities\LearnNotificationPersonal;
 
@@ -28,7 +29,7 @@ class LearnNotificationPersonalRepository extends EntityRepository
             ->where('lnp.updatedAt < :upd')
             ->setParameter(
                 'upd',
-                Carbon::now('Europe/Kiev')->subDay()
+                Carbon::now(Database::DEFAULT_TZ)->subDay()
             );
 
         return new LearnNotificationPersonalCollection($query->getQuery()->getResult());
@@ -49,9 +50,9 @@ class LearnNotificationPersonalRepository extends EntityRepository
         array_walk($time, static function ($item) {
             return (int) $item;
         });
-        $updated = Carbon::now('Europe/Kiev')->setTime($time[0], $time[1], 0);
-        if (Carbon::now('Europe/Kiev')->lessThan($updated)) {
-            $updated = Carbon::now('Europe/Kiev')->subDay()->setTime($time[0], $time[1], 0);
+        $updated = Carbon::now(Database::DEFAULT_TZ)->setTime($time[0], $time[1], 0);
+        if (Carbon::now(Database::DEFAULT_TZ)->lessThan($updated)) {
+            $updated = Carbon::now(Database::DEFAULT_TZ)->subDay()->setTime($time[0], $time[1], 0);
         }
         $entity = new LearnNotificationPersonal();
         $entity->setUserId($userId);
@@ -96,7 +97,7 @@ class LearnNotificationPersonalRepository extends EntityRepository
      */
     public function updateNotification(LearnNotificationPersonal $entity): void
     {
-        $entity->setUpdatedAt(Carbon::now('Europe/Kiev'));
+        $entity->setUpdatedAt(Carbon::now(Database::DEFAULT_TZ));
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
     }

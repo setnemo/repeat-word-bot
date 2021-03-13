@@ -10,32 +10,13 @@ namespace RepeatBot\Bot\Service\CommandService;
  */
 class CallbackQueryDirectorFabric
 {
-    private string $query;
-    private int $chatId;
-    private int $messageId;
-    private int $callbackQueryId;
-    private array $payload;
-
     /**
      * DirectorFabric constructor.
      *
-     * @param string $query
-     * @param int    $chatId
-     * @param int    $messageId
-     * @param int    $callbackQueryId
+     * @param CommandOptions $options
      */
-    public function __construct(
-        string $query = '',
-        int $chatId = 0,
-        int $messageId = 0,
-        int $callbackQueryId = 0
-    ) {
-        $this->query = $query;
-        $this->chatId = $chatId;
-        $this->messageId = $messageId;
-        $this->callbackQueryId = $callbackQueryId;
-
-        $this->payload = explode('_', $this->query);
+    public function __construct(protected CommandOptions $options)
+    {
     }
 
     /**
@@ -43,7 +24,7 @@ class CallbackQueryDirectorFabric
      */
     public function getCommandDirector(): CommandDirector
     {
-        $command = $this->payload[0];
+        $command = $this->getOptions()->getPayload()[0] ?? '';
 
         return match($command) {
             'collections' => $this->makeCollectionCommand(),
@@ -57,7 +38,7 @@ class CallbackQueryDirectorFabric
      */
     private function makeSettingsCommand(): CommandDirector
     {
-        $command = $this->payload[1];
+        $command = $this->getOptions()->getPayload()[1] ?? '';
 
         return match($command) {
             'voices'   => $this->makeSettingsVoicesCommand(),
@@ -116,13 +97,20 @@ class CallbackQueryDirectorFabric
     {
         return new CommandDirector(
             new CommandOptions(
-                $command,
-                '',
-                explode('_', $this->query),
-                $this->chatId,
-                $this->messageId,
-                $this->callbackQueryId
+                command: $command,
+                payload: $this->getOptions()->getPayload(),
+                chatId: $this->getOptions()->getChatId(),
+                messageId: $this->getOptions()->getMessageId(),
+                callbackQueryId: $this->getOptions()->getCallbackQueryId()
             )
         );
+    }
+
+    /**
+     * @return CommandOptions
+     */
+    public function getOptions(): CommandOptions
+    {
+        return $this->options;
     }
 }

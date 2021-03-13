@@ -18,32 +18,18 @@ use RepeatBot\Core\ORM\Repositories\TrainingRepository;
  */
 class GenericMessageDirectorFabric
 {
-    private string $text;
-    private int $chatId;
-    private int $messageId;
-    private int $callbackQueryId;
     protected Cache $cache;
     protected TrainingRepository $trainingRepository;
+    protected CommandOptions $options;
 
     /**
      * DirectorFabric constructor.
      *
-     * @param string $query
-     * @param int    $chatId
-     * @param int    $messageId
-     * @param int    $callbackQueryId
+     * @param CommandOptions $options
      */
-    public function __construct(
-        string $query = '',
-        int $chatId = 0,
-        int $messageId = 0,
-        int $callbackQueryId = 0
-    ) {
-        $this->text = $query;
-        $this->chatId = $chatId;
-        $this->messageId = $messageId;
-        $this->callbackQueryId = $callbackQueryId;
-
+    public function __construct(CommandOptions $options)
+    {
+        $this->options = $options;
         $config = App::getInstance()->getConfig();
         $this->cache = Cache::getInstance()->init($config);
         /** @psalm-suppress PropertyTypeCoercion */
@@ -57,8 +43,8 @@ class GenericMessageDirectorFabric
      */
     public function getCommandDirector(): CommandDirector
     {
-        $userId = $this->chatId;
-        $text = $this->text;
+        $userId = $this->getOptions()->getChatId();
+        $text = $this->getOptions()->getText();
         if ($this->itsStartNewTraining($text)) {
             $cacheCommand = $this->getStrReplaceStartCommand($text);
             $this->cache->setTrainingStatus(
@@ -106,10 +92,9 @@ class GenericMessageDirectorFabric
     {
         return new CommandDirector(
             new CommandOptions(
-                $command,
-                $this->text,
-                [],
-                $this->chatId
+                command: $command,
+                text: $this->getOptions()->getText(),
+                chatId: $this->getOptions()->getChatId()
             )
         );
     }
@@ -170,5 +155,13 @@ class GenericMessageDirectorFabric
     private function getStrReplaceStartCommand(string $text): string
     {
         return str_replace(' ', '', $text);
+    }
+
+    /**
+     * @return CommandOptions
+     */
+    public function getOptions(): CommandOptions
+    {
+        return $this->options;
     }
 }

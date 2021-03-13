@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Collections\ExportCollection;
 use RepeatBot\Core\ORM\Entities\Export;
 
@@ -36,7 +37,7 @@ class ExportRepository extends EntityRepository
     public function applyExport(Export $entity): void
     {
         $entity->setUsed(1);
-        $entity->setUpdatedAt(Carbon::now('Europe/Kiev'));
+        $entity->setUpdatedAt(Carbon::now(Database::DEFAULT_TZ));
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
     }

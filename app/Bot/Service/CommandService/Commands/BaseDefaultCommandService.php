@@ -13,7 +13,7 @@ use RepeatBot\Bot\Service\CommandService\Validators\ValidateCommand;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
 
-abstract class BaseCommandService implements CommandInterface
+abstract class BaseDefaultCommandService implements CommandInterface
 {
     protected CommandOptions $options;
 

@@ -17,7 +17,7 @@ use RepeatBot\Core\ORM\Repositories\LearnNotificationPersonalRepository;
  * Class AlarmService
  * @package RepeatBot\Bot\Service\CommandService\Commands
  */
-class AlarmService extends BaseCommandService
+class AlarmService extends BaseDefaultCommandService
 {
     private LearnNotificationPersonalRepository $repository;
 
