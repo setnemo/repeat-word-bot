@@ -62,7 +62,7 @@ jobs:
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
           -Dsonar.organization=omentes
           -Dsonar.host.url=https://sonarcloud.io/
-          -Dsonar.projectKey=DA
+          -Dsonar.projectKey=omentes_repeat-word-bot
           -Dsonar.exlusions=vendor
           -Dsonar.pullrequest.branch=${{ github.head_ref }}
           -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
@@ -72,7 +72,7 @@ jobs:
         if: ${{ github.event_name == 'push' }}
         run: sonar-scanner
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          -Dsonar.organization=pdffiller
+          -Dsonar.organization=omentes
           -Dsonar.host.url=https://sonarcloud.io/
-          -Dsonar.projectKey=DA
+          -Dsonar.projectKey=omentes_repeat-word-bot
           -Dsonar.exlusions=vendor
