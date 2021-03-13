@@ -43,14 +43,30 @@ class ResponseDirector
      */
     public function getResponse(): ServerResponse
     {
-        $data = $this->data;
+        $data = $this->getData();
 
-        return match($this->type) {
+        return match($this->getType()) {
             'sendMessage'         => Request::sendMessage($data),
             'sendDocument'        => Request::sendDocument($data),
             'sendVoice'           => Request::sendVoice($data),
             'editMessageText'     => Request::editMessageText($data),
             'answerCallbackQuery' => Request::answerCallbackQuery($data),
         };
+    }
+    
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+    
+    /**
+     * @return array
+     */
+    public function getData(): array
+    {
+        return $this->data;
     }
 }

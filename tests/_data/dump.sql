@@ -26,22 +26,22 @@ DROP TABLE IF EXISTS `callback_query`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `callback_query` (
-                                  `id` bigint(20) unsigned NOT NULL COMMENT 'Unique identifier for this query',
-                                  `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
-                                  `chat_id` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier',
-                                  `message_id` bigint(20) unsigned DEFAULT NULL COMMENT 'Unique message identifier',
-                                  `inline_message_id` char(255) DEFAULT NULL COMMENT 'Identifier of the message sent via the bot in inline mode, that originated the query',
-                                  `chat_instance` char(255) NOT NULL COMMENT 'Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent',
-                                  `data` char(255) NOT NULL COMMENT 'Data associated with the callback button',
-                                  `game_short_name` char(255) NOT NULL COMMENT 'Short name of a Game to be returned, serves as the unique identifier for the game',
-                                  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
-                                  `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique  * identifier for this query',
-                                  PRIMARY KEY (`primary_id`),
-                                  KEY `user_id` (`user_id`),
-                                  KEY `chat_id` (`chat_id`),
-                                  KEY `message_id` (`message_id`),
-                                  KEY `chat_id_2` (`chat_id`,`message_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1210586981038241240 DEFAULT CHARSET=utf8mb4;
+  `id` bigint(20) unsigned NOT NULL COMMENT 'Unique identifier for this query',
+  `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
+  `chat_id` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier',
+  `message_id` bigint(20) unsigned DEFAULT NULL COMMENT 'Unique message identifier',
+  `inline_message_id` char(255) DEFAULT NULL COMMENT 'Identifier of the message sent via the bot in inline mode, that originated the query',
+  `chat_instance` char(255) NOT NULL COMMENT 'Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent',
+  `data` char(255) NOT NULL COMMENT 'Data associated with the callback button',
+  `game_short_name` char(255) NOT NULL COMMENT 'Short name of a Game to be returned, serves as the unique identifier for the game',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+  `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique\n * identifier for this query',
+  PRIMARY KEY (`primary_id`),
+  KEY `user_id` (`user_id`),
+  KEY `chat_id` (`chat_id`),
+  KEY `message_id` (`message_id`),
+  KEY `chat_id_2` (`chat_id`,`message_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -61,20 +61,20 @@ DROP TABLE IF EXISTS `chat`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `chat` (
-                        `id` bigint(20) NOT NULL COMMENT 'Unique identifier for this chat',
-                        `type` enum('private','group','supergroup','channel') NOT NULL COMMENT 'Type of chat, can be either private, group, supergroup or channel',
-                        `title` char(255) DEFAULT NULL COMMENT 'Title, for supergroups, channels and group chats',
-                        `username` char(255) DEFAULT NULL COMMENT 'Username, for private chats, supergroups and channels if available',
-                        `first_name` char(255) DEFAULT NULL COMMENT 'First name of the other party in a private chat',
-                        `last_name` char(255) DEFAULT NULL COMMENT 'Last name of the other party in a private chat',
-                        `all_members_are_administrators` tinyint(1) DEFAULT NULL COMMENT 'True if a all members of this group are admins',
-                        `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
-                        `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',
-                        `old_id` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier, this is filled when a group is converted to a supergroup',
-                        `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique  * identifier for this query',
-                        PRIMARY KEY (`primary_id`),
-                        KEY `old_id` (`old_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=281861760 DEFAULT CHARSET=utf8mb4;
+  `id` bigint(20) NOT NULL COMMENT 'Unique identifier for this chat',
+  `type` enum('private','group','supergroup','channel') NOT NULL COMMENT 'Type of chat, can be either private, group, supergroup or channel',
+  `title` char(255) DEFAULT NULL COMMENT 'Title, for supergroups, channels and group chats',
+  `username` char(255) DEFAULT NULL COMMENT 'Username, for private chats, supergroups and channels if available',
+  `first_name` char(255) DEFAULT NULL COMMENT 'First name of the other party in a private chat',
+  `last_name` char(255) DEFAULT NULL COMMENT 'Last name of the other party in a private chat',
+  `all_members_are_administrators` tinyint(1) DEFAULT NULL COMMENT 'True if a all members of this group are admins',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+  `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',
+  `old_id` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier, this is filled when a group is converted to a supergroup',
+  `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique\n * identifier for this query',
+  PRIMARY KEY (`primary_id`),
+  KEY `old_id` (`old_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,16 +94,16 @@ DROP TABLE IF EXISTS `chosen_inline_result`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `chosen_inline_result` (
-                                        `id` bigint(20) unsigned NOT NULL COMMENT 'Unique identifier for this entry',
-                                        `result_id` char(255) NOT NULL COMMENT 'The unique identifier for the result that was chosen',
-                                        `user_id` bigint(20) DEFAULT NULL COMMENT 'The user that chose the result',
-                                        `location` char(255) DEFAULT NULL COMMENT 'Sender location, only for bots that require user location',
-                                        `inline_message_id` char(255) DEFAULT NULL COMMENT 'Identifier of the sent inline message',
-                                        `query` text NOT NULL COMMENT 'The query that was used to obtain the result',
-                                        `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
-                                        `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique  * identifier for this query',
-                                        PRIMARY KEY (`primary_id`),
-                                        KEY `user_id` (`user_id`)
+  `id` bigint(20) unsigned NOT NULL COMMENT 'Unique identifier for this entry',
+  `result_id` char(255) NOT NULL COMMENT 'The unique identifier for the result that was chosen',
+  `user_id` bigint(20) DEFAULT NULL COMMENT 'The user that chose the result',
+  `location` char(255) DEFAULT NULL COMMENT 'Sender location, only for bots that require user location',
+  `inline_message_id` char(255) DEFAULT NULL COMMENT 'Identifier of the sent inline message',
+  `query` text NOT NULL COMMENT 'The query that was used to obtain the result',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+  `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique\n * identifier for this query',
+  PRIMARY KEY (`primary_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -124,12 +124,12 @@ DROP TABLE IF EXISTS `collection`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `collection` (
-                              `id` int(11) NOT NULL AUTO_INCREMENT,
-                              `name` varchar(255) NOT NULL,
-                              `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-                              `public` int(11) DEFAULT NULL,
-                              PRIMARY KEY (`id`),
-                              KEY `name` (`name`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `public` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -151,19 +151,19 @@ DROP TABLE IF EXISTS `conversation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `conversation` (
-                                `id` bigint(20) unsigned NOT NULL COMMENT 'Unique identifier for this entry',
-                                `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
-                                `chat_id` bigint(20) DEFAULT NULL COMMENT 'Unique user or chat identifier',
-                                `status` enum('active','cancelled','stopped') NOT NULL DEFAULT 'active' COMMENT 'Conversation state',
-                                `command` varchar(160) DEFAULT NULL COMMENT 'Default command to execute',
-                                `notes` text COMMENT 'Data stored from command',
-                                `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
-                                `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',
-                                `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique  * identifier for this query',
-                                PRIMARY KEY (`primary_id`),
-                                KEY `user_id` (`user_id`),
-                                KEY `chat_id` (`chat_id`),
-                                KEY `status` (`status`)
+  `id` bigint(20) unsigned NOT NULL COMMENT 'Unique identifier for this entry',
+  `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
+  `chat_id` bigint(20) DEFAULT NULL COMMENT 'Unique user or chat identifier',
+  `status` enum('active','cancelled','stopped') NOT NULL DEFAULT 'active' COMMENT 'Conversation state',
+  `command` varchar(160) DEFAULT NULL COMMENT 'Default command to execute',
+  `notes` text COMMENT 'Data stored from command',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+  `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',
+  `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique\n * identifier for this query',
+  PRIMARY KEY (`primary_id`),
+  KEY `user_id` (`user_id`),
+  KEY `chat_id` (`chat_id`),
+  KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -184,21 +184,21 @@ DROP TABLE IF EXISTS `edited_message`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `edited_message` (
-                                  `id` bigint(20) unsigned NOT NULL COMMENT 'Unique identifier for this entry',
-                                  `chat_id` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier',
-                                  `message_id` bigint(20) unsigned DEFAULT NULL COMMENT 'Unique message identifier',
-                                  `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
-                                  `edit_date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was edited in timestamp format',
-                                  `text` text COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8',
-                                  `entities` text COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
-                                  `caption` text COMMENT 'For message with caption, the actual UTF-8 text of the caption',
-                                  `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique  * identifier for this query',
-                                  PRIMARY KEY (`primary_id`),
-                                  KEY `chat_id` (`chat_id`),
-                                  KEY `message_id` (`message_id`),
-                                  KEY `user_id` (`user_id`),
-                                  KEY `chat_id_2` (`chat_id`,`message_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4;
+  `id` bigint(20) unsigned NOT NULL COMMENT 'Unique identifier for this entry',
+  `chat_id` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier',
+  `message_id` bigint(20) unsigned DEFAULT NULL COMMENT 'Unique message identifier',
+  `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
+  `edit_date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was edited in timestamp format',
+  `text` text COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8',
+  `entities` text COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
+  `caption` text COMMENT 'For message with caption, the actual UTF-8 text of the caption',
+  `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique\n * identifier for this query',
+  PRIMARY KEY (`primary_id`),
+  KEY `chat_id` (`chat_id`),
+  KEY `message_id` (`message_id`),
+  KEY `user_id` (`user_id`),
+  KEY `chat_id_2` (`chat_id`,`message_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -218,15 +218,15 @@ DROP TABLE IF EXISTS `export`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `export` (
-                          `id` int(11) NOT NULL AUTO_INCREMENT,
-                          `user_id` bigint(20) NOT NULL,
-                          `chat_id` bigint(20) NOT NULL,
-                          `word_type` varchar(255) DEFAULT NULL,
-                          `used` int(11) DEFAULT NULL,
-                          `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-                          `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-                          PRIMARY KEY (`id`),
-                          KEY `export_user_id_index` (`user_id`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `chat_id` bigint(20) NOT NULL,
+  `word_type` varchar(255) DEFAULT NULL,
+  `used` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `export_user_id_index` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -247,15 +247,15 @@ DROP TABLE IF EXISTS `inline_query`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `inline_query` (
-                                `id` bigint(20) unsigned NOT NULL COMMENT 'Unique identifier for this query',
-                                `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
-                                `location` char(255) DEFAULT NULL COMMENT 'Location of the user',
-                                `query` text NOT NULL COMMENT 'Text of the query',
-                                `offset` char(255) DEFAULT NULL COMMENT 'Offset of the result',
-                                `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
-                                `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique  * identifier for this query',
-                                PRIMARY KEY (`primary_id`),
-                                KEY `user_id` (`user_id`)
+  `id` bigint(20) unsigned NOT NULL COMMENT 'Unique identifier for this query',
+  `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
+  `location` char(255) DEFAULT NULL COMMENT 'Location of the user',
+  `query` text NOT NULL COMMENT 'Text of the query',
+  `offset` char(255) DEFAULT NULL COMMENT 'Offset of the result',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+  `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique\n * identifier for this query',
+  PRIMARY KEY (`primary_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -276,15 +276,15 @@ DROP TABLE IF EXISTS `learn_notification`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `learn_notification` (
-                                      `id` int(11) NOT NULL AUTO_INCREMENT,
-                                      `user_id` bigint(20) NOT NULL,
-                                      `message` text NOT NULL,
-                                      `silent` int(11) DEFAULT NULL,
-                                      `used` int(11) DEFAULT NULL,
-                                      `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-                                      `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-                                      PRIMARY KEY (`id`),
-                                      KEY `event_created_index` (`created_at`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `message` text NOT NULL,
+  `silent` int(11) DEFAULT NULL,
+  `used` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `event_created_index` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -305,15 +305,15 @@ DROP TABLE IF EXISTS `learn_notification_personal`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `learn_notification_personal` (
-                                               `id` bigint(20) NOT NULL AUTO_INCREMENT,
-                                               `user_id` bigint(20) NOT NULL,
-                                               `alarm` datetime NOT NULL,
-                                               `message` text COLLATE utf8_unicode_ci NOT NULL,
-                                               `timezone` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                                               `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-                                               `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
-                                               PRIMARY KEY (`id`),
-                                               KEY `learn_notification_personal_user_id_index` (`user_id`)
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `alarm` datetime NOT NULL,
+  `message` text COLLATE utf8_unicode_ci NOT NULL,
+  `timezone` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `learn_notification_personal_user_id_index` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -334,69 +334,69 @@ DROP TABLE IF EXISTS `message`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `message` (
-                           `chat_id` bigint(20) NOT NULL COMMENT 'Unique chat identifier',
-                           `sender_chat_id` bigint(20) DEFAULT NULL COMMENT 'Sender of the message, sent on behalf of a chat',
-                           `id` bigint(20) unsigned NOT NULL COMMENT 'Unique message identifier',
-                           `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
-                           `date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
-                           `forward_from` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier, sender of the original message',
-                           `forward_from_chat` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier, chat the original message belongs to',
-                           `forward_from_message_id` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier of the original message in the channel',
-                           `forward_signature` text COMMENT 'For messages forwarded from channels, signature of the post author if present',
-                           `forward_sender_name` text COMMENT 'Sender''s name for messages forwarded from users who disallow adding a link to their account in forwarded messages',
-                           `forward_date` timestamp NULL DEFAULT NULL COMMENT 'date the original message was sent in timestamp format',
-                           `reply_to_chat` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier',
-                           `reply_to_message` bigint(20) unsigned DEFAULT NULL COMMENT 'Message that this message is reply to',
-                           `via_bot` bigint(20) DEFAULT NULL COMMENT 'Optional. Bot through which the message was sent',
-                           `edit_date` bigint(20) unsigned DEFAULT NULL COMMENT 'Date the message was last edited in Unix time',
-                           `media_group_id` text COMMENT 'The unique identifier of a media message group this message belongs to',
-                           `author_signature` text COMMENT 'Signature of the post author for messages in channels',
-                           `text` text COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8mb4',
-                           `entities` text COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
-                           `caption_entities` text COMMENT 'For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption',
-                           `audio` text COMMENT 'Audio object. Message is an audio file, information about the file',
-                           `document` text COMMENT 'Document object. Message is a general file, information about the file',
-                           `animation` text COMMENT 'Message is an animation, information about the animation',
-                           `game` text COMMENT 'Game object. Message is a game, information about the game',
-                           `photo` text COMMENT 'Array of PhotoSize objects. Message is a photo, available sizes of the photo',
-                           `sticker` text COMMENT 'Sticker object. Message is a sticker, information about the sticker',
-                           `video` text COMMENT 'Video object. Message is a video, information about the video',
-                           `voice` text COMMENT 'Voice Object. Message is a Voice, information about the Voice',
-                           `video_note` text COMMENT 'VoiceNote Object. Message is a Video Note, information about the Video Note',
-                           `caption` text COMMENT 'For message with caption, the actual UTF-8 text of the caption',
-                           `contact` text COMMENT 'Contact object. Message is a shared contact, information about the contact',
-                           `location` text COMMENT 'Location object. Message is a shared location, information about the location',
-                           `venue` text COMMENT 'Venue object. Message is a Venue, information about the Venue',
-                           `poll` text COMMENT 'Poll object. Message is a native poll, information about the poll',
-                           `dice` text COMMENT 'Message is a dice with random value from 1 to 6',
-                           `new_chat_members` text COMMENT 'List of unique user identifiers, new member(s) were added to the group, information about them (one of these members may be the bot itself)',
-                           `left_chat_member` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier, a member was removed from the group, information about them (this member may be the bot itself)',
-                           `new_chat_title` char(255) DEFAULT NULL COMMENT 'A chat title was changed to this value',
-                           `new_chat_photo` text COMMENT 'Array of PhotoSize objects. A chat photo was change to this value',
-                           `delete_chat_photo` tinyint(1) DEFAULT NULL COMMENT 'Informs that the chat photo was deleted',
-                           `group_chat_created` tinyint(1) DEFAULT NULL COMMENT 'Informs that the group has been created',
-                           `supergroup_chat_created` tinyint(1) DEFAULT NULL COMMENT 'Informs that the supergroup has been created',
-                           `channel_chat_created` tinyint(1) DEFAULT NULL COMMENT 'Informs that the channel chat has been created',
-                           `migrate_to_chat_id` bigint(20) DEFAULT NULL COMMENT 'Migrate to chat identifier. The group has been migrated to a supergroup with the specified identifier',
-                           `migrate_from_chat_id` bigint(20) DEFAULT NULL COMMENT 'Migrate from chat identifier. The supergroup has been migrated from a group with the specified identifier',
-                           `pinned_message` text COMMENT 'Message object. Specified message was pinned',
-                           `invoice` text COMMENT 'Message is an invoice for a payment, information about the invoice',
-                           `successful_payment` text COMMENT 'Message is a service message about a successful payment, information about the payment',
-                           `connected_website` text COMMENT 'The domain name of the website on which the user has logged in.',
-                           `passport_data` text COMMENT 'Telegram Passport data',
-                           `proximity_alert_triggered` text COMMENT 'Service message. A user in the chat triggered another user''s proximity alert while sharing Live Location.',
-                           `reply_markup` text COMMENT 'Inline keyboard attached to the message',
-                           PRIMARY KEY (`chat_id`,`id`),
-                           KEY `user_id` (`user_id`),
-                           KEY `forward_from` (`forward_from`),
-                           KEY `forward_from_chat` (`forward_from_chat`),
-                           KEY `reply_to_chat` (`reply_to_chat`),
-                           KEY `reply_to_message` (`reply_to_message`),
-                           KEY `via_bot` (`via_bot`),
-                           KEY `left_chat_member` (`left_chat_member`),
-                           KEY `migrate_from_chat_id` (`migrate_from_chat_id`),
-                           KEY `migrate_to_chat_id` (`migrate_to_chat_id`),
-                           KEY `reply_to_chat_2` (`reply_to_chat`,`reply_to_message`)
+  `chat_id` bigint(20) NOT NULL COMMENT 'Unique chat identifier',
+  `sender_chat_id` bigint(20) DEFAULT NULL COMMENT 'Sender of the message, sent on behalf of a chat',
+  `id` bigint(20) unsigned NOT NULL COMMENT 'Unique message identifier',
+  `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
+  `date` timestamp NULL DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
+  `forward_from` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier, sender of the original message',
+  `forward_from_chat` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier, chat the original message belongs to',
+  `forward_from_message_id` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier of the original message in the channel',
+  `forward_signature` text COMMENT 'For messages forwarded from channels, signature of the post author if present',
+  `forward_sender_name` text COMMENT 'Sender''s name for messages forwarded from users who disallow adding a link to their account in forwarded messages',
+  `forward_date` timestamp NULL DEFAULT NULL COMMENT 'date the original message was sent in timestamp format',
+  `reply_to_chat` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier',
+  `reply_to_message` bigint(20) unsigned DEFAULT NULL COMMENT 'Message that this message is reply to',
+  `via_bot` bigint(20) DEFAULT NULL COMMENT 'Optional. Bot through which the message was sent',
+  `edit_date` bigint(20) unsigned DEFAULT NULL COMMENT 'Date the message was last edited in Unix time',
+  `media_group_id` text COMMENT 'The unique identifier of a media message group this message belongs to',
+  `author_signature` text COMMENT 'Signature of the post author for messages in channels',
+  `text` text COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8mb4',
+  `entities` text COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
+  `caption_entities` text COMMENT 'For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption',
+  `audio` text COMMENT 'Audio object. Message is an audio file, information about the file',
+  `document` text COMMENT 'Document object. Message is a general file, information about the file',
+  `animation` text COMMENT 'Message is an animation, information about the animation',
+  `game` text COMMENT 'Game object. Message is a game, information about the game',
+  `photo` text COMMENT 'Array of PhotoSize objects. Message is a photo, available sizes of the photo',
+  `sticker` text COMMENT 'Sticker object. Message is a sticker, information about the sticker',
+  `video` text COMMENT 'Video object. Message is a video, information about the video',
+  `voice` text COMMENT 'Voice Object. Message is a Voice, information about the Voice',
+  `video_note` text COMMENT 'VoiceNote Object. Message is a Video Note, information about the Video Note',
+  `caption` text COMMENT 'For message with caption, the actual UTF-8 text of the caption',
+  `contact` text COMMENT 'Contact object. Message is a shared contact, information about the contact',
+  `location` text COMMENT 'Location object. Message is a shared location, information about the location',
+  `venue` text COMMENT 'Venue object. Message is a Venue, information about the Venue',
+  `poll` text COMMENT 'Poll object. Message is a native poll, information about the poll',
+  `dice` text COMMENT 'Message is a dice with random value from 1 to 6',
+  `new_chat_members` text COMMENT 'List of unique user identifiers, new member(s) were added to the group, information about them (one of these members may be the bot itself)',
+  `left_chat_member` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier, a member was removed from the group, information about them (this member may be the bot itself)',
+  `new_chat_title` char(255) DEFAULT NULL COMMENT 'A chat title was changed to this value',
+  `new_chat_photo` text COMMENT 'Array of PhotoSize objects. A chat photo was change to this value',
+  `delete_chat_photo` tinyint(1) DEFAULT NULL COMMENT 'Informs that the chat photo was deleted',
+  `group_chat_created` tinyint(1) DEFAULT NULL COMMENT 'Informs that the group has been created',
+  `supergroup_chat_created` tinyint(1) DEFAULT NULL COMMENT 'Informs that the supergroup has been created',
+  `channel_chat_created` tinyint(1) DEFAULT NULL COMMENT 'Informs that the channel chat has been created',
+  `migrate_to_chat_id` bigint(20) DEFAULT NULL COMMENT 'Migrate to chat identifier. The group has been migrated to a supergroup with the specified identifier',
+  `migrate_from_chat_id` bigint(20) DEFAULT NULL COMMENT 'Migrate from chat identifier. The supergroup has been migrated from a group with the specified identifier',
+  `pinned_message` text COMMENT 'Message object. Specified message was pinned',
+  `invoice` text COMMENT 'Message is an invoice for a payment, information about the invoice',
+  `successful_payment` text COMMENT 'Message is a service message about a successful payment, information about the payment',
+  `connected_website` text COMMENT 'The domain name of the website on which the user has logged in.',
+  `passport_data` text COMMENT 'Telegram Passport data',
+  `proximity_alert_triggered` text COMMENT 'Service message. A user in the chat triggered another user''s proximity alert while sharing Live Location.',
+  `reply_markup` text COMMENT 'Inline keyboard attached to the message',
+  PRIMARY KEY (`chat_id`,`id`),
+  KEY `user_id` (`user_id`),
+  KEY `forward_from` (`forward_from`),
+  KEY `forward_from_chat` (`forward_from_chat`),
+  KEY `reply_to_chat` (`reply_to_chat`),
+  KEY `reply_to_message` (`reply_to_message`),
+  KEY `via_bot` (`via_bot`),
+  KEY `left_chat_member` (`left_chat_member`),
+  KEY `migrate_from_chat_id` (`migrate_from_chat_id`),
+  KEY `migrate_to_chat_id` (`migrate_to_chat_id`),
+  KEY `reply_to_chat_2` (`reply_to_chat`,`reply_to_message`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -417,22 +417,22 @@ DROP TABLE IF EXISTS `poll`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `poll` (
-                        `id` bigint(20) unsigned NOT NULL COMMENT 'Unique poll identifier',
-                        `question` text NOT NULL COMMENT 'Poll question',
-                        `options` text NOT NULL COMMENT 'List of poll options',
-                        `total_voter_count` int(10) unsigned DEFAULT NULL COMMENT 'Total number of users that voted in the poll',
-                        `is_closed` tinyint(1) DEFAULT NULL COMMENT 'True, if the poll is closed',
-                        `is_anonymous` tinyint(1) DEFAULT '1' COMMENT 'True, if the poll is anonymous',
-                        `type` char(255) DEFAULT NULL COMMENT 'Poll type, currently can be “regular” or “quiz”',
-                        `allows_multiple_answers` tinyint(1) DEFAULT NULL COMMENT 'True, if the poll allows multiple answers',
-                        `correct_option_id` int(10) unsigned DEFAULT NULL COMMENT '0-based identifier of the correct answer option. Available only for polls in the quiz mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot.',
-                        `explanation` varchar(255) DEFAULT NULL COMMENT 'Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters',
-                        `explanation_entities` text COMMENT 'Special entities like usernames, URLs, bot commands, etc. that appear in the explanation',
-                        `open_period` int(10) unsigned DEFAULT NULL COMMENT 'Amount of time in seconds the poll will be active after creation',
-                        `close_date` timestamp NULL DEFAULT NULL COMMENT 'Point in time (Unix timestamp) when the poll will be automatically closed',
-                        `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
-                        `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique  * identifier for this query',
-                        PRIMARY KEY (`primary_id`)
+  `id` bigint(20) unsigned NOT NULL COMMENT 'Unique poll identifier',
+  `question` text NOT NULL COMMENT 'Poll question',
+  `options` text NOT NULL COMMENT 'List of poll options',
+  `total_voter_count` int(10) unsigned DEFAULT NULL COMMENT 'Total number of users that voted in the poll',
+  `is_closed` tinyint(1) DEFAULT NULL COMMENT 'True, if the poll is closed',
+  `is_anonymous` tinyint(1) DEFAULT '1' COMMENT 'True, if the poll is anonymous',
+  `type` char(255) DEFAULT NULL COMMENT 'Poll type, currently can be “regular” or “quiz”',
+  `allows_multiple_answers` tinyint(1) DEFAULT NULL COMMENT 'True, if the poll allows multiple answers',
+  `correct_option_id` int(10) unsigned DEFAULT NULL COMMENT '0-based identifier of the correct answer option. Available only for polls in the quiz mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot.',
+  `explanation` varchar(255) DEFAULT NULL COMMENT 'Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters',
+  `explanation_entities` text COMMENT 'Special entities like usernames, URLs, bot commands, etc. that appear in the explanation',
+  `open_period` int(10) unsigned DEFAULT NULL COMMENT 'Amount of time in seconds the poll will be active after creation',
+  `close_date` timestamp NULL DEFAULT NULL COMMENT 'Point in time (Unix timestamp) when the poll will be automatically closed',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+  `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique\n * identifier for this query',
+  PRIMARY KEY (`primary_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -453,11 +453,11 @@ DROP TABLE IF EXISTS `poll_answer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `poll_answer` (
-                               `poll_id` bigint(20) unsigned NOT NULL COMMENT 'Unique poll identifier',
-                               `user_id` bigint(20) NOT NULL COMMENT 'The user, who changed the answer to the poll',
-                               `option_ids` text NOT NULL COMMENT '0-based identifiers of answer options, chosen by the user. May be empty if the user retracted their vote.',
-                               `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
-                               PRIMARY KEY (`poll_id`,`user_id`)
+  `poll_id` bigint(20) unsigned NOT NULL COMMENT 'Unique poll identifier',
+  `user_id` bigint(20) NOT NULL COMMENT 'The user, who changed the answer to the poll',
+  `option_ids` text NOT NULL COMMENT '0-based identifiers of answer options, chosen by the user. May be empty if the user retracted their vote.',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+  PRIMARY KEY (`poll_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -478,17 +478,17 @@ DROP TABLE IF EXISTS `pre_checkout_query`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pre_checkout_query` (
-                                      `id` bigint(20) unsigned NOT NULL COMMENT 'Unique query identifier',
-                                      `user_id` bigint(20) DEFAULT NULL COMMENT 'User who sent the query',
-                                      `currency` char(3) DEFAULT NULL COMMENT 'Three-letter ISO 4217 currency code',
-                                      `total_amount` bigint(20) DEFAULT NULL COMMENT 'Total price in the smallest units of the currency',
-                                      `invoice_payload` char(255) NOT NULL COMMENT 'Bot specified invoice payload',
-                                      `shipping_option_id` char(255) DEFAULT NULL COMMENT 'Identifier of the shipping option chosen by the user',
-                                      `order_info` text COMMENT 'Order info provided by the user',
-                                      `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
-                                      `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique  * identifier for this query',
-                                      PRIMARY KEY (`primary_id`),
-                                      KEY `user_id` (`user_id`)
+  `id` bigint(20) unsigned NOT NULL COMMENT 'Unique query identifier',
+  `user_id` bigint(20) DEFAULT NULL COMMENT 'User who sent the query',
+  `currency` char(3) DEFAULT NULL COMMENT 'Three-letter ISO 4217 currency code',
+  `total_amount` bigint(20) DEFAULT NULL COMMENT 'Total price in the smallest units of the currency',
+  `invoice_payload` char(255) NOT NULL COMMENT 'Bot specified invoice payload',
+  `shipping_option_id` char(255) DEFAULT NULL COMMENT 'Identifier of the shipping option chosen by the user',
+  `order_info` text COMMENT 'Order info provided by the user',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+  `primary_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique\n * identifier for this query',
+  PRIMARY KEY (`primary_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -509,13 +509,13 @@ DROP TABLE IF EXISTS `request_limiter`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `request_limiter` (
-                                   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
-                                   `chat_id` char(255) DEFAULT NULL COMMENT 'Unique chat identifier',
-                                   `inline_message_id` char(255) DEFAULT NULL COMMENT 'Identifier of the sent inline message',
-                                   `method` char(255) DEFAULT NULL COMMENT 'Request method',
-                                   `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
-                                   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=210 DEFAULT CHARSET=utf8mb4;
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier for this entry',
+  `chat_id` char(255) DEFAULT NULL COMMENT 'Unique chat identifier',
+  `inline_message_id` char(255) DEFAULT NULL COMMENT 'Identifier of the sent inline message',
+  `method` char(255) DEFAULT NULL COMMENT 'Request method',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -535,13 +535,13 @@ DROP TABLE IF EXISTS `shipping_query`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `shipping_query` (
-                                  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique query identifier',
-                                  `user_id` bigint(20) DEFAULT NULL COMMENT 'User who sent the query',
-                                  `invoice_payload` char(255) NOT NULL COMMENT 'Bot specified invoice payload',
-                                  `shipping_address` char(255) NOT NULL COMMENT 'User specified shipping address',
-                                  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
-                                  PRIMARY KEY (`id`),
-                                  KEY `user_id` (`user_id`)
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique query identifier',
+  `user_id` bigint(20) DEFAULT NULL COMMENT 'User who sent the query',
+  `invoice_payload` char(255) NOT NULL COMMENT 'Bot specified invoice payload',
+  `shipping_address` char(255) NOT NULL COMMENT 'User specified shipping address',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -562,34 +562,34 @@ DROP TABLE IF EXISTS `telegram_update`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `telegram_update` (
-                                   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Update''s unique identifier',
-                                   `chat_id` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier',
-                                   `message_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New incoming message of any kind - text, photo, sticker, etc.',
-                                   `edited_message_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New version of a message that is known to the bot and was edited',
-                                   `channel_post_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New incoming channel post of any kind - text, photo, sticker, etc.',
-                                   `edited_channel_post_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New version of a channel post that is known to the bot and was edited',
-                                   `inline_query_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New incoming inline query',
-                                   `chosen_inline_result_id` bigint(20) unsigned DEFAULT NULL COMMENT 'The result of an inline query that was chosen by a user and sent to their chat partner',
-                                   `callback_query_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New incoming callback query',
-                                   `shipping_query_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New incoming shipping query. Only for invoices with flexible price',
-                                   `pre_checkout_query_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New incoming pre-checkout query. Contains full information about checkout',
-                                   `poll_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New poll state. Bots receive only updates about polls, which are sent or stopped by the bot',
-                                   `poll_answer_poll_id` bigint(20) unsigned DEFAULT NULL COMMENT 'A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.',
-                                   PRIMARY KEY (`id`),
-                                   KEY `message_id` (`message_id`),
-                                   KEY `chat_message_id` (`chat_id`,`message_id`),
-                                   KEY `edited_message_id` (`edited_message_id`),
-                                   KEY `channel_post_id` (`channel_post_id`),
-                                   KEY `edited_channel_post_id` (`edited_channel_post_id`),
-                                   KEY `inline_query_id` (`inline_query_id`),
-                                   KEY `chosen_inline_result_id` (`chosen_inline_result_id`),
-                                   KEY `callback_query_id` (`callback_query_id`),
-                                   KEY `shipping_query_id` (`shipping_query_id`),
-                                   KEY `pre_checkout_query_id` (`pre_checkout_query_id`),
-                                   KEY `poll_id` (`poll_id`),
-                                   KEY `poll_answer_poll_id` (`poll_answer_poll_id`),
-                                   KEY `chat_id` (`chat_id`,`channel_post_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=274144639 DEFAULT CHARSET=utf8mb4;
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Update''s unique identifier',
+  `chat_id` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier',
+  `message_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New incoming message of any kind - text, photo, sticker, etc.',
+  `edited_message_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New version of a message that is known to the bot and was edited',
+  `channel_post_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New incoming channel post of any kind - text, photo, sticker, etc.',
+  `edited_channel_post_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New version of a channel post that is known to the bot and was edited',
+  `inline_query_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New incoming inline query',
+  `chosen_inline_result_id` bigint(20) unsigned DEFAULT NULL COMMENT 'The result of an inline query that was chosen by a user and sent to their chat partner',
+  `callback_query_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New incoming callback query',
+  `shipping_query_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New incoming shipping query. Only for invoices with flexible price',
+  `pre_checkout_query_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New incoming pre-checkout query. Contains full information about checkout',
+  `poll_id` bigint(20) unsigned DEFAULT NULL COMMENT 'New poll state. Bots receive only updates about polls, which are sent or stopped by the bot',
+  `poll_answer_poll_id` bigint(20) unsigned DEFAULT NULL COMMENT 'A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.',
+  PRIMARY KEY (`id`),
+  KEY `message_id` (`message_id`),
+  KEY `chat_message_id` (`chat_id`,`message_id`),
+  KEY `edited_message_id` (`edited_message_id`),
+  KEY `channel_post_id` (`channel_post_id`),
+  KEY `edited_channel_post_id` (`edited_channel_post_id`),
+  KEY `inline_query_id` (`inline_query_id`),
+  KEY `chosen_inline_result_id` (`chosen_inline_result_id`),
+  KEY `callback_query_id` (`callback_query_id`),
+  KEY `shipping_query_id` (`shipping_query_id`),
+  KEY `pre_checkout_query_id` (`pre_checkout_query_id`),
+  KEY `poll_id` (`poll_id`),
+  KEY `poll_answer_poll_id` (`poll_answer_poll_id`),
+  KEY `chat_id` (`chat_id`,`channel_post_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -609,23 +609,23 @@ DROP TABLE IF EXISTS `training`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `training` (
-                            `id` int(11) NOT NULL AUTO_INCREMENT,
-                            `word_id` int(11) NOT NULL,
-                            `user_id` bigint(20) NOT NULL,
-                            `collection_id` int(11) NOT NULL,
-                            `type` varchar(255) NOT NULL,
-                            `status` enum('first','second','third','fourth','fifth','sixth','never') DEFAULT 'first',
-                            `next` datetime DEFAULT CURRENT_TIMESTAMP,
-                            `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-                            `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-                            PRIMARY KEY (`id`),
-                            UNIQUE KEY `training_word_type_collection_id_uindex` (`word_id`,`type`,`collection_id`,`user_id`),
-                            KEY `user_id` (`user_id`),
-                            KEY `training_type_index` (`type`),
-                            KEY `training_word_id_index` (`word_id`),
-                            KEY `training_next_index` (`next`),
-                            CONSTRAINT `FK_D5128A8FE357438D` FOREIGN KEY (`word_id`) REFERENCES `word` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3001 DEFAULT CHARSET=utf8mb4;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `word_id` int(11) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `collection_id` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `status` enum('first','second','third','fourth','fifth','sixth','never') DEFAULT 'first',
+  `next` datetime DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `training_word_type_collection_id_uindex` (`word_id`,`type`,`collection_id`,`user_id`),
+  KEY `user_id` (`user_id`),
+  KEY `training_type_index` (`type`),
+  KEY `training_word_id_index` (`word_id`),
+  KEY `training_next_index` (`next`),
+  CONSTRAINT `FK_D5128A8FE357438D` FOREIGN KEY (`word_id`) REFERENCES `word` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -645,17 +645,17 @@ DROP TABLE IF EXISTS `training_save`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `training_save` (
-                                 `id` int(11) NOT NULL AUTO_INCREMENT,
-                                 `user_id` bigint(20) NOT NULL,
-                                 `word` varchar(255) NOT NULL,
-                                 `type` varchar(255) NOT NULL,
-                                 `status` varchar(255) NOT NULL,
-                                 `repeat` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                                 `used` int(11) DEFAULT NULL,
-                                 `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-                                 PRIMARY KEY (`id`),
-                                 UNIQUE KEY `save_training_user_id_word_uindex` (`user_id`,`word`,`type`) USING BTREE,
-                                 UNIQUE KEY `id` (`id`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `word` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `repeat` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `used` int(11) DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `save_training_user_id_word_uindex` (`user_id`,`word`,`type`) USING BTREE,
+  UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -676,17 +676,17 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
-                        `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier for this user or bot',
-                        `is_bot` tinyint(1) DEFAULT NULL COMMENT 'True, if this user is a bot',
-                        `first_name` char(255) NOT NULL COMMENT 'User''s or bot''s first name',
-                        `last_name` char(255) DEFAULT NULL COMMENT 'User''s or bot''s last name',
-                        `username` char(191) DEFAULT NULL COMMENT 'User''s or bot''s username',
-                        `language_code` char(10) DEFAULT NULL COMMENT 'IETF language tag of the user''s language',
-                        `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
-                        `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',
-                        PRIMARY KEY (`id`),
-                        KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=450583570 DEFAULT CHARSET=utf8mb4;
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier for this user or bot',
+  `is_bot` tinyint(1) DEFAULT NULL COMMENT 'True, if this user is a bot',
+  `first_name` char(255) NOT NULL COMMENT 'User''s or bot''s first name',
+  `last_name` char(255) DEFAULT NULL COMMENT 'User''s or bot''s last name',
+  `username` char(191) DEFAULT NULL COMMENT 'User''s or bot''s username',
+  `language_code` char(10) DEFAULT NULL COMMENT 'IETF language tag of the user''s language',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date creation',
+  `updated_at` timestamp NULL DEFAULT NULL COMMENT 'Entry date update',
+  PRIMARY KEY (`id`),
+  KEY `username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -706,10 +706,10 @@ DROP TABLE IF EXISTS `user_chat`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_chat` (
-                             `user_id` bigint(20) NOT NULL COMMENT 'Unique user identifier',
-                             `chat_id` bigint(20) NOT NULL COMMENT 'Unique user or chat identifier',
-                             PRIMARY KEY (`user_id`,`chat_id`),
-                             KEY `chat_id` (`chat_id`)
+  `user_id` bigint(20) NOT NULL COMMENT 'Unique user identifier',
+  `chat_id` bigint(20) NOT NULL COMMENT 'Unique user or chat identifier',
+  PRIMARY KEY (`user_id`,`chat_id`),
+  KEY `chat_id` (`chat_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -730,14 +730,14 @@ DROP TABLE IF EXISTS `user_notification`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_notification` (
-                                     `id` bigint(20) NOT NULL AUTO_INCREMENT,
-                                     `user_id` bigint(20) NOT NULL,
-                                     `silent` int(1) DEFAULT '1',
-                                     `deleted` int(11) DEFAULT NULL,
-                                     `deleted_at` timestamp NULL DEFAULT NULL,
-                                     PRIMARY KEY (`id`),
-                                     UNIQUE KEY `table_name_user_id_uindex` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `silent` int(1) DEFAULT '1',
+  `deleted` int(11) DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `table_name_user_id_uindex` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -757,15 +757,15 @@ DROP TABLE IF EXISTS `user_voice`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_voice` (
-                              `id` int(11) NOT NULL AUTO_INCREMENT,
-                              `user_id` bigint(20) DEFAULT NULL,
-                              `voice` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                              `used` int(11) NOT NULL DEFAULT '0',
-                              `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-                              `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
-                              PRIMARY KEY (`id`),
-                              UNIQUE KEY `user_voice_user_id_voice_uindex` (`user_id`,`voice`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) DEFAULT NULL,
+  `voice` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `used` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_voice_user_id_voice_uindex` (`user_id`,`voice`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -785,14 +785,14 @@ DROP TABLE IF EXISTS `version`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `version` (
-                           `id` int(11) NOT NULL AUTO_INCREMENT,
-                           `version` varchar(12) NOT NULL,
-                           `description` longtext,
-                           `used` int(11) DEFAULT NULL,
-                           `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-                           PRIMARY KEY (`id`),
-                           KEY `version_created_at_index` (`created_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `version` varchar(12) NOT NULL,
+  `description` longtext,
+  `used` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `version_created_at_index` (`created_at`)
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -813,13 +813,13 @@ DROP TABLE IF EXISTS `version_notification`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `version_notification` (
-                                        `chat_id` bigint(20) DEFAULT NULL,
-                                        `version_id` int(11) DEFAULT NULL,
-                                        `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-                                        `id` int(11) NOT NULL AUTO_INCREMENT,
-                                        PRIMARY KEY (`id`),
-                                        UNIQUE KEY `version_notification_user_id_version_id_uindex` (`chat_id`,`version_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `chat_id` bigint(20) DEFAULT NULL,
+  `version_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `version_notification_user_id_version_id_uindex` (`chat_id`,`version_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -839,13 +839,13 @@ DROP TABLE IF EXISTS `word`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `word` (
-                        `id` int(11) NOT NULL AUTO_INCREMENT,
-                        `word` varchar(255) NOT NULL,
-                        `translate` longtext,
-                        `collection_id` int(11) DEFAULT NULL,
-                        `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-                        PRIMARY KEY (`id`),
-                        UNIQUE KEY `word_word_uindex` (`word`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `word` varchar(255) NOT NULL,
+  `translate` longtext,
+  `collection_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `word_word_uindex` (`word`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18870 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -869,4 +869,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-12 22:28:59
+-- Dump completed on 2021-03-13 11:16:04

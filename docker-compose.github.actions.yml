@@ -2,11 +2,15 @@ version: '3'
 
 services:
 
-  worker:
+  repeat:
     build:
       context: .
-      dockerfile: docker/worker/Dockerfile
-    container_name: 'repeat-bot-tests-worker'
+      dockerfile: docker/php/Dockerfile
+    env_file: .env.github.actions
+    container_name: 'repeat-bot-tests-repeat'
+    links:
+      - mysql
+      - redis
     volumes:
       - .:/app/
     networks:
@@ -17,7 +21,7 @@ services:
     container_name: 'repeat-bot-tests-mysql'
     restart: always
     ports:
-      - "3306:3306"
+      - "13306:3306"
     environment:
       MYSQL_DATABASE: asterios
       MYSQL_ROOT_PASSWORD: password
@@ -30,7 +34,7 @@ services:
     container_name: 'repeat-bot-tests-redis'
     image: redis:3.2
     ports:
-      - "127.0.0.1:6379:6379/tcp"
+      - "127.0.0.1:16379:6379/tcp"
     networks:
       - repeat-bot-tests-network
 

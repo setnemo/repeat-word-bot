@@ -109,4 +109,12 @@ abstract class BaseCommandService implements CommandInterface
     {
         return [] !== $this->stack || null !== $this->response;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function showResponses(): array
+    {
+        return array_merge($this->stack, [$this->response]);
+    }
 }

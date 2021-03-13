@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use Codeception\Test\Unit;
 use RepeatBot\Common\Config;
-use Tests\Helpers\DatabaseTestCase;
 
 /**
  * Class ConfigTest
  * @package Tests\Unit
  */
-final class ConfigTest extends DatabaseTestCase
+final class ConfigTest extends Unit
 {
     public function testConfigPath1(): void
     {

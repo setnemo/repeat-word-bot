@@ -8,7 +8,7 @@ use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\OneYearService;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
-use RepeatBot\Core\Database\Database;
+use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\Training;
 use RepeatBot\Core\ORM\Repositories\TrainingRepository;
 

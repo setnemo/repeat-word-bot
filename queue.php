@@ -3,7 +3,7 @@
 use RepeatBot\Bot\Service\ExportQueueService;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Bot;
-use RepeatBot\Core\Database\Database;
+use RepeatBot\Core\Database;
 use RepeatBot\Core\Log;
 use RepeatBot\Core\Metric;
 

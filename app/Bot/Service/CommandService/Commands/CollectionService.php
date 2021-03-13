@@ -11,7 +11,7 @@ use Longman\TelegramBot\Entities\InlineKeyboard;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
-use RepeatBot\Core\Database\Database;
+use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Collections\WordCollection;
 use RepeatBot\Core\ORM\Entities\Collection;
 use RepeatBot\Core\ORM\Entities\Training;
