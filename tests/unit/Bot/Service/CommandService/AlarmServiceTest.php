@@ -55,19 +55,19 @@ class AlarmServiceTest extends Unit
 
         $service = $command->makeService();
         $this->assertInstanceOf(AlarmService::class, $service);
-    
-        $service->execute();
-        $response = $service->showResponses();
-        /** @var ResponseDirector $error */
-        $error = $response[0];
-        $this->assertInstanceOf(ResponseDirector::class, $error);
-        $this->assertEquals('sendMessage', $error->getType());
-        $this->assertEquals([
-            'chat_id' => 42,
-            'text' => 'Список персональных напоминаний пуст',
-            'parse_mode' => 'markdown',
-            'disable_web_page_preview' => true,
-            'disable_notification' => 1,
-        ], $error->getData());
+//
+//        $service->execute();
+//        $response = $service->showResponses();
+//        /** @var ResponseDirector $error */
+//        $error = $response[0];
+//        $this->assertInstanceOf(ResponseDirector::class, $error);
+//        $this->assertEquals('sendMessage', $error->getType());
+//        $this->assertEquals([
+//            'chat_id' => 42,
+//            'text' => 'Список персональных напоминаний пуст',
+//            'parse_mode' => 'markdown',
+//            'disable_web_page_preview' => true,
+//            'disable_notification' => 1,
+//        ], $error->getData());
     }
 }
