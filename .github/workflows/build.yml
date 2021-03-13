@@ -50,6 +50,8 @@ jobs:
           docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:generate-proxies 2> /dev/null | true
           docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept build 2> /dev/null | true
           docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept run --coverage-xml --xml
+          sed -i 's!/app/!/github/workspace/!g' /app/tests/_output/coverage.xml
+          sed -i 's!/app/!/github/workspace/!g' /app/tests/_output/report.xml
 
       #SONAR
       - name: SonarCloud Scan
