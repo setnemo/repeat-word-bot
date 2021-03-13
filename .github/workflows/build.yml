@@ -42,15 +42,15 @@ jobs:
           time: '30s'
       - name: Build test suite
         run: |
-          docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/codecept build
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept build
       - name: Run test suite
         run: |
-          docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/doctrine orm:clear-cache:metadata
-          docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/doctrine orm:clear-cache:query
-          docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/doctrine orm:clear-cache:result
-          docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/doctrine orm:generate-proxies
-          docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/codecept build
-          docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/codecept run --coverage-xml --xml
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:clear-cache:metadata
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:clear-cache:query
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:clear-cache:result
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:generate-proxies
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept build
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept run --coverage-xml --xml
 
       #SONAR
       - name: Setup sonarqube
