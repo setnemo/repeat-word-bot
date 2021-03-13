@@ -35,19 +35,42 @@ jobs:
         run: |
           cp .env.github.actions .env
       - name: Build the docker-compose stack
-        run: docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests up -d
+        run: docker-compose -f docker-compose.github.actions.yml up -d
       - name: Sleep
         uses: jakejarvis/wait-action@master
         with:
           time: '30s'
       - name: Build test suite
         run:|
-          docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec -T repeat vendor/bin/codecept build
+          docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/codecept build
       - name: Run test suite
         run:|
-          docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec repeat vendor/bin/doctrine orm:clear-cache:metadata 2> /dev/null | true
-          docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec repeat vendor/bin/doctrine orm:clear-cache:query 2> /dev/null | true
-          docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec repeat vendor/bin/doctrine orm:clear-cache:result 2> /dev/null | true
-          docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec repeat vendor/bin/doctrine orm:generate-proxies 2> /dev/null | true
-          docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec repeat vendor/bin/codecept build 2> /dev/null | true
-          docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec repeat vendor/bin/codecept run
+          docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/doctrine orm:clear-cache:metadata 2> /dev/null | true
+          docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/doctrine orm:clear-cache:query 2> /dev/null | true
+          docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/doctrine orm:clear-cache:result 2> /dev/null | true
+          docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/doctrine orm:generate-proxies 2> /dev/null | true
+          docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/codecept build 2> /dev/null | true
+          docker-compose -f docker-compose.github.actions.yml exec -T repeat vendor/bin/codecept run --coverage-xml --xml
+
+        #SONAR
+        - name: Setup sonarqube
+          uses: warchant/setup-sonar-scanner@v3
+        # Analyse PR
+        - name: Run sonarqube (analyse PR)
+          if: ${{ github.event_name == 'pull_request' }}
+          run: sonar-scanner
+            -Dsonar.organization=omentes
+            -Dsonar.host.url=https://sonarcloud.io/
+            -Dsonar.projectKey=DA
+            -Dsonar.exlusions=vendor
+            -Dsonar.pullrequest.branch=${{ github.head_ref }}
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+            -Dsonar.pullrequest.base=${{ github.base_ref }}
+        # Analyse branch
+        - name: Run sonarqube (analyse branch)
+          if: ${{ github.event_name == 'push' }}
+          run: sonar-scanner
+            -Dsonar.organization=pdffiller
+            -Dsonar.host.url=https://sonarcloud.io/
+            -Dsonar.projectKey=DA
+            -Dsonar.exlusions=vendor

@@ -13,9 +13,15 @@ use RepeatBot\Core\ORM\Entities\UserNotification;
 use RepeatBot\Core\ORM\Entities\UserVoice;
 use RepeatBot\Core\ORM\Entities\Version;
 use RepeatBot\Core\ORM\Entities\VersionNotification;
+use RepeatBot\Core\ORM\Entities\Word;
 
 class Unit extends \Codeception\Module
 {
+    public function haveWordInDatabase(Word $entity): Word
+    {
+        return HaveInDatabase::getInstance()->haveWordEntity($entity);
+    }
+
     public function haveVersionInDatabase(Version $entity): Version
     {
         return HaveInDatabase::getInstance()->haveVersionEntity($entity);

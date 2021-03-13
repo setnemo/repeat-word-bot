@@ -36,12 +36,18 @@ RUN pecl install mcrypt-1.0.4
 RUN docker-php-ext-install pdo pdo_mysql
 RUN docker-php-ext-enable pdo_mysql
 
-
-
 # Redis
 RUN apk add --no-cache pcre-dev $PHPIZE_DEPS \
         && pecl install redis \
         && docker-php-ext-enable redis.so
+
+ARG ENVIRONMENT=prod
+RUN if [ "$ENVIRONMENT" = "tests" ]; \
+    then pecl install xdebug-3.0.3 && \
+    docker-php-ext-enable xdebug && \
+    echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
+    echo "xdebug.client_port=9003" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+    else echo "Build $ENVIRONMENT, xdebug skipping"; fi
 
 # Install PHP Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

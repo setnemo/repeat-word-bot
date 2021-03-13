@@ -13,9 +13,19 @@ use RepeatBot\Core\ORM\Entities\UserNotification;
 use RepeatBot\Core\ORM\Entities\UserVoice;
 use RepeatBot\Core\ORM\Entities\Version;
 use RepeatBot\Core\ORM\Entities\VersionNotification;
+use RepeatBot\Core\ORM\Entities\Word;
 
 class HaveInDatabase extends ORM
 {
+    public function haveWordEntity(Word $entity): Word
+    {
+        $em = self::getEntityManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return $entity;
+    }
+
     public function haveVersionEntity(Version $entity): Version
     {
         $em = self::getEntityManager();

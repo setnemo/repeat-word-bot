@@ -24,14 +24,14 @@ class UserNotification
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private int $id;
 
     /**
      * @var int
      *
      * @ORM\Column(name="user_id", type="bigint", nullable=false)
      */
-    private $userId;
+    private int $userId;
 
     /**
      * @var int

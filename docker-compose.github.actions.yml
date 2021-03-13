@@ -2,23 +2,25 @@ version: '3'
 
 services:
 
-  repeat:
+  repeatt:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
+      args:
+        - ENVIRONMENT=tests
     env_file: .env.github.actions
-    container_name: 'repeat-bot-tests-repeat'
+    container_name: 'repeat-bot-tests-repeatt'
     links:
-      - mysql
-      - redis
+      - mysqlt
+      - redist
     volumes:
       - .:/app/
     networks:
       - repeat-bot-tests-network
 
-  mysql:
+  mysqlt:
     image: mysql:5.7.22
-    container_name: 'repeat-bot-tests-mysql'
+    container_name: 'repeat-bot-tests-mysqlt'
     restart: always
     ports:
       - "13306:3306"
@@ -30,8 +32,8 @@ services:
     networks:
       - repeat-bot-tests-network
 
-  redis:
-    container_name: 'repeat-bot-tests-redis'
+  redist:
+    container_name: 'repeat-bot-tests-redist'
     image: redis:3.2
     ports:
       - "127.0.0.1:16379:6379/tcp"

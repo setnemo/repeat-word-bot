@@ -107,41 +107,39 @@ orm-proxies:
 
 .PHONY: test-up
 test-up:
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests up -d
+	docker-compose -f docker-compose.github.actions.yml up -d
 
 .PHONY: test-build-up
 test-build-up:
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests up -d --build --remove-orphans
+	docker-compose -f docker-compose.github.actions.yml up -d --build --remove-orphans
 
 .PHONY: test-stop
 test-stop:
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests stop
+	docker-compose -f docker-compose.github.actions.yml stop
 
 .PHONY: test-ps
 test-ps:
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests ps
+	docker-compose -f docker-compose.github.actions.yml ps
 
 .PHONY: test-all
 test-all:
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec repeat vendor/bin/doctrine orm:clear-cache:metadata 2> /dev/null | true
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec repeat vendor/bin/doctrine orm:clear-cache:query 2> /dev/null | true
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec repeat vendor/bin/doctrine orm:clear-cache:result 2> /dev/null | true
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec repeat vendor/bin/doctrine orm:generate-proxies 2> /dev/null | true
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec repeat vendor/bin/codecept build 2> /dev/null | true
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec repeat vendor/bin/codecept run
+	docker-compose -f docker-compose.github.actions.yml exec repeat vendor/bin/doctrine orm:clear-cache:metadata
+	docker-compose -f docker-compose.github.actions.yml exec repeat vendor/bin/doctrine orm:clear-cache:query
+	docker-compose -f docker-compose.github.actions.yml exec repeat vendor/bin/doctrine orm:clear-cache:result
+	docker-compose -f docker-compose.github.actions.yml exec repeat vendor/bin/codecept build
+	docker-compose -f docker-compose.github.actions.yml exec repeat vendor/bin/codecept run
 
 .PHONY: test-run
 test-run:
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec -T repeat vendor/bin/doctrine orm:clear-cache:metadata
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec -T repeat vendor/bin/doctrine orm:clear-cache:query
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec -T repeat vendor/bin/doctrine orm:clear-cache:result
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec -T repeat vendor/bin/doctrine orm:generate-proxies
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec -T repeat vendor/bin/codecept build
-	docker-compose -f docker-compose.github.actions.yml -p repeat-bot-tests exec -T repeat vendor/bin/codecept run ${ARGS}
+	docker-compose -f docker-compose.github.actions.yml exec repeat vendor/bin/doctrine orm:clear-cache:metadata
+	docker-compose -f docker-compose.github.actions.yml exec repeat vendor/bin/doctrine orm:clear-cache:query
+	docker-compose -f docker-compose.github.actions.yml exec repeat vendor/bin/doctrine orm:clear-cache:result
+	docker-compose -f docker-compose.github.actions.yml exec repeat vendor/bin/codecept build
+	docker-compose -f docker-compose.github.actions.yml exec repeat vendor/bin/codecept run ${ARGS}
 
 .PHONY: network
 network:
-	docker network create telegram-bots-network 2> /dev/null | true
+	docker network create telegram-bots-network
 
 .PHONY: default
 default: help
