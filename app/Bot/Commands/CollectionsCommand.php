@@ -31,7 +31,7 @@ class CollectionsCommand extends SystemCommand
                 chatId: $this->getMessage()->getChat()->getId(),
             )
         );
-    
+
         return $command->executeCommand($command->makeService());
     }
 }

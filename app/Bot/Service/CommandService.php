@@ -20,7 +20,7 @@ class CommandService
     public function __construct(protected CommandOptions $options, protected string $type = '')
     {
     }
-    
+
     /**
      * @return CommandInterface
      */
@@ -32,8 +32,8 @@ class CommandService
         default => $this->makeDefaultService($this->getOptions()),
         };
     }
-    
-    
+
+
     /**
      * @param CommandInterface $service
      *
@@ -44,7 +44,7 @@ class CommandService
         if (!$service->hasResponse()) {
             $service = $service->execute();
         }
-        
+
         return $service->postStackMessages()->getResponseMessage();
     }
 
@@ -83,7 +83,7 @@ class CommandService
 
         return $command->makeService();
     }
-    
+
     /**
      * @return CommandOptions
      */
@@ -91,7 +91,7 @@ class CommandService
     {
         return $this->options;
     }
-    
+
     /**
      * @return string
      */

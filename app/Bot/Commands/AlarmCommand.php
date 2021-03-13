@@ -30,7 +30,8 @@ class AlarmCommand extends SystemCommand
                 command: 'alarm',
                 payload: explode(' ', BotHelper::getTextFromInput($this->getMessage()->getText(true))),
                 chatId: $this->getMessage()->getChat()->getId(),
-        ));
+            )
+        );
 
         return $command->executeCommand($command->makeService());
     }

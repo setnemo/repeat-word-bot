@@ -21,7 +21,7 @@ class GenericmessageCommand extends SystemCommand
             ),
             type: 'generic'
         );
-    
+
         return $command->executeCommand($command->makeService());
     }
 }

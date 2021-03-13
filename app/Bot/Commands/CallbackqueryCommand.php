@@ -43,7 +43,7 @@ class CallbackqueryCommand extends SystemCommand
             messageId: $this->getCallbackQuery()->getMessage()->getMessageId(),
             callbackQueryId: intval($this->getCallbackQuery()->getId())
         ), type: 'query');
-    
+
         return $command->executeCommand($command->makeService());
     }
 }

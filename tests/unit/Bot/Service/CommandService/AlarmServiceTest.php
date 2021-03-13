@@ -27,8 +27,9 @@ class AlarmServiceTest extends Unit
                 command: 'alarm',
                 payload: explode(' ', ''),
                 chatId: 42,
-        ));
-    
+            )
+        );
+
         $service = $command->makeService();
         $this->assertInstanceOf(AlarmService::class, $service);
 

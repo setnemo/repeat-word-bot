@@ -30,7 +30,7 @@ class TimeCommand extends SystemCommand
                 chatId: $this->getMessage()->getChat()->getId(),
             )
         );
-    
+
         return $command->executeCommand($command->makeService());
     }
 }
