@@ -19,91 +19,67 @@ class HaveInDatabase extends ORM
 {
     public function haveWordEntity(Word $entity): Word
     {
-        $em = self::getEntityManager();
-        $em->persist($entity);
-        $em->flush();
-
-        return $entity;
+        return $this->updateEntity($entity);
     }
 
     public function haveVersionEntity(Version $entity): Version
     {
-        $em = self::getEntityManager();
-        $em->persist($entity);
-        $em->flush();
-
-        return $entity;
+        return $this->updateEntity($entity);
     }
 
     public function haveVersionNotificationEntity(VersionNotification $entity): VersionNotification
     {
-        $em = self::getEntityManager();
-        $em->persist($entity);
-        $em->flush();
-
-        return $entity;
+        return $this->updateEntity($entity);
     }
 
     public function haveUserVoiceEntity(UserVoice $entity): UserVoice
     {
-        $em = self::getEntityManager();
-        $em->persist($entity);
-        $em->flush();
-
-        return $entity;
+        return $this->updateEntity($entity);
     }
 
     public function haveUserNotificationEntity(UserNotification $entity): UserNotification
     {
-        $em = self::getEntityManager();
-        $em->persist($entity);
-        $em->flush();
-
-        return $entity;
+        return $this->updateEntity($entity);
     }
 
     public function haveTrainingEntity(Training $entity): Training
     {
-        $em = self::getEntityManager();
-        $em->persist($entity);
-        $em->flush();
-
-        return $entity;
+        return $this->updateEntity($entity);
     }
 
     public function haveLearnNotificationPersonalEntity(LearnNotificationPersonal $entity): LearnNotificationPersonal
     {
-        $em = self::getEntityManager();
-        $em->persist($entity);
-        $em->flush();
-
-        return $entity;
+        return $this->updateEntity($entity);
     }
 
     public function haveLearnNotificationEntity(LearnNotification $entity): LearnNotification
     {
-        $em = self::getEntityManager();
-        $em->persist($entity);
-        $em->flush();
-
-        return $entity;
+        return $this->updateEntity($entity);
     }
 
     public function haveExportEntity(Export $entity): Export
     {
-        $em = self::getEntityManager();
-        $em->persist($entity);
-        $em->flush();
-
-        return $entity;
+        return $this->updateEntity($entity);
     }
 
     public function haveCollectionEntity(Collection $entity): Collection
     {
+        return $this->updateEntity($entity);
+    }
+    
+    /**
+     * @param object $entity
+     *
+     * @return object
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function updateEntity(object $entity): object
+    {
         $em = self::getEntityManager();
         $em->persist($entity);
         $em->flush();
-
+        
         return $entity;
-    }
+}
 }

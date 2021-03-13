@@ -45,11 +45,11 @@ jobs:
           docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept build
       - name: Run test suite
         run: |
-          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:clear-cache:metadata
-          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:clear-cache:query
-          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:clear-cache:result
-          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:generate-proxies
-          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept build
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:clear-cache:metadata 2> /dev/null | true
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:clear-cache:query 2> /dev/null | true
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:clear-cache:result 2> /dev/null | true
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:generate-proxies 2> /dev/null | true
+          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept build 2> /dev/null | true
           docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept run --coverage-xml --xml
 
       #SONAR
@@ -59,6 +59,7 @@ jobs:
       - name: Run sonarqube (analyse PR)
         if: ${{ github.event_name == 'pull_request' }}
         run: sonar-scanner
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
           -Dsonar.organization=omentes
           -Dsonar.host.url=https://sonarcloud.io/
           -Dsonar.projectKey=DA
@@ -70,6 +71,7 @@ jobs:
       - name: Run sonarqube (analyse branch)
         if: ${{ github.event_name == 'push' }}
         run: sonar-scanner
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
           -Dsonar.organization=pdffiller
           -Dsonar.host.url=https://sonarcloud.io/
           -Dsonar.projectKey=DA
