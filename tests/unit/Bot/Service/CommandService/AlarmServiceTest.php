@@ -84,7 +84,7 @@ class AlarmServiceTest extends Unit
         $tz = 'FDT';
         $created = Carbon::now();
         $updated = Carbon::now();
-    
+
         $entity = new LearnNotificationPersonal();
         $entity->setUserId($chatId);
         $entity->setMessage($message);
@@ -92,7 +92,7 @@ class AlarmServiceTest extends Unit
         $entity->setAlarm($alarm);
         $entity->setCreatedAt($created);
         $entity->setUpdatedAt($updated);
-    
+
         $this->tester->haveLearnNotificationPersonalInDatabase($entity);
 
         $command = new CommandService(
