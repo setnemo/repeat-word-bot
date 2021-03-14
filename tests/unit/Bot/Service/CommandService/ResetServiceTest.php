@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Bot\Service\CommandService;
 
-use Codeception\Exception\ModuleException;
 use Codeception\Test\Unit;
 use Doctrine\ORM\EntityManager;
 use Longman\TelegramBot\Entities\Keyboard;

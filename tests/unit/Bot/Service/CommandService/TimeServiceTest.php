@@ -10,7 +10,6 @@ use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Commands\TimeService;
-use RepeatBot\Bot\Service\CommandService\Messages\StartMessage;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 use UnitTester;
 

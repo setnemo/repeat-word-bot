@@ -168,7 +168,7 @@ class TranslateTrainingService extends BaseDefaultCommandService
             ->getEntityManager()
             ->getRepository(UserVoice::class);
         $voice = $userVoiceRepository->getRandomVoice($userId);
-        $uri = (new GoogleTextToSpeechService($voice))->getMp3($word->getWord());
+        $uri = GoogleTextToSpeechService::getInstance()->init($voice)->getMp3($word->getWord());
         $data = [
             'chat_id' => $userId,
             'voice' => Request::encodeFile($uri),

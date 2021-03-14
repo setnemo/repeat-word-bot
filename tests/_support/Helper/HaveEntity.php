@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Helper;
 
-use Doctrine\ORM\EntityManager;
-use RepeatBot\Core\App;
-use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\Collection;
 use RepeatBot\Core\ORM\Entities\Export;
 use RepeatBot\Core\ORM\Entities\LearnNotification;
