@@ -21,6 +21,10 @@ class UnitTester extends \Codeception\Actor
 
     public function createFakeMp3s(): void
     {
+        if (!file_exists('/app/words/en-US/en-US-Wavenet-A')) {
+            mkdir('/app/words/en-US/en-US-Wavenet-A', 0755, true);
+            clearstatcache();
+        }
         foreach ($this->getWords() as $word) {
             file_put_contents(strtr('/app/words/en-US/en-US-Wavenet-A/:word.mp3', [':word' => $word]), '');
         }

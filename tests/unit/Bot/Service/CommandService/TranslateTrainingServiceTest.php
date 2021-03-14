@@ -34,8 +34,9 @@ class TranslateTrainingServiceTest extends Unit
     protected Cache $cache;
     private int $chatId;
 
-    protected function _before()
+    protected function setUp(): void
     {
+        parent::setUp();
         $this->chatId = 42;
         $this->em = $this->getModule('Doctrine2')->em;
         $this->cache = $this->tester->getCache();
