@@ -12,6 +12,10 @@ use RepeatBot\Bot\Service\CommandService\Messages\CollectionMessage;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 use UnitTester;
 
+/**
+ * Class CollectionServiceTest
+ * @package Tests\Unit\Bot\Service\CommandService
+ */
 class CollectionServiceTest extends Unit
 {
     protected UnitTester $tester;

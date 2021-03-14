@@ -11,6 +11,7 @@ use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 /**
  * Class TimeCommand
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\TimeService
  * @package Longman\TelegramBot\Commands\SystemCommand
  */
 class TimeCommand extends SystemCommand

@@ -378,4 +378,26 @@ class BotHelper
     {
         return null === $input ? '' : $input;
     }
+
+
+    /**
+     * @param array  $records
+     * @param string $text
+     *
+     * @return string
+     */
+    public static function getProgressText(array $records, string $text): string
+    {
+        foreach ($records as $type => $items) {
+            foreach ($items as $item) {
+                $status = ucfirst($item['status']);
+                $text .= BotHelper::getAnswer(
+                    "\[{$type}] {$status} итерация: ",
+                    (int) $item['counter']
+                ) . "\n";
+            }
+        }
+
+        return $text;
+    }
 }

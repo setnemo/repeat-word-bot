@@ -13,6 +13,7 @@ use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 /**
  * Class ExportCommand
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\ExportService
  * @package Longman\TelegramBot\Commands\SystemCommand
  */
 class ExportCommand extends SystemCommand

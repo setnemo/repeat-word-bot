@@ -7,6 +7,18 @@ use Longman\TelegramBot\Entities\ServerResponse;
 use RepeatBot\Bot\Service\CommandService;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
+/**
+ * Class GenericmessageCommand
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\StartService
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\HelpService
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\ProgressService
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\CollectionService
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\SettingsService
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\TrainingService
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\TranslateTrainingService
+ * @uses \RepeatBot\Bot\Service\CommandService\GenericMessageDirectorFabric
+ * @package Longman\TelegramBot\Commands\SystemCommands
+ */
 class GenericmessageCommand extends SystemCommand
 {
     /**

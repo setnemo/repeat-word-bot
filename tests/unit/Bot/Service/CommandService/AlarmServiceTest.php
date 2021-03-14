@@ -14,6 +14,10 @@ use RepeatBot\Bot\Service\CommandService\Messages\AlarmMessage;
 use RepeatBot\Core\ORM\Entities\LearnNotificationPersonal;
 use UnitTester;
 
+/**
+ * Class AlarmServiceTest
+ * @package Tests\Unit\Bot\Service\CommandService
+ */
 class AlarmServiceTest extends Unit
 {
     protected UnitTester $tester;

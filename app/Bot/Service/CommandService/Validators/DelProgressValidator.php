@@ -7,6 +7,7 @@ namespace RepeatBot\Bot\Service\CommandService\Validators;
 use Longman\TelegramBot\Entities\Keyboard;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
+use RepeatBot\Bot\Service\CommandService\Messages\DelMessage;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 
 class DelProgressValidator implements ValidateCommand
@@ -41,12 +42,8 @@ class DelProgressValidator implements ValidateCommand
         ];
     }
 
-    /**
-     * @return string
-     */
     protected function getErrorText(): string
     {
-        return "`Сброс прогресса:`\nИспользуйте команду `/del collection <number>` " .
-            "или `/del my progress`. Будьте осторожны: сброс не обратим";
+        return DelMessage::ERROR_TEXT;
     }
 }

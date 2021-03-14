@@ -11,6 +11,13 @@ use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 /**
  * Class CallbackqueryCommand
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\CollectionService
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\SettingsService
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\SettingsSilentService
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\SettingsPriorityService
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\SettingsVoicesService
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\EmptyCallbackService
+ * @uses \RepeatBot\Bot\Service\CommandService\CallbackQueryDirectorFabric
  * @package Longman\TelegramBot\Commands\SystemCommand
  */
 class CallbackqueryCommand extends SystemCommand

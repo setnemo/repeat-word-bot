@@ -12,6 +12,7 @@ use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 /**
  * Class StartCommand
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\StartService
  * @package Longman\TelegramBot\Commands\SystemCommand
  */
 class StartCommand extends SystemCommand

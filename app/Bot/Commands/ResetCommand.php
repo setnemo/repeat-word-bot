@@ -12,6 +12,7 @@ use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 /**
  * Class ResetCommand
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\ResetService
  * @package Longman\TelegramBot\Commands\SystemCommand
  */
 class ResetCommand extends SystemCommand

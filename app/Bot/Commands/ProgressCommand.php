@@ -11,6 +11,7 @@ use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 /**
  * Class ProgressCommand
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\ProgressService
  * @package Longman\TelegramBot\Commands\SystemCommand
  */
 class ProgressCommand extends SystemCommand
