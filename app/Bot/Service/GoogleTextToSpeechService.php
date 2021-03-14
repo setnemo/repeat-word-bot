@@ -23,7 +23,7 @@ class GoogleTextToSpeechService extends Singleton
     private ?SynthesisInput $synthesisInputText = null;
 
     private string $prefix;
-    private bool $filesExists;
+    private bool $filesExists = false;
 
     /**
      * @param string                    $voiceName
@@ -82,16 +82,23 @@ class GoogleTextToSpeechService extends Singleton
             return $path;
         }
 
-        $this->synthesisInputText->setText($text);
-        $response = $this->client->synthesizeSpeech(
-            $this->synthesisInputText,
-            $this->voice,
-            $this->audioConfig
-        );
-        $audioContent = $response->getAudioContent();
+        if (
+            null !== $this->client &&
+            null !== $this->voice &&
+            null !== $this->audioConfig &&
+            null !== $this->synthesisInputText
+        ) {
+            $this->synthesisInputText->setText($text);
+            $response = $this->client->synthesizeSpeech(
+                $this->synthesisInputText,
+                $this->voice,
+                $this->audioConfig
+            );
+            $audioContent = $response->getAudioContent();
 
-        file_put_contents($path, $audioContent);
-        clearstatcache();
+            file_put_contents($path, $audioContent);
+            clearstatcache();
+        }
 
         return $path;
     }
