@@ -38,7 +38,7 @@ jobs:
       - name: Sleep
         uses: jakejarvis/wait-action@master
         with:
-          time: '30s'
+          time: '15s'
       - name: Build test suite
         run: |
           docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept build
@@ -50,12 +50,9 @@ jobs:
           docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:generate-proxies 2> /dev/null | true
           docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept build 2> /dev/null | true
           docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept run --coverage-xml --xml
-      - name: Prepare rports
+      - name: Changes path in output files after tests in docker with coverage to relative github actions path
         run: |
-          ls -la ./tests/_output/
           sed -i 's!/app/!/github/workspace/!g' $(find ./tests/_output/ -type f) | true
-
-      #SONAR
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
