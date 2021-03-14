@@ -10,7 +10,7 @@ use RepeatBot\Bot\Service\CommandService;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Commands\AlarmService;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
-use RepeatBot\Bot\Service\CommandService\Validators\Messages\AlarmMessage;
+use RepeatBot\Bot\Service\CommandService\Messages\AlarmMessage;
 use RepeatBot\Core\ORM\Entities\LearnNotificationPersonal;
 use UnitTester;
 

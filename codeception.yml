@@ -19,7 +19,7 @@ paths:
     data: tests
 coverage:
   enabled: true
-  remote: false
+  remote: true
   include:
     - app/*
   exclude:

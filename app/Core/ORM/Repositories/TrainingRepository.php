@@ -379,6 +379,7 @@ class TrainingRepository extends EntityRepository
      * @param TrainingCollection $collection
      *
      * @return Training|null
+     * @throws \Exception
      */
     private function getRandomEntity(bool $priority, TrainingCollection $collection): ?Training
     {

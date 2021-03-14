@@ -102,11 +102,11 @@ final class Bot extends Singleton
     }
 
     /**
-     *
+     * @param Config $config
      */
-    public function runHook(): void
+    public function runHook(Config $config): void
     {
-        $this->register('repeat-webhook');
+        $this->register($config, 'repeat-webhook');
         try {
             $this->telegram->handle();
             Metric::getInstance()->increaseMetric('webhook');
@@ -279,19 +279,21 @@ final class Bot extends Singleton
     }
 
 
-
     /**
+     * @param Config $config
      * @param string $prefix
+     *
+     * @throws TelegramException
      */
-    private function register(string $prefix): void
+    private function register(Config $config, string $prefix): void
     {
         /** @var Client $cache */
         $cache = Cache::getInstance()->getRedis();
-        $key = $prefix . '_registereda';
+        $key = $prefix . '_registered';
         if (!$cache->exists($key)) {
             $this->telegram->deleteWebhook();
             try {
-                $hook_url = "https://64c752e7e702.ngrok.io/";
+                $hook_url = $config->getKey('HOOK_HOST');
                 $result = $this->telegram->setWebhook($hook_url);
                 if ($result->isOk()) {
                     $cache->set($key, $result->getDescription());

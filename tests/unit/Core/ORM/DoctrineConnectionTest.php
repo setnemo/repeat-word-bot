@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Core;
+namespace Tests\Unit\Core\ORM;
 
 use Codeception\Test\Unit;
 use RepeatBot\Core\ORM\Entities\Version;

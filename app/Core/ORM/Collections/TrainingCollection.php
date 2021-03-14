@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RepeatBot\Core\ORM\Collections;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use RepeatBot\Core\Log;
 use RepeatBot\Core\ORM\Entities\Training;
 
 /**
@@ -15,12 +16,17 @@ class TrainingCollection extends ArrayCollection
 {
     /**
      * @return Training|null
+     * @throws \Exception
      */
     public function getRandomEntity(): ?Training
     {
-        $r = mt_rand(0, $this->count());
-        $a = $this->get($r);
+        $random = 0;
+        try {
+            $random = random_int(0, $this->count() - 1);
+        } catch (\Exception $e) {
+            Log::getInstance()->getLogger()->error('Fail random_int: ' . $e->getMessage());
+        }
 
-        return $a;
+        return $this->get($random);
     }
 }

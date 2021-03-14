@@ -10,6 +10,7 @@ use Exception;
 use Longman\TelegramBot\Entities\InlineKeyboard;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
+use RepeatBot\Bot\Service\CommandService\Messages\CollectionMessage;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Collections\WordCollection;
@@ -100,7 +101,7 @@ class CollectionService extends BaseDefaultCommandService
                 'sendMessage',
                 [
                     'chat_id' => $chatId,
-                    'text' => BotHelper::getCollectionText(),
+                    'text' => CollectionMessage::COLLECTION_WELCOME_TEXT,
                     'parse_mode' => 'markdown',
                     'disable_web_page_preview' => true,
                     'disable_notification' => 1,
