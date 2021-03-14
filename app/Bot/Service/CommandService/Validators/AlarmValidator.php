@@ -7,7 +7,7 @@ namespace RepeatBot\Bot\Service\CommandService\Validators;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
-use RepeatBot\Bot\Service\CommandService\Validators\Messages\AlarmMessage;
+use RepeatBot\Bot\Service\CommandService\Messages\AlarmMessage;
 
 class AlarmValidator implements ValidateCommand
 {

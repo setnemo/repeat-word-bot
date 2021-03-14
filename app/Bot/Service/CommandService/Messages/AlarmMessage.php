@@ -2,8 +2,12 @@
 
 declare(strict_types=1);
 
-namespace RepeatBot\Bot\Service\CommandService\Validators\Messages;
+namespace RepeatBot\Bot\Service\CommandService\Messages;
 
+/**
+ * Class AlarmMessage
+ * @package RepeatBot\Bot\Service\CommandService\Messages
+ */
 class AlarmMessage
 {
     public const ERROR_TEXT = "Чтобы создать напоминание на 9 утра - воспользуйтесь командой `/alarm 9:00`. " .

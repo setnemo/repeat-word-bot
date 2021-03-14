@@ -9,6 +9,8 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use RepeatBot\Bot\BotHelper;
+use RepeatBot\Core\Database;
+use RepeatBot\Core\Log;
 use RepeatBot\Core\ORM\Entities\UserVoice;
 
 /**
@@ -59,14 +61,14 @@ class UserVoiceRepository extends EntityRepository
         $entity = $this->findOneBy(['voice' => $voice, 'userId' => $userId]);
         if ($entity) {
             $entity->setUsed($used);
-            $entity->setUpdatedAt(Carbon::now(\RepeatBot\Core\Database::DEFAULT_TZ));
+            $entity->setUpdatedAt(Carbon::now(Database::DEFAULT_TZ));
         } else {
             $entity = new UserVoice();
             $entity->setUserId($userId);
             $entity->setVoice($voice);
             $entity->setUsed($used);
-            $entity->setCreatedAt(Carbon::now(\RepeatBot\Core\Database::DEFAULT_TZ));
-            $entity->setUpdatedAt(Carbon::now(\RepeatBot\Core\Database::DEFAULT_TZ));
+            $entity->setCreatedAt(Carbon::now(Database::DEFAULT_TZ));
+            $entity->setUpdatedAt(Carbon::now(Database::DEFAULT_TZ));
         }
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
@@ -84,7 +86,12 @@ class UserVoiceRepository extends EntityRepository
         if ($results === []) {
             return self::DEFAULT_VOICE;
         }
-        $random = mt_rand(0, count($results) - 1);
+        $random = 0;
+        try {
+            $random = random_int(0, count($results) - 1);
+        } catch (\Exception $e) {
+            Log::getInstance()->getLogger()->error('Fail random_int: ' . $e->getMessage());
+        }
 
         return $results[$random]->getVoice();
     }
