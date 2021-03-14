@@ -196,24 +196,26 @@ final class Bot extends Singleton
         $userNotificationRepository = Database::getInstance()
             ->getEntityManager()
             ->getRepository(ORM\Entities\UserNotification::class);
-
-
-        $userNotifications = $userNotificationRepository->getUserNotifications();
-        $inactiveUser = $trainingRepository->getInactiveUsers($userNotifications);
-        $newNotifications = $learnNotificationRepository->filterNotifications($inactiveUser);
-        $learnNotificationRepository->saveNotifications($newNotifications);
-        $notifications = $learnNotificationRepository->getUnsentNotifications();
-        /** @var LearnNotification $notification */
-        foreach ($notifications as $notification) {
-            $result = Request::sendMessage([
-                'chat_id' => $notification->getUserId(),
-                'text' => $notification->getMessage(),
-                'disable_notification' => $notification->getSilent()
-            ]);
-            $learnNotificationRepository->updateNotification($notification);
-            if (!$result->isOk()) {
-                $userNotificationRepository->deleteUserNotification($notification->getUserId());
+        try {
+            $userNotifications = $userNotificationRepository->getUserNotifications();
+            $inactiveUser = $trainingRepository->getInactiveUsers($userNotifications);
+            $newNotifications = $learnNotificationRepository->filterNotifications($inactiveUser);
+            $learnNotificationRepository->saveNotifications($newNotifications);
+            $notifications = $learnNotificationRepository->getUnsentNotifications();
+            /** @var LearnNotification $notification */
+            foreach ($notifications as $notification) {
+                $result = Request::sendMessage([
+                    'chat_id' => $notification->getUserId(),
+                    'text' => $notification->getMessage(),
+                    'disable_notification' => $notification->getSilent(),
+                ]);
+                $learnNotificationRepository->updateNotification($notification);
+                if (!$result->isOk()) {
+                    $userNotificationRepository->deleteUserNotification($notification->getUserId());
+                }
             }
+        } catch (\Throwable $t) {
+            echo $t->getMessage();
         }
     }
 
@@ -247,7 +249,7 @@ final class Bot extends Singleton
                 Request::sendMessage([
                     'chat_id' => $notification->getUserId(),
                     'text' => $notification->getMessage(),
-                    'disable_notification' => $silent
+                    'disable_notification' => $silent,
                 ]);
                 $learnNotificationRepository->updateNotification($notification);
             }

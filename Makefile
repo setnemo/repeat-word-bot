@@ -44,8 +44,8 @@ build:
 	docker-compose build ${ARGS}
 
 .PHONY: up
-up: network
-	docker-compose up -d
+up:
+	docker-compose up -d --remove-orphans
 
 .PHONY: stop
 stop:
@@ -81,11 +81,11 @@ status:
 
 .PHONY: psr
 psr:
-	 php vendor/bin/phpcbf --standard=psr12 app -n tests -n
+	php vendor/bin/phpcbf --standard=psr12 app -n tests -n
 
 .PHONY: psalm
 psalm:
-	 php vendor/bin/psalm
+	docker-compose exec repeat php vendor/bin/psalm
 
 .PHONY: orm-clear
 orm-clear:
@@ -99,7 +99,7 @@ orm-validate:
 
 .PHONY: orm-update
 orm-update:
-	docker-compose exec repeat vendor/bin/doctrine  orm:schema-tool:update --dump-sql
+	docker-compose exec repeat vendor/bin/doctrine orm:schema-tool:update --dump-sql
 
 .PHONY: orm-proxies
 orm-proxies:

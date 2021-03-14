@@ -6,6 +6,7 @@ namespace RepeatBot\Bot;
 
 use JetBrains\PhpStorm\ArrayShape;
 use Longman\TelegramBot\Entities\InlineKeyboard;
+use RepeatBot\Bot\Service\CommandService\Messages\SettingsMessage;
 
 class BotHelper
 {
@@ -90,6 +91,22 @@ class BotHelper
     }
 
     /**
+     * @return string[]
+     */
+    public static function getTrainingStatuses(): array
+    {
+        return [
+            'first',
+            'second',
+            'third',
+            'fourth',
+            'fifth',
+            'sixth',
+            'never'
+        ];
+    }
+
+    /**
      * @param string $textSilent
      * @param string $textPriority
      * @param string $textVoices
@@ -149,25 +166,6 @@ class BotHelper
         ];
 
         return $result;
-    }
-
-    /**
-     * @return string
-     */
-    public static function getCollectionText(): string
-    {
-        $text = "Выбирайте коллекцию для добавления в свой словарь. Слова с коллекции будут доступны в тренировке.\n\n";
-        $text .= "Все слова разделены на коллекции `по частоте использования` слова в языке. ";
-        $text .= "Не добавляйте сразу слишком много, сначала отправьте на долгие итерации коллекции с более популярными словами. ";
-        $text .= "При добавлении Коллекции слова добавляются в оба типа тренировок (`From English` + `To English`). ";
-        $text .= "Также есть команда /reset для сброса, если вы по ошибке добавили слишком много или хотите начать сначала\n\n";
-        $text .= "Каждая коллекция уникальна! Слова `не повторяются`. Вас ждет приключение на 17814 слов! ";
-        $text .= "Первые 35 коллекций по 500 слов и в последней 314 слов\n\n";
-        $text .= "Слова добавляются по 500 штук, поэтому после нажатия кнопки `Добавить` дождитесь ответа, что слова добавлены\n\n";
-        $text .= "Листая влево и вправо список слов примеров будет обновляться, это поможет вам более точно выбрать коллекцию для своего уровня владения языком\n\n";
-        $text .= "После добавления будут доступны кнопки `Удалить` и `Сбросить`, которые подскажут команды для удаления коллекции или сброса прогресса по данной коллекции";
-
-        return $text;
     }
 
     /**
@@ -323,9 +321,9 @@ class BotHelper
     {
         $symbolSilent = $silent === 1 ? '✅' : '❌';
         $symbolPriority = $priority === 1 ? '✅' : '❌';
-        $textSilent = "Тихий режим сообщений: {$symbolSilent}";
-        $texPriority = "Приоритет меньшей итерации: {$symbolPriority}";
-        $texVoices = "Выбрать голоса для тренировок";
+        $textSilent = strtr(SettingsMessage::TEXT_SILENT, [':silent' => $symbolSilent]);
+        $texPriority = strtr(SettingsMessage::TEXT_PRIORITY, [':priority' => $symbolPriority]);
+        $texVoices = SettingsMessage::TEXT_CHOICE_VOICE;
         /** @psalm-suppress TooManyArguments */
         $keyboard = new InlineKeyboard(...BotHelper::getSettingsKeyboard(
             $textSilent,
@@ -366,7 +364,24 @@ class BotHelper
      */
     public static function getTimeZones(): array
     {
-        return include_once __DIR__ . '/../../config/timezones.php';
+        return include '/app/config/timezones.php';
+    }
+
+    /**
+     * @return string
+     */
+    public static function getTimeText(): string
+    {
+        $text = "Список поддерживаемых аббривиатур для выбора часового пояса в персональных напоминаниях:\n\n";
+        $timezones = BotHelper::getTimeZones();
+        foreach ($timezones as $timezone) {
+            $text .= strtr("`:abbr:` :text\n", [
+                ':abbr' => $timezone['abbr'],
+                ':text' => $timezone['text'],
+            ]);
+        }
+
+        return $text . "\nДля напоминаний используйте буквенный код, например MSK (Moscow), тогда команда будет /alarm MSK 9:00";
     }
 
     /**

@@ -21,16 +21,16 @@ use RepeatBot\Core\ORM\ValueObjects\InactiveUser;
 class LearnNotificationRepository extends EntityRepository
 {
     /**
-     * @return array
+     * @return LearnNotificationCollection
      */
-    public function getUnsentNotifications(): array
+    public function getUnsentNotifications(): LearnNotificationCollection
     {
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('ln')
             ->from('RepeatBot\Core\ORM\Entities\LearnNotification', 'ln')
             ->where('ln.used = 0')
             ->orderBy('ln.createdAt', 'DESC');
-        return $query->getQuery()->getResult();
+        return new LearnNotificationCollection($query->getQuery()->getResult());
     }
 
     /**

@@ -14,6 +14,7 @@ use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Commands\ResetService;
 use RepeatBot\Bot\Service\CommandService\Messages\ResetMessage;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use RepeatBot\Core\Cache;
 use RepeatBot\Core\ORM\Entities\Training;
 use UnitTester;
 
@@ -25,15 +26,15 @@ class ResetServiceTest extends Unit
 {
     protected UnitTester $tester;
     protected EntityManager $em;
+    protected Cache $cache;
 
-    /**
-     * @throws ModuleException
-     */
     protected function _setUp()
     {
-        $this->em = $this->getModule('Doctrine2')->em;
         parent::_setUp();
+        $this->em = $this->getModule('Doctrine2')->em;
+        $this->cache = $this->tester->getCache();
     }
+
     public function testResetValidator(): void
     {
         $chatId = 424242;
@@ -67,7 +68,9 @@ class ResetServiceTest extends Unit
 
     public function testResetMyProgress(): void
     {
-        $chatId = 424242;
+        $id = 4242;
+        $chatId = 42;
+        $type = 'FromEnglish';
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'reset',
@@ -76,6 +79,8 @@ class ResetServiceTest extends Unit
             )
         );
         $this->tester->addCollection($chatId);
+        $this->cache->setTrainingStatusId($chatId, $type, $id);
+        $this->cache->setTrainingStatus($chatId, $type);
         $trainingRepository = $this->em->getRepository(Training::class);
         $trainings = $firstTrainings = $trainingRepository->findBy(['userId' => $chatId]);
         foreach ($trainings as $training) {
@@ -105,11 +110,15 @@ class ResetServiceTest extends Unit
 
         $trainingsAfterReset = $trainingRepository->findBy(['userId' => $chatId]);
         $this->assertEquals($firstTrainings, $trainingsAfterReset);
+        $this->assertEquals(null, $this->cache->checkTrainings($chatId));
+        $this->assertEquals(null, $this->cache->checkTrainingsStatus($chatId));
     }
 
     public function testResetMyProgressForCollection(): void
     {
-        $chatId = 424242;
+        $id = 4242;
+        $chatId = 42;
+        $type = 'FromEnglish';
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'reset',
@@ -118,6 +127,10 @@ class ResetServiceTest extends Unit
             )
         );
         $this->tester->addCollection($chatId, 2);
+        $this->cache->setTrainingStatusId($chatId, $type, $id);
+        $this->cache->setTrainingStatus($chatId, $type);
+        $this->assertEquals($type, $this->cache->checkTrainings($chatId));
+        $this->assertEquals($type, $this->cache->checkTrainingsStatus($chatId));
         $trainingRepository = $this->em->getRepository(Training::class);
         $trainings = $firstTrainings = $trainingRepository->findBy(['userId' => $chatId]);
         foreach ($trainings as $training) {
@@ -147,5 +160,7 @@ class ResetServiceTest extends Unit
 
         $trainingsAfterReset = $trainingRepository->findBy(['userId' => $chatId]);
         $this->assertEquals($firstTrainings, $trainingsAfterReset);
+        $this->assertEquals(null, $this->cache->checkTrainings($chatId));
+        $this->assertEquals(null, $this->cache->checkTrainingsStatus($chatId));
     }
 }

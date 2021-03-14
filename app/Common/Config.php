@@ -25,7 +25,7 @@ class Config
     public function __construct(array $config = [])
     {
         if (empty($config)) {
-            $config = include_once __DIR__ . '/../../config/app.php';
+            $config = include '/app/config/app.php';
         }
 
         $this->config = new Dot($config);

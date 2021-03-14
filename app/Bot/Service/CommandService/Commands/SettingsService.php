@@ -4,12 +4,7 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService\Commands;
 
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Exception;
-use Longman\TelegramBot\Entities\InlineKeyboard;
-use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;

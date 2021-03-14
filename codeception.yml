@@ -6,6 +6,7 @@ suites:
       enabled:
         - Asserts
         - \Helper\Unit
+        - \Helper\HaveEntity
         - Doctrine2:
             connection_callback: [ Helper\ORM, getEntityManager ]
       step_decorators: ~

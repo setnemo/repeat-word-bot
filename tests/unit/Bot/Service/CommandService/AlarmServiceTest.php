@@ -97,7 +97,7 @@ class AlarmServiceTest extends Unit
         $entity->setCreatedAt($created);
         $entity->setUpdatedAt($updated);
 
-        $this->tester->haveLearnNotificationPersonalInDatabase($entity);
+        $this->tester->haveLearnNotificationPersonalEntity($entity);
 
         $command = new CommandService(
             options: new CommandOptions(
