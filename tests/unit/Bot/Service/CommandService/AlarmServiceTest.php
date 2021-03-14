@@ -162,7 +162,7 @@ class AlarmServiceTest extends Unit
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'alarm',
-                payload: explode(' ', $time),
+                payload: explode(' ', "{$tz} {$time}"),
                 chatId: $chatId,
             )
         );
