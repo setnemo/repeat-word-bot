@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService\Validators;
 
+use RepeatBot\Bot\Service\CommandService\Messages\ResetMessage;
+
 /**
  * Class ResetProgressValidator
  * @package RepeatBot\Bot\Service\CommandService\Validators
@@ -15,7 +17,6 @@ class ResetProgressValidator extends DelProgressValidator
      */
     protected function getErrorText(): string
     {
-        return "`Сброс прогресса:`\nИспользуйте команду `/reset collection <number>` или " .
-            "`/reset collection <number>`. Будьте осторожны, сброс не обратим";
+        return ResetMessage::ERROR_TEXT;
     }
 }

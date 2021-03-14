@@ -44,11 +44,6 @@ jobs:
           docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept build
       - name: Run test suite
         run: |
-          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:clear-cache:metadata 2> /dev/null | true
-          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:clear-cache:query 2> /dev/null | true
-          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:clear-cache:result 2> /dev/null | true
-          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/doctrine orm:generate-proxies 2> /dev/null | true
-          docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept build 2> /dev/null | true
           docker-compose -f docker-compose.github.actions.yml exec -T repeatt vendor/bin/codecept run --coverage-xml --xml
       - name: Changes path in output files after tests in docker with coverage to relative github actions path
         run: |

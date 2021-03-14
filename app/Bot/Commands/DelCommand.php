@@ -13,6 +13,7 @@ use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 /**
  * Class DelCommand
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\DelService
  * @package Longman\TelegramBot\Commands\SystemCommand
  */
 class DelCommand extends SystemCommand

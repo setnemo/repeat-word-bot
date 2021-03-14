@@ -11,6 +11,7 @@ use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 /**
  * Class TrainingCommand
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\TrainingService
  * @package Longman\TelegramBot\Commands\SystemCommand
  */
 class TrainingCommand extends SystemCommand

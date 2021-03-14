@@ -12,6 +12,7 @@ use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 /**
  * Class AlarmCommand
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\AlarmService
  * @package Longman\TelegramBot\Commands\SystemCommand
  */
 class AlarmCommand extends SystemCommand

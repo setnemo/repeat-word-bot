@@ -11,7 +11,8 @@ use RepeatBot\Bot\Service\CommandService\CommandOptions;
 
 /**
  * Class HelpCommand
- * @package Longman\TelegramBot\Commands\SystemCommand
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\HelpService
+ * @package Longman\TelegramBot\Commands\SystemCommands
  */
 class HelpCommand extends SystemCommand
 {
