@@ -52,7 +52,6 @@ class ExportService extends BaseDefaultCommandService
             'chat_id' => $this->getOptions()->getChatId(),
             'text' => ExportMessage::EXPORT_TEXT,
             'parse_mode' => 'markdown',
-            'disable_web_page_preview' => true,
             'disable_notification' => 1,
         ]));
 

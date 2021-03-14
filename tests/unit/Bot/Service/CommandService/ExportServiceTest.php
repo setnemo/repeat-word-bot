@@ -4,21 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Bot\Service\CommandService;
 
-use Codeception\Exception\ModuleException;
 use Codeception\Test\Unit;
 use Doctrine\ORM\EntityManager;
 use Longman\TelegramBot\Entities\Keyboard;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
-use RepeatBot\Bot\Service\CommandService\Commands\DelService;
 use RepeatBot\Bot\Service\CommandService\Commands\ExportService;
-use RepeatBot\Bot\Service\CommandService\Messages\DelMessage;
 use RepeatBot\Bot\Service\CommandService\Messages\ExportMessage;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
-use RepeatBot\Core\Cache;
 use RepeatBot\Core\ORM\Entities\Export;
-use RepeatBot\Core\ORM\Entities\Training;
 use UnitTester;
 
 /**
@@ -77,6 +72,41 @@ class ExportServiceTest extends Unit
         ], $error->getData());
     }
 
+    /**
+     * @dataProvider successProvider
+     *
+     * @param array $example
+     */
+    public function testExportSuccess(array $example): void
+    {
+        $chatId = 42;
+        $command = new CommandService(
+            options: new CommandOptions(
+                command: 'export',
+                payload: explode(' ', $example['payload']),
+                chatId: $chatId,
+            )
+        );
+
+        $service = $command->makeService();
+        $this->assertInstanceOf(ExportService::class, $service);
+        $service->execute();
+        $response = $service->showResponses();
+        /** @var ResponseDirector $error */
+        $error = $response[0];
+        $this->assertInstanceOf(ResponseDirector::class, $error);
+        $this->assertEquals('sendMessage', $error->getType());
+        $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
+        $keyboard->setResizeKeyboard(true);
+        $this->assertEquals([
+            'chat_id' => $chatId,
+            'text' => ExportMessage::EXPORT_TEXT,
+            'parse_mode' => 'markdown',
+            'disable_notification' => 1,
+        ], $error->getData());
+        $this->tester->seeInRepository(Export::class, ['chatId' => $chatId]);
+    }
+
     public function errorProvider(): array
     {
         return [
@@ -84,7 +114,17 @@ class ExportServiceTest extends Unit
             [['payload' => 'first', 'message' => ExportMessage::ERROR_INVALID_PAYLOAD_TEXT, 'haveExport' => false]],
             [['payload' => 'FromEnglish', 'message' => ExportMessage::ERROR_INVALID_PAYLOAD_TEXT, 'haveExport' => false]],
             [['payload' => 'FromEnglish 1', 'message' => ExportMessage::ERROR_INVALID_PAYLOAD_TEXT, 'haveExport' => false]],
+            [['payload' => 'FromEnglish first', 'message' => ExportMessage::ERROR_HAVE_EXPORT_TEXT, 'haveExport' => true]],
             [['payload' => '', 'message' => ExportMessage::ERROR_HAVE_EXPORT_TEXT, 'haveExport' => true]],
+        ];
+    }
+
+    public function successProvider(): array
+    {
+        return [
+            [['payload' => '']],
+            [['payload' => 'FromEnglish first']],
+            [['payload' => 'ToEnglish first']],
         ];
     }
 }
