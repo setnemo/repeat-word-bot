@@ -11,9 +11,6 @@ use RepeatBot\Core\Database;
 
 class ORM extends Singleton
 {
-    /**
-     * @var EntityManager|null
-     */
     private static ?EntityManager $entityManager = null;
 
     final public static function getEntityManager(): EntityManager

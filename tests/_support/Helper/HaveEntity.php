@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Helper;
 
+use Doctrine\ORM\EntityManager;
+use RepeatBot\Core\App;
+use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\Collection;
 use RepeatBot\Core\ORM\Entities\Export;
 use RepeatBot\Core\ORM\Entities\LearnNotification;
@@ -15,7 +18,7 @@ use RepeatBot\Core\ORM\Entities\Version;
 use RepeatBot\Core\ORM\Entities\VersionNotification;
 use RepeatBot\Core\ORM\Entities\Word;
 
-class HaveInDatabase extends ORM
+class HaveEntity extends Unit
 {
     public function haveWordEntity(Word $entity): Word
     {
@@ -76,7 +79,7 @@ class HaveInDatabase extends ORM
      */
     private function updateEntity(object $entity): object
     {
-        $em = self::getEntityManager();
+        $em = ORM::getEntityManager();
         $em->persist($entity);
         $em->flush();
 

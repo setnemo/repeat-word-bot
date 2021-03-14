@@ -96,7 +96,7 @@ class SettingsVoicesService extends BaseDefaultCommandService
 
         $this->addStackMessage(new ResponseDirector('sendVoice', [
             'chat_id' => $userId,
-            'voice' => Request::encodeFile('/app/words/example/' . $num . '.mp3'),
+            'voice' => Request::encodeFile('/app/resource/example/' . $num . '.mp3'),
             'caption' => 'Example ' . BotHelper::getVoices()[$num],
             'disable_notification' => 1,
         ]));

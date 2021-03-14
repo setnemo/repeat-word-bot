@@ -7,6 +7,7 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 use Exception;
 use Longman\TelegramBot\Entities\Keyboard;
 use RepeatBot\Bot\BotHelper;
+use RepeatBot\Bot\Service\CommandService\Messages\TrainingMessage;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 
 /**
@@ -30,7 +31,7 @@ class TrainingService extends BaseDefaultCommandService
                 'sendMessage',
                 [
                     'chat_id' => $this->getOptions()->getChatId(),
-                    'text' => 'Пожалуйста выберете режим тренировки:',
+                    'text' => TrainingMessage::CHOOSE_TEXT,
                     'parse_mode' => 'markdown',
                     'disable_web_page_preview' => true,
                     'reply_markup' => $keyboard,

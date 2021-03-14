@@ -14,6 +14,7 @@ use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Commands\DelService;
 use RepeatBot\Bot\Service\CommandService\Messages\DelMessage;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use RepeatBot\Core\Cache;
 use RepeatBot\Core\ORM\Entities\Training;
 use UnitTester;
 
@@ -25,14 +26,13 @@ class DelServiceTest extends Unit
 {
     protected UnitTester $tester;
     protected EntityManager $em;
+    protected Cache $cache;
 
-    /**
-     * @throws ModuleException
-     */
     protected function _setUp()
     {
-        $this->em = $this->getModule('Doctrine2')->em;
         parent::_setUp();
+        $this->em = $this->getModule('Doctrine2')->em;
+        $this->cache = $this->tester->getCache();
     }
 
     public function testDelValidator(): void
@@ -68,7 +68,9 @@ class DelServiceTest extends Unit
 
     public function testDelMyProgress(): void
     {
+        $id = 4242;
         $chatId = 42;
+        $type = 'FromEnglish';
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'del',
@@ -77,6 +79,10 @@ class DelServiceTest extends Unit
             )
         );
         $this->tester->addCollection($chatId);
+        $this->cache->setTrainingStatusId($chatId, $type, $id);
+        $this->cache->setTrainingStatus($chatId, $type);
+        $this->assertEquals($type, $this->cache->checkTrainings($chatId));
+        $this->assertEquals($type, $this->cache->checkTrainingsStatus($chatId));
         $service = $command->makeService();
         $this->assertInstanceOf(DelService::class, $service);
 
@@ -100,11 +106,15 @@ class DelServiceTest extends Unit
         $trainingRepository = $this->em->getRepository(Training::class);
         $trainings = $trainingRepository->findBy(['userId' => $chatId]);
         $this->assertEquals([], $trainings);
+        $this->assertEquals(null, $this->cache->checkTrainings($chatId));
+        $this->assertEquals(null, $this->cache->checkTrainingsStatus($chatId));
     }
 
     public function testDelCollection(): void
     {
-        $chatId = 4242;
+        $id = 4242;
+        $chatId = 42;
+        $type = 'FromEnglish';
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'del',
@@ -113,6 +123,10 @@ class DelServiceTest extends Unit
             )
         );
         $this->tester->addCollection($chatId);
+        $this->cache->setTrainingStatusId($chatId, $type, $id);
+        $this->cache->setTrainingStatus($chatId, $type);
+        $this->assertEquals($type, $this->cache->checkTrainings($chatId));
+        $this->assertEquals($type, $this->cache->checkTrainingsStatus($chatId));
         $service = $command->makeService();
         $this->assertInstanceOf(DelService::class, $service);
 
@@ -136,5 +150,7 @@ class DelServiceTest extends Unit
         $trainingRepository = $this->em->getRepository(Training::class);
         $trainings = $trainingRepository->findBy(['userId' => $chatId]);
         $this->assertEquals([], $trainings);
+        $this->assertEquals(null, $this->cache->checkTrainings($chatId));
+        $this->assertEquals(null, $this->cache->checkTrainingsStatus($chatId));
     }
 }

@@ -6,7 +6,9 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
+use RepeatBot\Bot\Service\CommandService\Messages\ExportMessage;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\Export;
@@ -41,19 +43,19 @@ class ExportService extends BaseDefaultCommandService
             $this->exportRepository->create($this->getOptions()->getChatId(), $this->getOptions()->getChatId(), 'FromEnglish');
         } elseif (
             count($array) == 2 &&
-            in_array($array[0], ['FromEnglish','ToEnglish']) &&
-            in_array($array[1], ['first','second','third','fourth','fifth','sixth','never'])
+            in_array($array[0], BotHelper::getTrainingTypes()) &&
+            in_array($array[1], BotHelper::getTrainingStatuses())
         ) {
             $this->exportRepository->create($this->getOptions()->getChatId(), $this->getOptions()->getChatId(), $array[0] . '_' . $array[1]);
         }
-
         $this->setResponse(new ResponseDirector('sendMessage', [
             'chat_id' => $this->getOptions()->getChatId(),
-            'text' => "Создание экспорта поставлено в очередь. Как только файл будет готов вы получите его в личном сообщении.",
+            'text' => ExportMessage::EXPORT_TEXT,
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'disable_notification' => 1,
         ]));
+
         return $this;
     }
 }

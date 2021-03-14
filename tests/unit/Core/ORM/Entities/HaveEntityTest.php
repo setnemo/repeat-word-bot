@@ -59,7 +59,7 @@ final class HaveEntityTest extends Unit
         $entity->setTranslate($translate);
         $entity->setCreatedAt($created);
 
-        $this->tester->haveWordInDatabase($entity);
+        $this->tester->haveWordEntity($entity);
 
         $version = $this->em->find(Word::class, $entity->getId());
 
@@ -86,7 +86,7 @@ final class HaveEntityTest extends Unit
         $entity->setVersion($versionText);
         $entity->setCreatedAt($created);
         $entity->setDescription($description);
-        $this->tester->haveVersionInDatabase($entity);
+        $this->tester->haveVersionEntity($entity);
 
         $version = $this->em->find(Version::class, $entity->getId());
 
@@ -111,7 +111,7 @@ final class HaveEntityTest extends Unit
         $entity->setChatId($chatId);
         $entity->setVersionId($versionId);
         $entity->setCreatedAt($created);
-        $this->tester->haveVersionNotificationInDatabase($entity);
+        $this->tester->haveVersionNotificationEntity($entity);
 
         $versionNotification = $this->em->find(VersionNotification::class, $entity->getId());
 
@@ -139,7 +139,7 @@ final class HaveEntityTest extends Unit
         $entity->setUsed($used);
         $entity->setCreatedAt($created);
         $entity->setUpdatedAt($updated);
-        $this->tester->haveUserVoiceInDatabase($entity);
+        $this->tester->haveUserVoiceEntity($entity);
 
         $userVoice = $this->em->find(UserVoice::class, $entity->getId());
 
@@ -167,7 +167,7 @@ final class HaveEntityTest extends Unit
         $entity->setSilent($silent);
         $entity->setDeleted($deleted);
         $entity->setDeletedAt($deletedAt);
-        $this->tester->haveUserNotificationInDatabase($entity);
+        $this->tester->haveUserNotificationEntity($entity);
 
         $userNotification = $this->em->find(UserNotification::class, $entity->getId());
 
@@ -188,7 +188,7 @@ final class HaveEntityTest extends Unit
         $word->setWord('tmp');
         $word->setCollectionId(37);
         $word->setTranslate('tmp');
-        $this->tester->haveWordInDatabase($word);
+        $this->tester->haveWordEntity($word);
 
         $userId = 42;
         $collectionId = 1;
@@ -208,7 +208,7 @@ final class HaveEntityTest extends Unit
         $entity->setCreatedAt($created);
         $entity->setUpdatedAt($updated);
 
-        $this->tester->haveTrainingInDatabase($entity);
+        $this->tester->haveTrainingEntity($entity);
 
         $training = $this->em->find(Training::class, $entity->getId());
 
@@ -244,7 +244,7 @@ final class HaveEntityTest extends Unit
         $entity->setCreatedAt($created);
         $entity->setUpdatedAt($updated);
 
-        $this->tester->haveLearnNotificationPersonalInDatabase($entity);
+        $this->tester->haveLearnNotificationPersonalEntity($entity);
 
         $training = $this->em->find(LearnNotificationPersonal::class, $entity->getId());
 
@@ -278,7 +278,7 @@ final class HaveEntityTest extends Unit
         $entity->setCreatedAt($created);
         $entity->setUpdatedAt($updated);
 
-        $this->tester->haveLearnNotificationInDatabase($entity);
+        $this->tester->haveLearnNotificationEntity($entity);
 
         $learnNotification = $this->em->find(LearnNotification::class, $entity->getId());
 
@@ -312,7 +312,7 @@ final class HaveEntityTest extends Unit
         $entity->setCreatedAt($created);
         $entity->setUpdatedAt($updated);
 
-        $this->tester->haveExportInDatabase($entity);
+        $this->tester->haveExportEntity($entity);
 
         $export = $this->em->find(Export::class, $entity->getId());
 
@@ -338,7 +338,7 @@ final class HaveEntityTest extends Unit
         $entity->setName($name);
         $entity->setCreatedAt($created);
 
-        $this->tester->haveCollectionInDatabase($entity);
+        $this->tester->haveCollectionEntity($entity);
 
         $export = $this->em->find(Collection::class, $entity->getId());
 

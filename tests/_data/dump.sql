@@ -1,6 +1,9 @@
 CREATE DATABASE IF NOT EXISTS test_db;
 
 use test_db;
+SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'NO_ZERO_DATE',''));
+
 -- MySQL dump 10.13  Distrib 5.7.22, for Linux (x86_64)
 --
 -- Host: localhost    Database: repeat
