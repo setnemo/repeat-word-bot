@@ -21,8 +21,9 @@ class TrainingCollection extends ArrayCollection
     public function getRandomEntity(): ?Training
     {
         $random = 0;
+        $count = $this->count() - 1;
         try {
-            $random = random_int(0, $this->count() - 1);
+            $random = random_int(0, $count > -1 ? $count : 0);
         } catch (\Exception $e) {
             Log::getInstance()->getLogger()->error('Fail random_int: ' . $e->getMessage());
         }

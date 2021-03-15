@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Bot\Service\CommandService;
 
+use Carbon\Carbon;
 use Codeception\Test\Unit;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\Entity;
 use Google\Cloud\TextToSpeech\V1\AudioConfig;
 use Google\Cloud\TextToSpeech\V1\SynthesisInput;
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
@@ -14,12 +16,14 @@ use Longman\TelegramBot\Entities\Keyboard;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService;
 use RepeatBot\Bot\Service\CommandService\CommandOptions;
+use RepeatBot\Bot\Service\CommandService\Commands\DelService;
 use RepeatBot\Bot\Service\CommandService\Commands\TrainingService;
 use RepeatBot\Bot\Service\CommandService\Commands\TranslateTrainingService;
 use RepeatBot\Bot\Service\CommandService\Messages\TrainingMessage;
 use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 use RepeatBot\Bot\Service\GoogleTextToSpeechService;
 use RepeatBot\Core\Cache;
+use RepeatBot\Core\ORM\Entities\Training;
 use RepeatBot\Core\ORM\Entities\Word;
 use UnitTester;
 
@@ -52,10 +56,12 @@ class TranslateTrainingServiceTest extends Unit
             true,
         );
     }
+
     protected function _after()
     {
         $this->tester->removeFakeMp3s();
     }
+
     /**
      * @param array $example
      * @dataProvider trainingProvider
@@ -135,6 +141,43 @@ class TranslateTrainingServiceTest extends Unit
         $data = $response[0];
         $payload = $data->getData();
         $this->tester->assertStringContainsString('Слово пропущено на 1 год!', $payload['caption']);
+    }
+
+    public function testEmptyVocabulary(): void
+    {
+        (new CommandService(
+            options: new CommandOptions(
+                command: 'del',
+                payload: explode(' ', 'my progress'),
+                chatId: $this->chatId,
+            )
+        ))->makeService()->execute();
+
+        $service = $this->makeTraining('From English', true)->makeService();
+        $this->assertInstanceOf(TranslateTrainingService::class, $service);
+        $service->execute();
+        $response = $service->showResponses();
+        $data = $response[0];
+        $payload = $data->getData();
+        $this->tester->assertStringContainsString(
+            'У вас нет слов для изучения. Зайдите в раздел Коллекции и добавьте себе слова для тренировок',
+            $payload['text']
+        );
+    }
+
+    public function testNotHaveTrainingNow(): void
+    {
+        $this->tester->updateAllTrainingStatuses($this->chatId, 'FromEnglish');
+        $service = $this->makeTraining('From English', true)->makeService();
+        $this->assertInstanceOf(TranslateTrainingService::class, $service);
+        $service->execute();
+        $response = $service->showResponses();
+        $data = $response[0];
+        $payload = $data->getData();
+        $this->tester->assertStringContainsString(
+            'В тренировке `FromEnglish` ближайшее слово для изучения - ',
+            $payload['text']
+        );
     }
 
     public function testStopTraining(): void
@@ -222,5 +265,38 @@ class TranslateTrainingServiceTest extends Unit
             [['text' => 'p',]],
             [['text' => 'х',]],
         ];
+    }
+
+    /**
+     * @param string $type
+     * @param string $status
+     *
+     * @return Training
+     */
+    private function getTrainingEntity(string $type, string $status): Training
+    {
+        $word = new Word();
+        $word->setWord('tmp_word');
+        $word->setCollectionId(37);
+        $word->setTranslate('tmp_translate');
+        $this->tester->haveWordEntity($word);
+
+        $userId = 42;
+        $collectionId = 1;
+        $next = Carbon::now()->addDay();
+        $created = Carbon::now();
+        $updated = Carbon::now();
+
+        $entity = new Training();
+        $entity->setWord($word);
+        $entity->setUserId($userId);
+        $entity->setCollectionId($collectionId);
+        $entity->setType($type);
+        $entity->setStatus($status);
+        $entity->setNext($next);
+        $entity->setCreatedAt($created);
+        $entity->setUpdatedAt($updated);
+
+        return $entity;
     }
 }
