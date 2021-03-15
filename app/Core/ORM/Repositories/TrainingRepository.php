@@ -151,9 +151,17 @@ class TrainingRepository extends EntityRepository
         return new TrainingCollection($this->findBy(['userId' => $userId, 'type' => $type]));
     }
 
+    /**
+     * @param Training $training
+     * @param bool     $never
+     *
+     * @return Training
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function upStatusTraining(Training $training, bool $never = false): Training
     {
-        $newStatus = $this->getNewStatus($training, $never);
+        $newStatus = BotHelper::getNewStatus($training, $never);
 
         $training->setStatus($newStatus['status']);
         $training->setNext(Carbon::now(Database::DEFAULT_TZ)->addMinutes($newStatus['repeat']));
@@ -330,48 +338,6 @@ class TrainingRepository extends EntityRepository
     private function getMessageForInactiveUser(): string
     {
         return "Не останавливайся! Продолжи свою тренировку прямо сейчас!";
-    }
-
-    /**
-     * @param Training $training
-     * @param bool     $never
-     *
-     * @return array
-     */
-    private function getNewStatus(Training $training, bool $never = false): array
-    {
-        $status = $never === false ? $training->getStatus() : 'never';
-
-        return match($status) {
-            'second' => [
-                'status' => 'third',
-                'repeat' => 3 * 24 * 60,
-            ],
-            'third' => [
-                'status' => 'fourth',
-                'repeat' => 7 * 24 * 60,
-            ],
-            'fourth' => [
-                'status' => 'fifth',
-                'repeat' => 30 * 24 * 60,
-            ],
-            'fifth' => [
-                'status' => 'sixth',
-                'repeat' => 90 * 24 * 60,
-            ],
-            'sixth' => [
-                'status' => 'never',
-                'repeat' => 180 * 24 * 60,
-            ],
-            'never' => [
-                'status' => 'never',
-                'repeat' => 360 * 24 * 60,
-            ],
-            default => [
-                'status' => 'second',
-                'repeat' => 24 * 60,
-            ],
-            };
     }
 
     /**

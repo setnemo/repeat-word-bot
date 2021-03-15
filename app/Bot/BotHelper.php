@@ -7,6 +7,7 @@ namespace RepeatBot\Bot;
 use JetBrains\PhpStorm\ArrayShape;
 use Longman\TelegramBot\Entities\InlineKeyboard;
 use RepeatBot\Bot\Service\CommandService\Messages\SettingsMessage;
+use RepeatBot\Core\ORM\Entities\Training;
 
 class BotHelper
 {
@@ -104,6 +105,48 @@ class BotHelper
             'sixth',
             'never'
         ];
+    }
+
+    /**
+     * @param Training $training
+     * @param bool     $never
+     *
+     * @return array
+     */
+    public static function getNewStatus(Training $training, bool $never = false): array
+    {
+        $status = $never === false ? $training->getStatus() : 'never';
+
+        return match($status) {
+            'second' => [
+                'status' => 'third',
+                'repeat' => 3 * 24 * 60,
+            ],
+            'third' => [
+                'status' => 'fourth',
+                'repeat' => 7 * 24 * 60,
+            ],
+            'fourth' => [
+                'status' => 'fifth',
+                'repeat' => 30 * 24 * 60,
+            ],
+            'fifth' => [
+                'status' => 'sixth',
+                'repeat' => 90 * 24 * 60,
+            ],
+            'sixth' => [
+                'status' => 'never',
+                'repeat' => 180 * 24 * 60,
+            ],
+            'never' => [
+                'status' => 'never',
+                'repeat' => 360 * 24 * 60,
+            ],
+            default => [
+                'status' => 'second',
+                'repeat' => 24 * 60,
+            ],
+            };
     }
 
     /**
