@@ -286,7 +286,7 @@ final class Bot extends Singleton
     private function register(Config $config, string $prefix): void
     {
         /** @var Client $cache */
-        $cache = Cache::getInstance()->getRedis();
+        $cache = Cache::getInstance()->init($config)->getRedis();
         $key = $prefix . '_registered';
         if (!$cache->exists($key)) {
             $this->telegram->deleteWebhook();

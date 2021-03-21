@@ -9,6 +9,7 @@ use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
+use RepeatBot\Core\Metric;
 use TelegramBot\CommandWrapper\Command\BaseDefaultCommandService as DefaultCommandService;
 use TelegramBot\CommandWrapper\Command\CommandInterface;
 use TelegramBot\CommandWrapper\Command\CommandOptions;
@@ -29,6 +30,7 @@ abstract class BaseDefaultCommandService extends DefaultCommandService
         parent::__construct($options);
         $config = App::getInstance()->getConfig();
         $this->cache = Cache::getInstance()->init($config);
+        Metric::getInstance()->init($config)->increaseMetric('usage');
     }
 
     /**
