@@ -9,10 +9,10 @@ use Doctrine\ORM\EntityManager;
 use Longman\TelegramBot\Entities\Keyboard;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Commands\ExportService;
 use RepeatBot\Bot\Service\CommandService\Messages\ExportMessage;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Core\ORM\Entities\Export;
 use UnitTester;
 

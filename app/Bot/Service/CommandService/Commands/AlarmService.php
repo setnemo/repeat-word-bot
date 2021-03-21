@@ -6,9 +6,10 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Exception;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\LearnNotificationPersonal;
 use RepeatBot\Core\ORM\Repositories\LearnNotificationPersonalRepository;
@@ -36,7 +37,9 @@ class AlarmService extends BaseDefaultCommandService
 
     /**
      * {@inheritDoc}
-     * @throws Exception
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SupportTypeException
      */
     public function execute(): CommandInterface
     {
@@ -53,7 +56,7 @@ class AlarmService extends BaseDefaultCommandService
     }
 
     /**
-     * @throws Exception
+     * @throws SupportTypeException
      */
     private function executeAlarmListCommand(): void
     {
@@ -82,7 +85,7 @@ class AlarmService extends BaseDefaultCommandService
     }
 
     /**
-     * @throws Exception
+     * @throws SupportTypeException
      */
     private function executeAlarmResetCommand(): void
     {
@@ -104,7 +107,7 @@ class AlarmService extends BaseDefaultCommandService
     /**
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws Exception
+     * @throws SupportTypeException
      */
     private function executeSetAlarmCommand(): void
     {

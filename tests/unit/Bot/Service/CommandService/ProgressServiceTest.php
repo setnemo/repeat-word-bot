@@ -9,10 +9,10 @@ use Codeception\Test\Unit;
 use Doctrine\ORM\EntityManager;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Commands\ProgressService;
 use RepeatBot\Bot\Service\CommandService\Messages\ProgressMessage;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Core\ORM\Entities\Training;
 use UnitTester;
 

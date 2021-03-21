@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1815fe3721dd0c141cf8f2135c9cd990",
+    "content-hash": "1db4ead819efb74c153d9377c9d20db8",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -2245,6 +2245,47 @@
                 }
             ],
             "time": "2021-02-24T17:30:44+00:00"
+        },
+        {
+            "name": "omentes/telegram-bot-command-wrapper",
+            "version": "0.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/omentes/telegram-bot-command-wrapper.git",
+                "reference": "10647a986cf8ef6ecd761c1281cf4c2e8e10597a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/omentes/telegram-bot-command-wrapper/zipball/10647a986cf8ef6ecd761c1281cf4c2e8e10597a",
+                "reference": "10647a986cf8ef6ecd761c1281cf4c2e8e10597a",
+                "shasum": ""
+            },
+            "require": {
+                "longman/telegram-bot": "^0.70.1",
+                "php": ">=8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "TelegramBot\\CommandWrapper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "omentes",
+                    "email": "setnemo@gmail.com"
+                }
+            ],
+            "description": "Useful command wrapper for longman/telegram-bot",
+            "support": {
+                "issues": "https://github.com/omentes/telegram-bot-command-wrapper/issues",
+                "source": "https://github.com/omentes/telegram-bot-command-wrapper/tree/0.0.4"
+            },
+            "time": "2021-03-21T16:11:19+00:00"
         },
         {
             "name": "paragonie/random_compat",

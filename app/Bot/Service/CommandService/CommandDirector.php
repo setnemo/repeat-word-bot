@@ -6,9 +6,7 @@ namespace RepeatBot\Bot\Service\CommandService;
 
 use RepeatBot\Bot\Service\CommandService\Commands\AlarmService;
 use RepeatBot\Bot\Service\CommandService\Commands\CollectionService;
-use RepeatBot\Bot\Service\CommandService\Commands\CommandInterface;
 use RepeatBot\Bot\Service\CommandService\Commands\DelService;
-use RepeatBot\Bot\Service\CommandService\Commands\EmptyCallbackService;
 use RepeatBot\Bot\Service\CommandService\Commands\ExportService;
 use RepeatBot\Bot\Service\CommandService\Commands\HelpService;
 use RepeatBot\Bot\Service\CommandService\Commands\ProgressService;
@@ -25,26 +23,12 @@ use RepeatBot\Bot\Service\CommandService\Validators\AlarmValidator;
 use RepeatBot\Bot\Service\CommandService\Validators\DelProgressValidator;
 use RepeatBot\Bot\Service\CommandService\Validators\ExportValidator;
 use RepeatBot\Bot\Service\CommandService\Validators\ResetProgressValidator;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Service\EmptyCallbackService;
 
-class CommandDirector
+class CommandDirector extends \TelegramBot\CommandWrapper\Command\CommandDirector
 {
-    /**
-     * CommandDirector constructor.
-     *
-     * @param CommandOptions $options
-     */
-    public function __construct(protected CommandOptions $options)
-    {
-    }
-
-    /**
-     * @return CommandOptions
-     */
-    public function getOptions(): CommandOptions
-    {
-        return $this->options;
-    }
-
     /**
      * @return CommandInterface
      */

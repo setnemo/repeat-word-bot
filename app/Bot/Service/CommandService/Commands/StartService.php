@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService\Commands;
 
-use Exception;
 use Longman\TelegramBot\Entities\Keyboard;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\Messages\StartMessage;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 
 /**
  * Class StartService
@@ -18,7 +19,7 @@ class StartService extends BaseDefaultCommandService
 {
     /**
      * {@inheritDoc}
-     * @throws Exception
+     * @throws SupportTypeException
      */
     public function execute(): CommandInterface
     {

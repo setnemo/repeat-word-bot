@@ -6,10 +6,10 @@ namespace Tests\Unit\Bot\Service\CommandService;
 
 use Codeception\Test\Unit;
 use RepeatBot\Bot\Service\CommandService;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Commands\HelpService;
 use RepeatBot\Bot\Service\CommandService\Messages\HelpMessage;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use TelegramBot\CommandWrapper\ResponseDirector;
 use UnitTester;
 
 /**

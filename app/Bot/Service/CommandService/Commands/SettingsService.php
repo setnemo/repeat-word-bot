@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService\Commands;
 
-use Exception;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use RepeatBot\Bot\BotHelper;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\UserNotification;
 use RepeatBot\Core\ORM\Entities\UserVoice;
@@ -38,7 +41,9 @@ class SettingsService extends BaseDefaultCommandService
 
     /**
      * {@inheritDoc}
-     * @throws Exception
+     * @throws SupportTypeException
+     * @throws OptimisticLockException
+     * @throws ORMException
      */
     public function execute(): CommandInterface
     {

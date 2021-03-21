@@ -107,7 +107,7 @@ orm-proxies:
 
 .PHONY: test-up
 test-up:
-	docker-compose -f docker-compose.github.actions.yml up -d
+	docker-compose -f docker-compose.github.actions.yml up -d  --remove-orphans
 
 .PHONY: test-build-up
 test-build-up:

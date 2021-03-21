@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService\Commands;
 
-use Exception;
 use Longman\TelegramBot\Entities\Keyboard;
+use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Bot\Service\GoogleTextToSpeechService;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\Exception\EmptyVocabularyException;
@@ -39,7 +41,8 @@ class TranslateTrainingService extends BaseDefaultCommandService
 
     /**
      * {@inheritDoc}
-     * @throws Exception
+     * @throws SupportTypeException
+     * @throws TelegramException
      */
     public function execute(): CommandInterface
     {
@@ -139,11 +142,12 @@ class TranslateTrainingService extends BaseDefaultCommandService
 
     /**
      * @param string $type
-     * @param string      $question
-     * @param int         $userId
+     * @param string $question
+     * @param int    $userId
      *
      * @throws EmptyVocabularyException
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws TelegramException
+     * @throws SupportTypeException
      */
     private function newTrainingWord(string $type, string $question, int $userId): void
     {
@@ -217,7 +221,7 @@ class TranslateTrainingService extends BaseDefaultCommandService
      * @param int    $userId
      * @param string $text
      *
-     * @throws Exception
+     * @throws SupportTypeException
      */
     private function saveTextMessage(int $userId, string $text): void
     {

@@ -6,9 +6,11 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 
 use Exception;
 use RepeatBot\Bot\BotHelper;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Messages\ProgressMessage;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\Training;
 use RepeatBot\Core\ORM\Repositories\TrainingRepository;
@@ -35,7 +37,7 @@ class ProgressService extends BaseDefaultCommandService
 
     /**
      * {@inheritDoc}
-     * @throws Exception
+     * @throws SupportTypeException
      */
     public function execute(): CommandInterface
     {

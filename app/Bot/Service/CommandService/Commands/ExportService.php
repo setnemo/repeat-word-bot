@@ -7,9 +7,11 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use RepeatBot\Bot\BotHelper;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Messages\ExportMessage;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\Export;
 use RepeatBot\Core\ORM\Repositories\ExportRepository;
@@ -34,6 +36,7 @@ class ExportService extends BaseDefaultCommandService
      * {@inheritDoc}
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws SupportTypeException
      */
     public function execute(): CommandInterface
     {

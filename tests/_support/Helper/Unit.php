@@ -7,7 +7,7 @@ namespace Helper;
 
 use Carbon\Carbon;
 use RepeatBot\Bot\Service\CommandService;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Core\Cache as CoreCache;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\Training;

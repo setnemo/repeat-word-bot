@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService;
 
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+
 /**
  * Class CallbackQueryDirectorFabric
  * @package RepeatBot\Bot\Service\CommandService\Commands

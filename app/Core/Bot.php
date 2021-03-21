@@ -63,10 +63,7 @@ final class Bot extends Singleton
                     'database' => $config->getKey('database.name'),
                 ]
             );
-            /**
-             *   $this->telegram->enableLimiter();
-             *   $this->getSetUpdateFilter();
-             */
+            $this->register($config, 'repeat-webhook');
         } catch (TelegramException $e) {
             $logger->error($e->getMessage(), $e->getTrace());
         }
@@ -106,7 +103,6 @@ final class Bot extends Singleton
      */
     public function runHook(Config $config): void
     {
-        $this->register($config, 'repeat-webhook');
         try {
             $this->telegram->handle();
             Metric::getInstance()->increaseMetric('webhook');
@@ -295,7 +291,7 @@ final class Bot extends Singleton
         if (!$cache->exists($key)) {
             $this->telegram->deleteWebhook();
             try {
-                $hook_url = $config->getKey('HOOK_HOST');
+                $hook_url = $config->getKey('telegram.hook_host');
                 $result = $this->telegram->setWebhook($hook_url);
                 if ($result->isOk()) {
                     $cache->set($key, $result->getDescription());

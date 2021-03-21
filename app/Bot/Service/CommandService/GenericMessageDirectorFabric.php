@@ -11,6 +11,7 @@ use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\Training;
 use RepeatBot\Core\ORM\Repositories\TrainingRepository;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
 
 /**
  * Class GenericMessageDirectorFabric

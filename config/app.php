@@ -22,6 +22,7 @@ return [
         'bot_name' => getenv('TG_NAME'),
         'admin_id' => getenv('TG_ADMIN_ID'),
         'command_path' => '/app/app/Bot/Commands',
+        'hook_host' => (string) getenv('HOOK_HOST'),
     ],
     'redis' => [
         'host' => getenv('REDIS_HOST'),

@@ -7,9 +7,9 @@ namespace RepeatBot\Bot\Service;
 use Longman\TelegramBot\Entities\ServerResponse;
 use RepeatBot\Bot\Service\CommandService\CallbackQueryDirectorFabric;
 use RepeatBot\Bot\Service\CommandService\CommandDirector;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
-use RepeatBot\Bot\Service\CommandService\Commands\CommandInterface;
 use RepeatBot\Bot\Service\CommandService\GenericMessageDirectorFabric;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
 
 /**
  * Class CommandService

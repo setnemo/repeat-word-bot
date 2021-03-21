@@ -7,21 +7,17 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
-use RepeatBot\Bot\Service\CommandService\Validators\ValidateCommand;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
+use TelegramBot\CommandWrapper\Command\BaseDefaultCommandService as DefaultCommandService;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\ResponseDirector;
+use TelegramBot\CommandWrapper\Validator\ValidateCommand;
 
-abstract class BaseDefaultCommandService implements CommandInterface
+abstract class BaseDefaultCommandService extends DefaultCommandService
 {
-    protected CommandOptions $options;
-
     protected Cache $cache;
-
-    protected array $stack = [];
-
-    protected ?ResponseDirector $response = null;
 
     /**
      * BaseCommandService constructor.
@@ -30,7 +26,7 @@ abstract class BaseDefaultCommandService implements CommandInterface
      */
     public function __construct(CommandOptions $options)
     {
-        $this->options = $options;
+        parent::__construct($options);
         $config = App::getInstance()->getConfig();
         $this->cache = Cache::getInstance()->init($config);
     }

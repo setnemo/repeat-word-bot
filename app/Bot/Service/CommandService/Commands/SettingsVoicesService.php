@@ -11,13 +11,15 @@ use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\UserNotification;
 use RepeatBot\Core\ORM\Entities\UserVoice;
 use RepeatBot\Core\ORM\Repositories\UserNotificationRepository;
 use RepeatBot\Core\ORM\Repositories\UserVoiceRepository;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
 
 /**
  * Class SettingsVoicesService
@@ -43,7 +45,6 @@ class SettingsVoicesService extends BaseDefaultCommandService
 
     /**
      * {@inheritDoc}
-     * @throws Exception
      */
     public function execute(): CommandInterface
     {
@@ -63,7 +64,6 @@ class SettingsVoicesService extends BaseDefaultCommandService
     }
 
     /**
-     * @throws Exception
      */
     private function executeSettingsVoicesStartCommand(): void
     {
@@ -88,7 +88,7 @@ class SettingsVoicesService extends BaseDefaultCommandService
      * @param $num
      *
      * @throws TelegramException
-     * @throws Exception
+     * @throws SupportTypeException
      */
     private function executeSettingsVoicesExampleCommand($num): void
     {
@@ -112,7 +112,7 @@ class SettingsVoicesService extends BaseDefaultCommandService
     /**
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws Exception
+     * @throws SupportTypeException
      */
     private function executeSettingsVoicesBackCommand(): void
     {
@@ -132,7 +132,7 @@ class SettingsVoicesService extends BaseDefaultCommandService
      *
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws Exception
+     * @throws SupportTypeException
      */
     private function executeSettingsVoicesSwitcherCommand(int $num, int $switcher): void
     {

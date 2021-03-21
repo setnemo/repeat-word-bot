@@ -7,8 +7,10 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 use Exception;
 use Longman\TelegramBot\Entities\Keyboard;
 use RepeatBot\Bot\BotHelper;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\Training;
 use RepeatBot\Core\ORM\Repositories\TrainingRepository;
@@ -35,7 +37,7 @@ class ResetService extends BaseDefaultCommandService
 
     /**
      * {@inheritDoc}
-     * @throws Exception
+     * @throws SupportTypeException
      */
     public function execute(): CommandInterface
     {
@@ -51,7 +53,7 @@ class ResetService extends BaseDefaultCommandService
     }
 
     /**
-     * @throws Exception
+     * @throws SupportTypeException
      */
     private function executeResetMyProgressCommand(): void
     {
@@ -79,7 +81,7 @@ class ResetService extends BaseDefaultCommandService
     /**
      * @param int $num
      *
-     * @throws Exception
+     * @throws SupportTypeException
      */
     private function executeResetCollectionCommand(int $num): void
     {

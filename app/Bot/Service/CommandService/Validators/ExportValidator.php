@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace RepeatBot\Bot\Service\CommandService\Validators;
 
 use RepeatBot\Bot\BotHelper;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Messages\ExportMessage;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
+use TelegramBot\CommandWrapper\Validator\ValidateCommand;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\Export;
 use RepeatBot\Core\ORM\Repositories\ExportRepository;
@@ -33,7 +35,7 @@ class ExportValidator implements ValidateCommand
 
     /**
      * {@inheritDoc}
-     * @throws \Exception
+     * @throws SupportTypeException
      */
     public function validate(CommandOptions $options): array
     {
@@ -62,7 +64,7 @@ class ExportValidator implements ValidateCommand
      * @param string         $text
      *
      * @return ResponseDirector[]
-     * @throws \Exception
+     * @throws SupportTypeException
      */
     private function createUserErrorResponse(CommandOptions $options, string $text): array
     {

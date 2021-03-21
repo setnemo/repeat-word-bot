@@ -6,12 +6,10 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Exception;
 use Longman\TelegramBot\Entities\InlineKeyboard;
 use RepeatBot\Bot\BotHelper;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Messages\CollectionMessage;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Collections\WordCollection;
 use RepeatBot\Core\ORM\Entities\Collection;
@@ -20,6 +18,9 @@ use RepeatBot\Core\ORM\Entities\Word;
 use RepeatBot\Core\ORM\Repositories\CollectionRepository;
 use RepeatBot\Core\ORM\Repositories\TrainingRepository;
 use RepeatBot\Core\ORM\Repositories\WordRepository;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 
 class CollectionService extends BaseDefaultCommandService
 {
@@ -47,7 +48,7 @@ class CollectionService extends BaseDefaultCommandService
 
     /**
      * {@inheritDoc}
-     * @throws Exception
+     * @throws SupportTypeException
      */
     public function execute(): CommandInterface
     {
@@ -58,7 +59,7 @@ class CollectionService extends BaseDefaultCommandService
     /**
      * @param bool $edit
      *
-     * @throws Exception
+     * @throws SupportTypeException
      */
     private function executeCollectionCommand(bool $edit = false): void
     {
@@ -91,7 +92,7 @@ class CollectionService extends BaseDefaultCommandService
     /**
      * @param int $id
      *
-     * @throws Exception
+     * @throws SupportTypeException
      */
     private function executeFirstCollectionCommand(int $id): void
     {
@@ -135,7 +136,9 @@ class CollectionService extends BaseDefaultCommandService
      * @param int $id
      *
      * @return string
-     * @throws Exception
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SupportTypeException
      */
     private function executeAddCollectionCommand(int $id): string
     {
@@ -151,7 +154,7 @@ class CollectionService extends BaseDefaultCommandService
      * @param int $id
      *
      * @return string
-     * @throws Exception
+     * @throws SupportTypeException
      */
     private function executeDelCollectionCommand(int $id): string
     {
@@ -173,7 +176,7 @@ class CollectionService extends BaseDefaultCommandService
      * @param int $id
      *
      * @return string
-     * @throws Exception
+     * @throws SupportTypeException
      */
     private function executeResetCollectionCommand(int $id): string
     {
@@ -195,7 +198,7 @@ class CollectionService extends BaseDefaultCommandService
      * @param int $id
      *
      * @return string
-     * @throws Exception
+     * @throws SupportTypeException
      */
     private function editCollectionMessage(int $id): string
     {
@@ -229,7 +232,7 @@ class CollectionService extends BaseDefaultCommandService
      *
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws Exception
+     * @throws SupportTypeException
      */
     private function addNewWords(
         TrainingRepository $trainingRepository,

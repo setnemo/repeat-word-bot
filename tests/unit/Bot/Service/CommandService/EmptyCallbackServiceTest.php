@@ -6,9 +6,9 @@ namespace Tests\Unit\Bot\Service\CommandService;
 
 use Codeception\Test\Unit;
 use RepeatBot\Bot\Service\CommandService;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
-use RepeatBot\Bot\Service\CommandService\Commands\EmptyCallbackService;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\ResponseDirector;
+use TelegramBot\CommandWrapper\Service\EmptyCallbackService;
 use UnitTester;
 
 /**

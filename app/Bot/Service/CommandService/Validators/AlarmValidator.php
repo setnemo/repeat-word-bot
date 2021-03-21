@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace RepeatBot\Bot\Service\CommandService\Validators;
 
 use RepeatBot\Bot\BotHelper;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
 use RepeatBot\Bot\Service\CommandService\Messages\AlarmMessage;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
+use TelegramBot\CommandWrapper\Validator\ValidateCommand;
 
 class AlarmValidator implements ValidateCommand
 {
     /**
      * {@inheritDoc}
+     * @throws SupportTypeException
      */
     public function validate(CommandOptions $options): array
     {

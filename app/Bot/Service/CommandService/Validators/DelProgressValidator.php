@@ -6,14 +6,17 @@ namespace RepeatBot\Bot\Service\CommandService\Validators;
 
 use Longman\TelegramBot\Entities\Keyboard;
 use RepeatBot\Bot\BotHelper;
-use RepeatBot\Bot\Service\CommandService\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Messages\DelMessage;
-use RepeatBot\Bot\Service\CommandService\ResponseDirector;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
+use TelegramBot\CommandWrapper\Validator\ValidateCommand;
 
 class DelProgressValidator implements ValidateCommand
 {
     /**
      * {@inheritDoc}
+     * @throws SupportTypeException
      */
     public function validate(CommandOptions $options): array
     {

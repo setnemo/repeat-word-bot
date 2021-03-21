@@ -17,7 +17,10 @@ $bot = Bot::getInstance();
 $bot->init($config, $logger);
 $metric = Metric::getInstance()->init($config);
 Cache::getInstance()->init($config);
-$bot->runHook($config);
-echo json_encode(
-    ["repeat-bot" => "ok"]
-);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $bot->runHook($config);
+} else {
+    echo json_encode(
+        ["repeat-bot" => "ok"]
+    );
+}
