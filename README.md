@@ -1,4 +1,4 @@
-# Repeat Word Bot v3.0.0
+# Repeat Word Bot v3.0.1
 
 Telegram bot [@RepeatWordBot][0] will help you learn new English words
 
