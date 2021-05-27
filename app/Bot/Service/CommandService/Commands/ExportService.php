@@ -30,7 +30,7 @@ class ExportService extends BaseDefaultCommandService
             ->getEntityManager()
             ->getRepository(Export::class);
         parent::__construct($options);
-        Metric::getInstance()->increaseMetric('export');
+        Metric::getInstance()->init($config)->increaseMetric('export');
     }
 
     /**
