@@ -86,7 +86,7 @@ class ExportQueueService
         $mpdf->SetHTMLHeader($header);
         $mpdf->SetHTMLFooter($footer);
 
-        $mpdf->WriteHTML('<table id="export"><tr><th>№ п.п.</th><th>Слово</th><th>Перевод</th></tr>');
+        $mpdf->WriteHTML('<table id="export"><tr><th>№ п.п.</th><th>Слово</th><th>Переклад</th></tr>');
         foreach ($trainings as $id => $training) {
             $mpdf->WriteHTML(strtr("<tr><td>:number</td><td>:word</td><td>:translate</td></tr>", [
                 ':number' => ((int)$id) + 1,

@@ -94,10 +94,7 @@ class TranslateTrainingService extends BaseDefaultCommandService
      */
     private function getFormattedText(): string
     {
-        $text = mb_strtolower($this->getOptions()->getText());
-        $text = preg_replace('/(ё)/i', 'е', $text);
-
-        return $text;
+        return preg_replace('/(ʼ’‘`)/i', "'", mb_strtolower($this->getOptions()->getText()));
     }
 
     /**
