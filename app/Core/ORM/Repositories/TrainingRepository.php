@@ -337,7 +337,7 @@ class TrainingRepository extends EntityRepository
      */
     private function getMessageForInactiveUser(): string
     {
-        return "Не останавливайся! Продолжи свою тренировку прямо сейчас!";
+        return "Не зупиняйтеся! Продовжуйте своє тренування прямо зараз!";
     }
 
     /**
