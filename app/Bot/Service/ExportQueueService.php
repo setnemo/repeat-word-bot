@@ -54,7 +54,7 @@ class ExportQueueService
             'chat_id' => $export->getChatId(),
             'text' => 'export',
             'document' => Request::encodeFile($uri),
-            'caption' => 'Экспорт изучаемых слов',
+            'caption' => 'Експорт досліджуваних слов',
             'disable_web_page_preview' => true,
             'disable_notification' => 1,
         ];
@@ -75,7 +75,7 @@ class ExportQueueService
         $stylesheet = file_get_contents('/app/resource/export.css');
         $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
         $header = '<table width="100%"><tr>';
-        $header .= '<td width="50%" style="text-align: left; font-weight: bold;">Экспорт изучаемых слов</td>';
+        $header .= '<td width="50%" style="text-align: left; font-weight: bold;">Експорт досліджуваних слов</td>';
         $header .= '<td width="50%" style="text-align: right; font-weight: bold;">';
         $header .= '<a href="https:/t.me/RepeatWordBot">Telegram @RepeatWordBot</a></td></tr></table>';
         $footer = '<table width="100%"><tr>' ;
