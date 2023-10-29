@@ -19,7 +19,7 @@ $wordRepository = Database::getInstance()->init($config)
     ->getEntityManager()
     ->getRepository(\RepeatBot\Core\ORM\Entities\Word::class);
 
-$translate = new TranslateClient(['key' => '']);
+$translate = new TranslateClient(['key' => $config->getKey('translate_key')]);
 
 
 $items = $wordRepository->getWordsForTranslate($args[1] ?? 0);

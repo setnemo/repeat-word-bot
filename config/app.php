@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 return [
+    'translate_key' => (string) getenv('TRANSLATE_KEY'),
     'database' => [
         'host' => getenv('DB_HOST') ?? 'mysql',
         'name' => getenv('DB_NAME') ?? 'test_db',
