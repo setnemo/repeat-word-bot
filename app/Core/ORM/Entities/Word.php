@@ -91,7 +91,7 @@ class Word
      */
     public function getTranslate(): string
     {
-        return htmlspecialchars_decode($this->translate);
+        return htmlspecialchars_decode($this->translate, 1);
     }
 
     /**
