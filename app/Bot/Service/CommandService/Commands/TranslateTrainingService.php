@@ -57,7 +57,7 @@ class TranslateTrainingService extends BaseDefaultCommandService
             try {
                 $this->newTrainingWord($type, $answer, $userId);
             } catch (EmptyVocabularyException $e) {
-                $text = 'У вас нет слов для изучения. Зайдите в раздел Коллекции и добавьте себе слова для тренировок';
+                $text = 'Ви не маєте слів для вивчення. Зайдіть в розділ Колекції та додайте собі слова для тренувань';
                 try {
                     $text = $this->getNearestText($userId, $type, $answer);
                 } catch (EmptyVocabularyException $e) {
@@ -126,15 +126,15 @@ class TranslateTrainingService extends BaseDefaultCommandService
         };
         if ($this->cache->checkSkipTrainings($userId, $type)) {
             $this->cache->removeSkipTrainings($userId, $type);
-            $text = "Слово пропущено! Ответ на {$oldQuestion}: {$correct}\n\n";
+            $text = "Слово пропущене! Відповідь на {$oldQuestion}: {$correct}\n\n";
         } elseif ($this->cache->checkOneYear($userId, $type)) {
             $this->cache->removeOneYear($userId, $type);
-            $text = "Слово пропущено на 1 год! Ответ на {$oldQuestion}: {$correct}\n\n";
+            $text = "Слово пропущене на 1 рік! Відповідь на {$oldQuestion}: {$correct}\n\n";
         } else {
             if ($result) {
                 $this->trainingRepository->upStatusTraining($training);
             }
-            $text = $result ? "Правильно!\n\n" : "Неправильно! Ответ: {$correct}\n\n";
+            $text = $result ? "Правильно!\n\n" : "Неправильно! Відповідь: {$correct}\n\n";
         }
 
         return $text;
@@ -152,8 +152,8 @@ class TranslateTrainingService extends BaseDefaultCommandService
     private function newTrainingWord(string $type, string $question, int $userId): void
     {
         $question .= match ($type) {
-            'ToEnglish' => "Пожалуйста напишите ответ на английском!\n\nСлово: ",
-            'FromEnglish' => "Пожалуйста напишите ответ на русском!\n\nСлово: ",
+            'ToEnglish' => "Будь ласка напишіть відповідь англійською!\n\nСлово: ",
+            'FromEnglish' => "Будь ласка напишіть відповідь українською!\n\nСлово: ",
         };
         $priority = $this->cache->getPriority($userId);
         $training = $this->trainingRepository->getRandomTraining($userId, $type, $priority === 1);
@@ -204,8 +204,8 @@ class TranslateTrainingService extends BaseDefaultCommandService
     private function getNearestText(int $userId, string $type, string $text): string
     {
         $availableTraining = $this->trainingRepository->getNearestAvailableTrainingTime($userId, $type);
-        $template = "В тренировке `:training` ближайшее слово для изучения - `:word`, ";
-        $template .= "которое будет доступно `:date`. Вы всегда можете добавить новую коллекцию.";
+        $template = "У тренуванні `:training` найближче слово для вивчення - `:word`,";
+        $template .= "яке буде доступне `: date`. Ви завжди можете додати нову колекцію.";
 
         return $text . strtr(
             $template,

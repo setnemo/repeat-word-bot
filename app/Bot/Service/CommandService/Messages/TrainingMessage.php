@@ -10,5 +10,5 @@ namespace RepeatBot\Bot\Service\CommandService\Messages;
  */
 class TrainingMessage
 {
-    public const CHOOSE_TEXT = 'Пожалуйста выберете режим тренировки:';
+    public const CHOOSE_TEXT = 'Будь ласка оберіть режим тренування:';
 }

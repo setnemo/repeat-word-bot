@@ -34,7 +34,7 @@ class CommandDirector extends \TelegramBot\CommandWrapper\Command\CommandDirecto
      */
     public function makeService(): CommandInterface
     {
-        return match($this->getOptions()->getCommand()) {
+        return match ($this->getOptions()->getCommand()) {
             'alarm'              => $this->makeAlarmCommand($this->getOptions()),
             'collections'        => $this->makeCollectionCommand($this->getOptions()),
             'empty'              => $this->makeEmptyCommand($this->getOptions()),

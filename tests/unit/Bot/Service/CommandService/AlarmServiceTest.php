@@ -72,7 +72,7 @@ class AlarmServiceTest extends Unit
         $this->assertEquals('sendMessage', $error->getType());
         $this->assertEquals([
             'chat_id' => $chatId,
-            'text' => 'Список персональных напоминаний пуст',
+            'text' => 'Список персональних нагадувань порожній',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'disable_notification' => 1,
@@ -150,7 +150,7 @@ class AlarmServiceTest extends Unit
         $this->assertEquals('sendMessage', $responseDirector->getType());
         $this->assertEquals([
             'chat_id' => $chatId,
-            'text' => "Напоминание на `{$tz} {$time}` создано! Посмотреть свои напоминания /alarm list",
+            'text' => "Нагадування на `{$tz} {$time}` створено! Переглянути свої нагадування /alarm list",
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'disable_notification' => 1,

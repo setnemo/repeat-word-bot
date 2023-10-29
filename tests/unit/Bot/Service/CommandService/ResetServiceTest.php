@@ -100,7 +100,7 @@ class ResetServiceTest extends Unit
         $keyboard->setResizeKeyboard(true);
         $this->assertEquals([
             'chat_id' => $chatId,
-            'text' => 'Ваш прогресс был сброшен.',
+            'text' => 'Ваш прогрес було скинуто.',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,
@@ -150,7 +150,7 @@ class ResetServiceTest extends Unit
         $keyboard->setResizeKeyboard(true);
         $this->assertEquals([
             'chat_id' => $chatId,
-            'text' => 'Ваш прогресс по коллекции 2 был сброшен.',
+            'text' => 'Ваш прогрес по колекції 2 був скинутий.',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,

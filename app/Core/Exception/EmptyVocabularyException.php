@@ -12,5 +12,4 @@ use Exception;
  */
 class EmptyVocabularyException extends Exception
 {
-
 }

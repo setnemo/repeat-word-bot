@@ -67,7 +67,7 @@ class DelService extends BaseDefaultCommandService
         $keyboard->setResizeKeyboard(true);
         $data = [
             'chat_id' => $userId,
-            'text' => 'Ваш прогресс был удалён.',
+            'text' => 'Ваш прогрес був видалений.',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,
@@ -95,7 +95,7 @@ class DelService extends BaseDefaultCommandService
         $keyboard->setResizeKeyboard(true);
         $data = [
             'chat_id' => $userId,
-            'text' => "Ваш прогресс по коллекции {$num} был удалён.",
+            'text' => "Ваш прогрес по колекції {$num} був видалений.",
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,

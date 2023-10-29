@@ -51,7 +51,7 @@ class CollectionServiceTest extends Unit
         $this->assertInstanceOf(ResponseDirector::class, $responseDirector2);
         $this->assertEquals('sendMessage', $responseDirector2->getType());
         $this->assertStringContainsString(
-            'Коллекция `Популярность 12/12 Часть 1` содержит такие слова, как',
+            'Колекція `Популярність 12/12 Частина 1` містить такі слова, як',
             $responseDirector2->getData()['text']
         );
     }
@@ -79,7 +79,7 @@ class CollectionServiceTest extends Unit
         $this->assertEquals('sendMessage', $responseDirector1->getType());
         $this->assertEquals([
             'chat_id' => $chatId,
-            'text' => 'Добавлено 500 слов!',
+            'text' => 'Додано 500 слів!',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'disable_notification' => 1,
@@ -89,7 +89,7 @@ class CollectionServiceTest extends Unit
         $this->assertInstanceOf(ResponseDirector::class, $responseDirector2);
         $this->assertEquals('editMessageText', $responseDirector2->getType());
         $this->assertStringContainsString(
-            'Коллекция `Популярность 12/12 Часть 1` содержит такие слова, как',
+            'Колекція `Популярність 12/12 Частина 1` містить такі слова, як',
             $responseDirector2->getData()['text']
         );
     }
@@ -98,7 +98,7 @@ class CollectionServiceTest extends Unit
     {
         $this->queryTest(
             'reset',
-            'Для сброса прогресса по словам с этой коллекции воспользуйтесь командой `/reset collection 1`'
+            'Для скидання прогресу за словами цієї колекції скористайтесь командою `/reset collection 1`'
         );
     }
 
@@ -106,7 +106,7 @@ class CollectionServiceTest extends Unit
     {
         $this->queryTest(
             'del',
-            'Для удаления слов этой коллекции из вашего прогресса воспользуйтесь командой `/del collection 1`'
+            'Для видалення слів цієї колекції з вашого прогресу скористайтесь командою `/del collection 1`'
         );
     }
 
@@ -143,7 +143,7 @@ class CollectionServiceTest extends Unit
         $this->assertInstanceOf(ResponseDirector::class, $responseDirector2);
         $this->assertEquals('editMessageText', $responseDirector2->getType());
         $this->assertStringContainsString(
-            'Коллекция `Популярность 12/12 Часть 1` содержит такие слова, как',
+            'Колекція `Популярність 12/12 Частина 1` містить такі слова, як',
             $responseDirector2->getData()['text']
         );
     }

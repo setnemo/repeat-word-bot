@@ -48,6 +48,30 @@ services:
     logging:
       options:
         max-size: "10m"
+
+  mysql:
+    image: mysql:5.7.22
+    container_name: 'telegram-bots-mysql'
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_ROOT_HOST: '%'
+    #    volumes:
+    #      - ./docker/sql/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    networks:
+      - tier
+
+  redis:
+    container_name: 'telegram-bots-redis'
+    image: redis:3.2
+    restart: always
+    ports:
+      - "127.0.0.1:6379:6379/tcp"
+    networks:
+      - tier
+
 volumes:
   filters:
     driver: local
@@ -56,5 +80,3 @@ volumes:
 
 networks:
   tier:
-    external:
-      name: telegram-bots-network

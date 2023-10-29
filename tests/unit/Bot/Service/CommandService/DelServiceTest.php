@@ -95,7 +95,7 @@ class DelServiceTest extends Unit
         $keyboard->setResizeKeyboard(true);
         $this->assertEquals([
             'chat_id' => $chatId,
-            'text' => 'Ваш прогресс был удалён.',
+            'text' => 'Ваш прогрес був видалений.',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,
@@ -139,7 +139,7 @@ class DelServiceTest extends Unit
         $keyboard->setResizeKeyboard(true);
         $this->assertEquals([
             'chat_id' => $chatId,
-            'text' => 'Ваш прогресс по коллекции 1 был удалён.',
+            'text' => 'Ваш прогрес по колекції 1 був видалений.',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,

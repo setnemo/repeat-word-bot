@@ -21,7 +21,8 @@
         "mpdf/mpdf": "8.0.10",
         "google/cloud-text-to-speech": "^1.2",
         "doctrine/orm": "^2.8",
-        "omentes/telegram-bot-command-wrapper": "0.0.4"
+        "omentes/telegram-bot-command-wrapper": "0.0.4",
+        "google/cloud-translate": "^1.14"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.5",

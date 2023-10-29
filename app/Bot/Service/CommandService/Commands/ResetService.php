@@ -68,7 +68,7 @@ class ResetService extends BaseDefaultCommandService
         $keyboard->setResizeKeyboard(true);
         $data = [
             'chat_id' => $userId,
-            'text' => 'Ваш прогресс был сброшен.',
+            'text' => 'Ваш прогрес було скинуто.',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,
@@ -96,7 +96,7 @@ class ResetService extends BaseDefaultCommandService
         $keyboard->setResizeKeyboard(true);
         $data = [
             'chat_id' => $userId,
-            'text' => "Ваш прогресс по коллекции {$num} был сброшен.",
+            'text' => "Ваш прогрес по колекції {$num} був скинутий.",
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'reply_markup' => $keyboard,

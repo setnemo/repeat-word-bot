@@ -10,6 +10,6 @@ namespace RepeatBot\Bot\Service\CommandService\Messages;
  */
 class DelMessage
 {
-    public const ERROR_TEXT = "`Сброс прогресса:`\nИспользуйте команду `/del collection <number>` " .
-    "или `/del my progress`. Будьте осторожны: сброс не обратим";
+    public const ERROR_TEXT = "`Скидання прогресу:`\nВикористовуйте команду `/del collection <number>` " .
+    "або `/del my progress`. Будьте обережні, скидання неможливо скасувати";
 }

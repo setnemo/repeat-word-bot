@@ -10,6 +10,6 @@ namespace RepeatBot\Bot\Service\CommandService\Messages;
  */
 class ResetMessage
 {
-    public const ERROR_TEXT = "`Сброс прогресса:`\nИспользуйте команду `/reset collection <number>` или " .
-    "`/reset collection <number>`. Будьте осторожны, сброс не обратим";
+    public const ERROR_TEXT = "`Скидання прогресу:`\nВикористовуйте команду `/reset collection <number>` або " .
+    "`/reset collection <number>`. Будьте обережні, скидання неможливо скасувати";
 }

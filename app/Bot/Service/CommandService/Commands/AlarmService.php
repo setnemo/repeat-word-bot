@@ -75,7 +75,7 @@ class AlarmService extends BaseDefaultCommandService
                 'sendMessage',
                 [
                     'chat_id' => $this->getOptions()->getChatId(),
-                    'text' => empty($text) ? 'Список персональных напоминаний пуст' : $text,
+                    'text' => empty($text) ? 'Список персональних нагадувань порожній' : $text,
                     'parse_mode' => 'markdown',
                     'disable_web_page_preview' => true,
                     'disable_notification' => 1,
@@ -95,7 +95,7 @@ class AlarmService extends BaseDefaultCommandService
                 'sendMessage',
                 [
                     'chat_id' => $this->getOptions()->getChatId(),
-                    'text' => 'Напоминания удалены',
+                    'text' => 'Нагадування видалено',
                     'parse_mode' => 'markdown',
                     'disable_web_page_preview' => true,
                     'disable_notification' => 1,
@@ -117,11 +117,11 @@ class AlarmService extends BaseDefaultCommandService
         $tz = $commands[1] ?? 'FDT';
         $this->repository->createNotification(
             $this->getOptions()->getChatId(),
-            "Тренировка ждет! Начни прямо сейчас /training",
+            "Тренування чекає! Почни прямо зараз /training",
             $time,
             $tz
         );
-        $text = "Напоминание на `$tz $time` создано! Посмотреть свои напоминания /alarm list";
+        $text = "Нагадування на `$tz $time` створено! Переглянути свої нагадування /alarm list";
 
         $this->setResponse(
             new ResponseDirector(

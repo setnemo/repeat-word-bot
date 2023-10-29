@@ -118,7 +118,7 @@ class GenericMessageDirectorFabric
      */
     private function isStopCommand(string $text): bool
     {
-        return $text === 'Остановить';
+        return $text === 'Зупинити';
     }
 
     /**

@@ -125,7 +125,7 @@ class TranslateTrainingServiceTest extends Unit
         $response = $service->showResponses();
         $data = $response[0];
         $payload = $data->getData();
-        $this->tester->assertStringContainsString('Слово пропущено!', $payload['caption']);
+        $this->tester->assertStringContainsString('Слово пропущене!', $payload['caption'] ?? '');
     }
 
     public function testSkipOneYear(): void
@@ -140,7 +140,7 @@ class TranslateTrainingServiceTest extends Unit
         $response = $service->showResponses();
         $data = $response[0];
         $payload = $data->getData();
-        $this->tester->assertStringContainsString('Слово пропущено на 1 год!', $payload['caption']);
+        $this->tester->assertStringContainsString('Слово пропущене на 1 рік!', $payload['caption']);
     }
 
     public function testEmptyVocabulary(): void
@@ -160,7 +160,7 @@ class TranslateTrainingServiceTest extends Unit
         $data = $response[0];
         $payload = $data->getData();
         $this->tester->assertStringContainsString(
-            'У вас нет слов для изучения. Зайдите в раздел Коллекции и добавьте себе слова для тренировок',
+            'Ви не маєте слів для вивчення. Зайдіть в розділ Колекції та додайте собі слова для тренувань',
             $payload['text']
         );
     }
@@ -175,7 +175,7 @@ class TranslateTrainingServiceTest extends Unit
         $data = $response[0];
         $payload = $data->getData();
         $this->tester->assertStringContainsString(
-            'В тренировке `FromEnglish` ближайшее слово для изучения - ',
+            'У тренуванні `FromEnglish` найближче слово для вивчення - ',
             $payload['text']
         );
     }
@@ -183,7 +183,7 @@ class TranslateTrainingServiceTest extends Unit
     public function testStopTraining(): void
     {
         $this->makeTraining('From English', true)->makeService();
-        $command = $this->makeTraining('Остановить');
+        $command = $this->makeTraining('Зупинити');
         $service = $command->makeService();
         $this->assertInstanceOf(TrainingService::class, $service);
         $service->execute();

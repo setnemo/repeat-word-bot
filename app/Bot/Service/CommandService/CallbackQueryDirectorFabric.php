@@ -28,7 +28,7 @@ class CallbackQueryDirectorFabric
     {
         $command = $this->getOptions()->getPayload()[0] ?? '';
 
-        return match($command) {
+        return match ($command) {
             'collections' => $this->makeCollectionCommand(),
             'settings'    => $this->makeSettingsCommand(),
         default           => $this->makeEmptyCallback(),
@@ -42,7 +42,7 @@ class CallbackQueryDirectorFabric
     {
         $command = $this->getOptions()->getPayload()[1] ?? '';
 
-        return match($command) {
+        return match ($command) {
             'voices'   => $this->makeSettingsVoicesCommand(),
             'silent'   => $this->makeSettingsSilentCommand(),
             'priority' => $this->makeSettingsPriorityCommand(),

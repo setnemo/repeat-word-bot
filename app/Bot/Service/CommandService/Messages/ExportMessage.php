@@ -10,9 +10,9 @@ namespace RepeatBot\Bot\Service\CommandService\Messages;
  */
 class ExportMessage
 {
-    public const EXPORT_TEXT = 'Создание экспорта поставлено в очередь. Как только файл будет готов вы получите его в личном сообщении.';
-    public const ERROR_HAVE_EXPORT_TEXT = 'У вас есть экспорт слов, дождитесь очереди для создания файла';
-    public const ERROR_INVALID_PAYLOAD_TEXT = "Допустимые форматы команды\n - /export\n - /export FromEnglish first\n" .
-    " - /export ToEnglish second\n\n Где первое слово режим без пробела, а второе название итерации. " .
-    "Посмотреть сколько у вас слов в какой итерации можно командой /progress";
+    public const EXPORT_TEXT = 'Створення експорту поставлено у чергу. Як тільки файл буде готовий, ви отримаєте його в особистому повідомленні.';
+    public const ERROR_HAVE_EXPORT_TEXT = 'У вас є експорт слів, дочекайтесь черги для створення файлу';
+    public const ERROR_INVALID_PAYLOAD_TEXT = "Допустимі формати команди\n - /export\n - /export FromEnglish first\n" .
+    " - /export ToEnglish second\n\n Де перше слово режим без пробілу, а друга назва ітерації. " .
+    "Подивитися скільки у вас слів у якій ітерації можна командою /progress";
 }

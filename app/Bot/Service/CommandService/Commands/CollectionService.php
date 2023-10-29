@@ -68,7 +68,7 @@ class CollectionService extends BaseDefaultCommandService
         } else {
             $commands = $this->getOptions()->getPayload();
             $command = $commands[1] ?? '';
-            $text = match($command) {
+            $text = match ($command) {
                 'add' => $this->executeAddCollectionCommand(intval($commands[2])),
                 'del' => $this->executeDelCollectionCommand(intval($commands[2])),
                 'reset' => $this->executeResetCollectionCommand(intval($commands[2])),
@@ -113,7 +113,7 @@ class CollectionService extends BaseDefaultCommandService
         $haveRatingWords = $this->trainingRepository->userHaveCollection(intval($id), $chatId);
         /** @psalm-suppress TooManyArguments */
         $keyboard = new InlineKeyboard(...BotHelper::getCollectionPagination($id, $haveRatingWords));
-        $text = strtr("Коллекция `:name` содержит такие слова, как:\n\n`:words`", [
+        $text = strtr("Колекція `:name` містить такі слова, як:\n\n`:words`", [
             ':name' => $rating->getName(),
             ':words' => implode(', ', $this->wordRepository->getExampleWords($rating->getId())),
         ]);
@@ -147,7 +147,7 @@ class CollectionService extends BaseDefaultCommandService
         $this->addNewWords($this->trainingRepository, $words, $userId);
         $this->editCollectionMessage($id);
 
-        return 'Слова добавлены';
+        return 'Слова додані';
     }
 
     /**
@@ -158,7 +158,7 @@ class CollectionService extends BaseDefaultCommandService
      */
     private function executeDelCollectionCommand(int $id): string
     {
-        $text = "Для удаления слов этой коллекции из вашего прогресса воспользуйтесь командой `/del collection {$id}`";
+        $text = "Для видалення слів цієї колекції з вашого прогресу скористайтесь командою `/del collection {$id}`";
         $data = [
             'chat_id' => $this->getOptions()->getChatId(),
             'text' => $text,
@@ -180,7 +180,7 @@ class CollectionService extends BaseDefaultCommandService
      */
     private function executeResetCollectionCommand(int $id): string
     {
-        $text = "Для сброса прогресса по словам с этой коллекции воспользуйтесь командой `/reset collection {$id}`";
+        $text = "Для скидання прогресу за словами цієї колекції скористайтесь командою `/reset collection {$id}`";
         $data = [
             'chat_id' => $this->getOptions()->getChatId(),
             'text' => $text,
@@ -205,7 +205,7 @@ class CollectionService extends BaseDefaultCommandService
         $userId = $this->getOptions()->getChatId();
         $rating = $this->collectionRepository->getCollection(intval($id));
         $haveRatingWords = $this->trainingRepository->userHaveCollection(intval($id), $userId);
-        $text = strtr("Коллекция `:name` содержит такие слова, как:\n\n`:words`", [
+        $text = strtr("Колекція `:name` містить такі слова, як:\n\n`:words`", [
             ':name' => $rating->getName(),
             ':words' => implode(', ', $this->wordRepository->getExampleWords($rating->getId())),
         ]);
@@ -250,7 +250,7 @@ class CollectionService extends BaseDefaultCommandService
         $count = $i / 2;
         $data = [
             'chat_id' => $this->getOptions()->getChatId(),
-            'text' => BotHelper::getAnswer("Добавлено ", (int)$count) . '!',
+            'text' => BotHelper::getAnswer("Додано ", (int)$count) . '!',
             'parse_mode' => 'markdown',
             'disable_web_page_preview' => true,
             'disable_notification' => 1,
