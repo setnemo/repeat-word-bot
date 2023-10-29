@@ -22,7 +22,7 @@ $wordRepository = Database::getInstance()->init($config)
 $translate = new TranslateClient(['key' => $config->getKey('translate_key')]);
 
 
-$items = $wordRepository->getWordsForTranslate($args[1] ?? 0);
+$items = $wordRepository->getWordsForTranslate($argv[1] ?? 0);
 foreach ($items as $item) {
     $result = $translate->translate($item->getTranslate(), [
         'target' => 'uk'
