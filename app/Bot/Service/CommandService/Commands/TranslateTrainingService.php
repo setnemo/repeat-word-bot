@@ -8,6 +8,7 @@ use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
+use RepeatBot\Core\Log;
 use TelegramBot\CommandWrapper\Command\CommandInterface;
 use TelegramBot\CommandWrapper\Command\CommandOptions;
 use TelegramBot\CommandWrapper\Exception\SupportTypeException;
@@ -121,6 +122,9 @@ class TranslateTrainingService extends BaseDefaultCommandService
             'ToEnglish' => $text === mb_strtolower($word->getWord()),
             'FromEnglish' => $this->getToEnglishResult($training, $text),
         };
+
+        $logger = Log::getInstance()->getLogger();
+        $logger->critical('Text: ' . $word->getTranslate());
         if ($this->cache->checkSkipTrainings($userId, $type)) {
             $this->cache->removeSkipTrainings($userId, $type);
             $text = "Слово пропущене! Відповідь на {$oldQuestion}: {$correct}\n\n";
