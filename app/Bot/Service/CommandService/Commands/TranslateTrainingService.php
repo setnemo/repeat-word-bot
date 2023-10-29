@@ -122,9 +122,6 @@ class TranslateTrainingService extends BaseDefaultCommandService
             'ToEnglish' => $text === mb_strtolower($word->getWord()),
             'FromEnglish' => $this->getToEnglishResult($training, $text),
         };
-
-        $logger = Log::getInstance()->getLogger();
-        $logger->critical('Text: ' . $word->getTranslate());
         if ($this->cache->checkSkipTrainings($userId, $type)) {
             $this->cache->removeSkipTrainings($userId, $type);
             $text = "Слово пропущене! Відповідь на {$oldQuestion}: {$correct}\n\n";
