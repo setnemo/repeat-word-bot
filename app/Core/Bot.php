@@ -74,7 +74,7 @@ final class Bot extends Singleton
 
     public function botNotify()
     {
-        $this->checkVersion();
+//        $this->checkVersion();
         $this->handleNotifications();
         $this->handleNotificationsPersonal();
     }
