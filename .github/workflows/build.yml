@@ -55,7 +55,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.organization=omentes
+            -Dsonar.organization=setnemo
             -Dsonar.host.url=https://sonarcloud.io/
-            -Dsonar.projectKey=omentes_repeat-word-bot
+            -Dsonar.projectKey=setnemo_repeat-word-bot
             -Dsonar.exlusions=vendor
