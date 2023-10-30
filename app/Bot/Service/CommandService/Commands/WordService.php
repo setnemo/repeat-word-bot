@@ -28,9 +28,7 @@ class WordService extends BaseDefaultCommandService
     public function __construct(CommandOptions $options)
     {
         /** @psalm-suppress PropertyTypeCoercion */
-        $this->wordRepository = Database::getInstance()
-            ->getEntityManager()
-            ->getRepository(Word::class);
+        $this->wordRepository = Database::getInstance()->getEntityManager()->getRepository(Word::class);
         parent::__construct($options);
     }
 
@@ -44,7 +42,7 @@ class WordService extends BaseDefaultCommandService
     {
         $array   = $this->getOptions()->getPayload();
         $command = $array[self::CMD];
-        $text     = match ($command) {
+        $text    = match ($command) {
             static::UPDATE => $this->update(params: (string)$array[self::BODY] ?? ''),
             default => $this->show(id: intval($array[self::BODY]) ?? 0),
         };
@@ -64,11 +62,29 @@ class WordService extends BaseDefaultCommandService
     {
         $item = $this->wordRepository->findOneBy(['id' => $id]);
 
-        return $item ? strtr('`:word`: `:translate`', [':word' => $item->getWord(), ':translate' => $item->getTranslate()]) : 'Слово не знайдено!';
+        return $item ? strtr("`:word`:\n\n`:translate`", [':word' => $item->getWord(), ':translate' => $item->getTranslate()]) : 'Слово не знайдено!';
     }
 
+    /**
+     * @param string $params
+     * @return string
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     protected function update(string $params): string
     {
-        return 'HEARK';
+        $explode = explode(' ', $params);
+        $first   = (int)array_shift($explode);
+        $explode = explode('; ', trim(implode(' ', $explode)));
+        if (empty($explode) || 1 > $first || 18869 < $first) {
+            return 'Помилка оновлення';
+        }
+        $newTranslate = implode('; ', $explode);
+        $this->wordRepository->updateWord($first, $newTranslate);
+
+        return strtr('Слово [:id]:`:new` оновлено!', [
+            ':id'  => $first,
+            ':new' => $newTranslate,
+        ]);
     }
 }
