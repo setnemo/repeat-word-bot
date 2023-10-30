@@ -104,15 +104,15 @@ class TranslateTrainingService extends BaseDefaultCommandService
         };
         if ($this->cache->checkSkipTrainings($userId, $type)) {
             $this->cache->removeSkipTrainings($userId, $type);
-            $text = "Слово пропущене! Відповідь на {$oldQuestion}: {$correct}\n\n";
+            $text = "Слово пропущене! Відповідь на `{$oldQuestion}`: `{$correct}`\n\n";
         } elseif ($this->cache->checkOneYear($userId, $type)) {
             $this->cache->removeOneYear($userId, $type);
-            $text = "Слово пропущене на 1 рік! Відповідь на {$oldQuestion}: {$correct}\n\n";
+            $text = "Слово пропущене на 1 рік! Відповідь на `{$oldQuestion}`: `{$correct}`\n\n";
         } else {
             if ($result) {
                 $this->trainingRepository->upStatusTraining($training);
             }
-            $text = $result ? "Правильно!\n\n" : "Неправильно! Відповідь: {$correct}\n\n";
+            $text = $result ? "Правильно! (`$correct`)\n\n" : "Неправильно! Відповідь: `{$correct}`\n\n";
         }
 
         return $text;
