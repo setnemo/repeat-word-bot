@@ -10,7 +10,7 @@ namespace RepeatBot\Bot\Service\CommandService\Messages;
  */
 class ProgressMessage
 {
-    public const EMPTY_VOCABULARY = 'Ваш словарь пуст. Пожалуйста добавьте коллекцию!';
+    public const EMPTY_VOCABULARY = 'Ваш словник є порожнім. Будь ласка, додайте колекцію!';
 
     const HINT = "`Підказка:`\nFirst ітерація: повтор слова через 24 години\n" .
     "Second ітерація: повторення слова через 3 дні\n" .
