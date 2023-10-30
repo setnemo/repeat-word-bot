@@ -35,8 +35,8 @@ public function __construct(CommandOptions $options)
     /** @psalm-suppress PropertyTypeCoercion */
     $this->wordRepository = Database::getInstance()->getEntityManager()->getRepository(Word::class);
     /** @psalm-suppress PropertyTypeCoercion */
-    $this->config         = App::getInstance()->getConfig();
-    $this->cache          = Cache::getInstance()->init($this->config);
+    $this->config = App::getInstance()->getConfig();
+    $this->cache  = Cache::getInstance()->init($this->config);
     Metric::getInstance()->init($this->config)->increaseMetric('update_words');
     parent::__construct($options);
 }
@@ -92,11 +92,17 @@ public function execute(): CommandInterface
         if (empty($newTranslate)) {
             return 'Помилка оновлення';
         }
+        $item = $this->wordRepository->findOneBy(['id' => $first]);
         $this->wordRepository->updateWord($first, $newTranslate);
 
-        return strtr("Слово [:id]:\n\n`:new` оновлено!", [
-        ':id'  => $first,
-        ':new' => $newTranslate,
-        ]);
+        return strtr(
+            "Слово :word[:id]:\n\nOld:\n:old\n\nNew:\n:new` оновлено!",
+            [
+            ':word' => $item->getWord(),
+            ':old'  => $item->getTranslate(),
+            ':id'   => $first,
+            ':new'  => $newTranslate,
+            ]
+        );
     }
 }
