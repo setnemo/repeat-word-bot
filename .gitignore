@@ -5,3 +5,4 @@ words
 google.json
 supervisord.pid
 bots-environment
+/docker-compose.override.yml
