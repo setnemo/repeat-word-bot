@@ -93,6 +93,9 @@ public function execute(): CommandInterface
             return 'Помилка оновлення';
         }
         $item = $this->wordRepository->findOneBy(['id' => $first]);
+        if (!$item) {
+            return 'Помилка оновлення';
+        }
         $this->wordRepository->updateWord($first, $newTranslate);
 
         return strtr(
