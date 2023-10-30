@@ -29,7 +29,7 @@ class CommandService
         return match ($this->getType()) {
             'query' => $this->makeQueryService($this->getOptions()),
             'generic' => $this->makeGenericService($this->getOptions()),
-        default => $this->makeDefaultService($this->getOptions()),
+            default => $this->makeDefaultService($this->getOptions()),
         };
     }
 

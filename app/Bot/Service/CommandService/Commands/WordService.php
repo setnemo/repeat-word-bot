@@ -20,26 +20,26 @@ use TelegramBot\CommandWrapper\ResponseDirector;
 
 class WordService extends BaseDefaultCommandService
 {
-public const CMD = 'cmd';
-public const BODY = 'body';
-public const UPDATE = 'update';
-public const SHOW = 'show';
-protected WordRepository $wordRepository;
-protected Config $config;
+    public const CMD = 'cmd';
+    public const BODY = 'body';
+    public const UPDATE = 'update';
+    public const SHOW = 'show';
+    protected WordRepository $wordRepository;
+    protected Config $config;
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-public function __construct(CommandOptions $options)
-{
-    /** @psalm-suppress PropertyTypeCoercion */
-    $this->wordRepository = Database::getInstance()->getEntityManager()->getRepository(Word::class);
-    /** @psalm-suppress PropertyTypeCoercion */
-    $this->config = App::getInstance()->getConfig();
-    $this->cache  = Cache::getInstance()->init($this->config);
-    Metric::getInstance()->init($this->config)->increaseMetric('update_words');
-    parent::__construct($options);
-}
+    public function __construct(CommandOptions $options)
+    {
+        /** @psalm-suppress PropertyTypeCoercion */
+        $this->wordRepository = Database::getInstance()->getEntityManager()->getRepository(Word::class);
+        /** @psalm-suppress PropertyTypeCoercion */
+        $this->config = App::getInstance()->getConfig();
+        $this->cache  = Cache::getInstance()->init($this->config);
+        Metric::getInstance()->init($this->config)->increaseMetric('update_words');
+        parent::__construct($options);
+    }
 
     /**
      * {@inheritDoc}
@@ -47,14 +47,14 @@ public function __construct(CommandOptions $options)
      * @throws OptimisticLockException
      * @throws SupportTypeException
      */
-public function execute(): CommandInterface
-{
-    $array   = $this->getOptions()->getPayload();
-    $command = $array[self::CMD];
-    $text    = match ($command) {
-        static::UPDATE => $this->update(params: (string)$array[self::BODY] ?? ''),
-    default => $this->show(id: intval($array[self::BODY]) ?? 0),
-    };
+    public function execute(): CommandInterface
+    {
+        $array   = $this->getOptions()->getPayload();
+        $command = $array[self::CMD];
+        $text    = match ($command) {
+            static::UPDATE => $this->update(params: (string)$array[self::BODY] ?? ''),
+            default => $this->show(id: intval($array[self::BODY]) ?? 0),
+        };
         $this->setResponse(
             new ResponseDirector('sendMessage', [
             'chat_id'              => $this->getOptions()->getChatId(),
@@ -64,9 +64,13 @@ public function execute(): CommandInterface
             ])
         );
 
-    return $this;
-        }
+        return $this;
+    }
 
+    /**
+     * @param int $id
+     * @return string
+     */
     protected function show(int $id): string
     {
         $item = $this->wordRepository->findOneBy(['id' => $id]);
@@ -99,7 +103,7 @@ public function execute(): CommandInterface
         $this->wordRepository->updateWord($first, $newTranslate);
 
         return strtr(
-            "Слово :word[:id]:\n\nOld:\n:old\n\nNew:\n:new` оновлено!",
+            "Слово `:word`[`:id`]:\n\nOld:\n`:old`\n\nNew:\n`:new` оновлено!",
             [
             ':word' => $item->getWord(),
             ':old'  => $item->getTranslate(),

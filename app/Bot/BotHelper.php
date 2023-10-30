@@ -145,7 +145,7 @@ class BotHelper
                 'status' => 'second',
                 'repeat' => 24 * 60,
             ],
-            };
+        };
     }
 
     /**

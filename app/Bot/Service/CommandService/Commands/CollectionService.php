@@ -72,7 +72,7 @@ class CollectionService extends BaseDefaultCommandService
                 'add' => $this->executeAddCollectionCommand(intval($commands[2])),
                 'del' => $this->executeDelCollectionCommand(intval($commands[2])),
                 'reset' => $this->executeResetCollectionCommand(intval($commands[2])),
-            default => $this->editCollectionMessage(intval($command))
+                default => $this->editCollectionMessage(intval($command))
             };
 
                 $this->setResponse(
