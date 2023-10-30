@@ -52,6 +52,7 @@ RUN rm -rf /var/cache/apk/*
 
 # setup supervisor
 ADD docker/supervisor/repeat-bot.conf /etc/supervisor/conf.d/repeat-bot.conf
+ADD docker/supervisor/cleaner.conf /etc/supervisor/conf.d/cleaner.conf
 ADD docker/supervisor/supervisord.conf /etc/supervisord.conf
 
 VOLUME ["/app"]
