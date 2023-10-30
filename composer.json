@@ -1,10 +1,10 @@
 {
-    "name": "omentes/repeat-word-bot",
+    "name": "setnemo/repeat-word-bot",
     "description": "Telegram bot that will help you repeat new English words",
     "minimum-stability": "stable",
     "authors": [
         {
-            "name": "omentes",
+            "name": "setnemo",
             "email": "setnemo@gmail.com"
         }
     ],
