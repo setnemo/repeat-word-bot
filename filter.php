@@ -21,9 +21,7 @@ $wordRepository = Database::getInstance()->init($config)
 
 $items = $wordRepository->getWordsForTranslate($argv[1] ?? 0);
 
-
 $subscription_key = $config->getKey('translate_key_azure');
-
 $path = "https://api.cognitive.microsofttranslator.com/dictionary/lookup?api-version=3.0&from=en&to=uk";
 
 $text = "great";
@@ -45,9 +43,9 @@ if (!function_exists('com_create_guid')) {
     }
 }
 
-function dictionaryLookup($path, $key, $content): string
+function dictionaryLookup($path, $key, $content): array
 {
-    return json_encode(
+    return
         json_decode(
             file_get_contents(
                 $path,
@@ -57,15 +55,14 @@ function dictionaryLookup($path, $key, $content): string
                         'header'  => "Content-type: application/json\r\n" .
                             "Content-length: " . strlen($content) . "\r\n" .
                             "Ocp-Apim-Subscription-Key: $key\r\n" .
+                            "Ocp-Apim-Subscription-Region: germanywestcentral\r\n" .
                             "X-ClientTraceId: " . com_create_guid() . "\r\n",
                         'method'  => 'POST',
                         'content' => $content,
                     ],
                 ])
-            )
-        ),
-        JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
-    );
+            ), true
+        );
 }
 
 foreach ($items as $item) {
@@ -74,9 +71,16 @@ foreach ($items as $item) {
             'Text' => $item->getWord(),
         ],
     ]));
-    var_dump($res);
-    echo $item->getId() . ':'  . "\n";
-//    $wordRepository->updateWord($item->getId(), $translate);
+    $result = [];
+    foreach ($res[0]['translations'] ?? [] as $word) {
+        $result[] = $word['normalizedTarget'];
+    }
+    $words = implode('; ', $result);
+    echo $item->getId() . ':'  . $words . "\n";
+    usleep(0.125 * 1000000);
+    if (!empty($words)) {
+        $wordRepository->updateWord($item->getId(), $words);
+    }
 }
 
 

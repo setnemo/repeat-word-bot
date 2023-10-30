@@ -58,8 +58,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
       MYSQL_ROOT_HOST: '%'
-    #    volumes:
-    #      - ./docker/sql/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    volumes:
+      - ./tests/_data/dump.sql:/docker-entrypoint-initdb.d/dump.sql
     networks:
       - tier
 
