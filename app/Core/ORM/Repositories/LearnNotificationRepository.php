@@ -34,9 +34,24 @@ class LearnNotificationRepository extends EntityRepository
     }
 
     /**
-     * @param int    $userId
+     * @return void
+     */
+    public function deleteDeprecatedNotifications(): void
+    {
+        $this->getEntityManager()->createQueryBuilder()
+            ->delete('RepeatBot\Core\ORM\Entities\LearnNotification', 'ln')
+            ->where('ln.updatedAt is not null')
+            ->andWhere('ln.updatedAt < :updated')
+            ->setParameter(
+                'updated',
+                Carbon::now(Database::DEFAULT_TZ)->subDays(2)
+            )->getQuery()->execute();
+    }
+
+    /**
+     * @param int $userId
      * @param string $message
-     * @param int    $silent
+     * @param int $silent
      *
      * @return LearnNotification
      * @throws ORMException
@@ -85,7 +100,7 @@ class LearnNotificationRepository extends EntityRepository
             )->orderBy('ln.createdAt', 'DESC');
 
         $learnNotificationCollection = new LearnNotificationCollection($query->getQuery()->getResult());
-        $inactiveUsers = $inactiveUsers->filter(
+        $inactiveUsers               = $inactiveUsers->filter(
             static function (InactiveUser $current) use ($learnNotificationCollection) {
                 return !$learnNotificationCollection->hasUser($current);
             }
