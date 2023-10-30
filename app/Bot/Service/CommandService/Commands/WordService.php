@@ -45,8 +45,6 @@ class WordService extends BaseDefaultCommandService
         $array   = $this->getOptions()->getPayload();
         $command = $array[self::CMD];
         $body    = $array[self::BODY];
-        self::UPDATE;
-        self::SHOW
         $this->setResponse(
             new ResponseDirector('sendMessage', [
                 'chat_id'              => $this->getOptions()->getChatId(),

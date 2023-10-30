@@ -26,7 +26,7 @@ class WordValidator implements ValidateCommand
             return $this->createUserErrorResponse($options);
         }
 
-        if (empty($options->getPayload()['cmd']) || !in_array(strtolower($options->getPayload()['cmd'] ?? ''), [WordService::UPDATE, WordService::SHOW])) {
+        if (empty($options->getPayload()[WordService::CMD]) || !in_array(strtolower($options->getPayload()[WordService::CMD] ?? ''), [WordService::UPDATE, WordService::SHOW])) {
             return $this->createUserErrorResponse($options, 'Помилка команди');
         }
 
