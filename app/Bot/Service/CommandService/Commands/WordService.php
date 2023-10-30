@@ -89,6 +89,9 @@ class WordService extends BaseDefaultCommandService
             return 'Помилка оновлення';
         }
         $newTranslate = implode('; ', $explode);
+        if (empty($newTranslate)) {
+            return 'Помилка оновлення';
+        }
         $this->wordRepository->updateWord($first, $newTranslate);
 
         return strtr("Слово [:id]:\n\n`:new` оновлено!", [
