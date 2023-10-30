@@ -44,16 +44,31 @@ class WordService extends BaseDefaultCommandService
     {
         $array   = $this->getOptions()->getPayload();
         $command = $array[self::CMD];
-        $body    = $array[self::BODY];
+        $text     = match ($command) {
+            static::UPDATE => $this->update(params: (string)$array[self::BODY] ?? ''),
+            default => $this->show(id: intval($array[self::BODY]) ?? 0),
+        };
         $this->setResponse(
             new ResponseDirector('sendMessage', [
                 'chat_id'              => $this->getOptions()->getChatId(),
-                'text'                 => '',
+                'text'                 => $text,
                 'parse_mode'           => 'markdown',
                 'disable_notification' => 1,
             ])
         );
 
         return $this;
+    }
+
+    protected function show(int $id): string
+    {
+        $item = $this->wordRepository->findOneBy(['id' => $id]);
+
+        return $item ? strtr('`:word`: `:translate`', [':word' => $item->getWord(), ':translate' => $item->getTranslate()]) : 'Слово не знайдено!';
+    }
+
+    protected function update(string $params): string
+    {
+        return 'HEARK';
     }
 }
