@@ -18,6 +18,7 @@ return [
         'name' => '',
         'path' =>  getenv('LOG_PATH') ?? '/app/logs/app/',
         'filename' => 'bot.log',
+        'filename_admin' => 'admin.log',
         'level' => '400',
     ],
     'telegram' => [
