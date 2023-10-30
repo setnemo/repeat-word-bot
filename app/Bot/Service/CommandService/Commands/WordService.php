@@ -57,10 +57,10 @@ class WordService extends BaseDefaultCommandService
         };
         $this->setResponse(
             new ResponseDirector('sendMessage', [
-            'chat_id'              => $this->getOptions()->getChatId(),
-            'text'                 => $text,
-            'parse_mode'           => 'markdown',
-            'disable_notification' => 1,
+                'chat_id'              => $this->getOptions()->getChatId(),
+                'text'                 => $text,
+                'parse_mode'           => 'markdown',
+                'disable_notification' => 1,
             ])
         );
 
@@ -96,7 +96,8 @@ class WordService extends BaseDefaultCommandService
         if (empty($newTranslate)) {
             return 'Помилка оновлення';
         }
-        $item = $this->wordRepository->findOneBy(['id' => $first]);
+        $item         = $this->wordRepository->findOneBy(['id' => $first]);
+        $translateOld = $item->getTranslate();
         if (!$item) {
             return 'Помилка оновлення';
         }
@@ -105,10 +106,10 @@ class WordService extends BaseDefaultCommandService
         return strtr(
             "Слово `:word` \[ `:id` ]:\n\nOld:\n`:old`\n\nNew:\n`:new` оновлено!",
             [
-            ':word' => $item->getWord(),
-            ':old'  => $item->getTranslate(),
-            ':id'   => $first,
-            ':new'  => $newTranslate,
+                ':word' => $item->getWord(),
+                ':old'  => $translateOld,
+                ':id'   => $first,
+                ':new'  => $newTranslate,
             ]
         );
     }
