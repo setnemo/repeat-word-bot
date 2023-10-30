@@ -30,7 +30,7 @@ class WordCommand extends SystemCommand
         $explode       = explode(' ', $textFromInput);
         $command       = new CommandService(
             options: new CommandOptions(
-                command: 'admin_word',
+                command: 'word',
                 payload: $explode,
                 chatId: $this->getMessage()->getChat()->getId(),
             )
