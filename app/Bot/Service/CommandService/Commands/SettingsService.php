@@ -23,8 +23,8 @@ use TelegramBot\CommandWrapper\ResponseDirector;
  */
 class SettingsService extends BaseDefaultCommandService
 {
-    private UserVoiceRepository $userVoiceRepository;
-    private UserNotificationRepository $userNotificationRepository;
+    protected UserVoiceRepository $userVoiceRepository;
+    protected UserNotificationRepository $userNotificationRepository;
 
     /**
      * {@inheritDoc}

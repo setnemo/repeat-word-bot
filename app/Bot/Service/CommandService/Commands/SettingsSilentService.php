@@ -21,7 +21,7 @@ use TelegramBot\CommandWrapper\ResponseDirector;
  */
 class SettingsSilentService extends BaseDefaultCommandService
 {
-    private UserNotificationRepository $repository;
+    protected UserNotificationRepository $repository;
 
     /**
      * {@inheritDoc}

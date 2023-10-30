@@ -20,7 +20,7 @@ use TelegramBot\CommandWrapper\ResponseDirector;
  */
 class ResetService extends BaseDefaultCommandService
 {
-    private TrainingRepository $trainingRepository;
+    protected TrainingRepository $trainingRepository;
 
     /**
      * {@inheritDoc}
@@ -54,7 +54,7 @@ class ResetService extends BaseDefaultCommandService
     /**
      * @throws SupportTypeException
      */
-    private function executeResetMyProgressCommand(): void
+    protected function executeResetMyProgressCommand(): void
     {
         $userId = $this->getOptions()->getChatId();
         foreach (BotHelper::getTrainingTypes() as $type) {
@@ -82,7 +82,7 @@ class ResetService extends BaseDefaultCommandService
      *
      * @throws SupportTypeException
      */
-    private function executeResetCollectionCommand(int $num): void
+    protected function executeResetCollectionCommand(int $num): void
     {
         $userId = $this->getOptions()->getChatId();
         foreach (BotHelper::getTrainingTypes() as $type) {

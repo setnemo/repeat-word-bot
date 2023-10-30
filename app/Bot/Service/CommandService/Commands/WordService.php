@@ -6,7 +6,11 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use RepeatBot\Common\Config;
+use RepeatBot\Core\App;
+use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database;
+use RepeatBot\Core\Metric;
 use RepeatBot\Core\ORM\Entities\Word;
 use RepeatBot\Core\ORM\Repositories\WordRepository;
 use TelegramBot\CommandWrapper\Command\CommandInterface;
@@ -20,7 +24,8 @@ class WordService extends BaseDefaultCommandService
     public const BODY = 'body';
     public const UPDATE = 'update';
     public const SHOW = 'show';
-    private WordRepository $wordRepository;
+    protected WordRepository $wordRepository;
+    protected Config $config;
 
     /**
      * {@inheritDoc}
@@ -29,6 +34,10 @@ class WordService extends BaseDefaultCommandService
     {
         /** @psalm-suppress PropertyTypeCoercion */
         $this->wordRepository = Database::getInstance()->getEntityManager()->getRepository(Word::class);
+        /** @psalm-suppress PropertyTypeCoercion */
+        $this->config         = App::getInstance()->getConfig();
+        $this->cache          = Cache::getInstance()->init($this->config);
+        Metric::getInstance()->init($this->config)->increaseMetric('update_words');
         parent::__construct($options);
     }
 
@@ -82,7 +91,7 @@ class WordService extends BaseDefaultCommandService
         $newTranslate = implode('; ', $explode);
         $this->wordRepository->updateWord($first, $newTranslate);
 
-        return strtr('Слово [:id]:`:new` оновлено!', [
+        return strtr("Слово [:id]:\n\n`:new` оновлено!", [
             ':id'  => $first,
             ':new' => $newTranslate,
         ]);

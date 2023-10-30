@@ -18,7 +18,7 @@ use TelegramBot\CommandWrapper\ResponseDirector;
 
 class ExportService extends BaseDefaultCommandService
 {
-    private ExportRepository $exportRepository;
+    protected ExportRepository $exportRepository;
 
     /**
      * {@inheritDoc}

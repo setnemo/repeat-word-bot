@@ -27,7 +27,7 @@ use TelegramBot\CommandWrapper\ResponseDirector;
  */
 class TranslateTrainingService extends BaseDefaultCommandService
 {
-    private TrainingRepository $trainingRepository;
+    protected TrainingRepository $trainingRepository;
 
     /**
      * {@inheritDoc}
@@ -85,7 +85,7 @@ class TranslateTrainingService extends BaseDefaultCommandService
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function getAnswer(int $trainingId, string $type, int $userId): string
+    protected function getAnswer(int $trainingId, string $type, int $userId): string
     {
         $training    = $this->trainingRepository->getTraining($trainingId);
         $word        = $training->getWord();
@@ -121,7 +121,7 @@ class TranslateTrainingService extends BaseDefaultCommandService
     /**
      * @return string
      */
-    private function getFormattedText(): string
+    protected function getFormattedText(): string
     {
         return preg_replace('/(ʼ’‘`)/i', "'", mb_strtolower($this->getOptions()->getText()));
     }
@@ -132,7 +132,7 @@ class TranslateTrainingService extends BaseDefaultCommandService
      *
      * @return bool
      */
-    private function getToEnglishResult(Training $training, string $text): bool
+    protected function getToEnglishResult(Training $training, string $text): bool
     {
         $result = false;
         foreach (explode('; ', mb_strtolower($training->getWord()->getTranslate())) as $translate) {
@@ -153,7 +153,7 @@ class TranslateTrainingService extends BaseDefaultCommandService
      * @throws TelegramException
      * @throws SupportTypeException
      */
-    private function newTrainingWord(string $type, string $question, int $userId): void
+    protected function newTrainingWord(string $type, string $question, int $userId): void
     {
         $question .= match ($type) {
             'ToEnglish' => "Будь ласка напишіть відповідь англійською!\n\nСлово: ",
@@ -195,7 +195,7 @@ class TranslateTrainingService extends BaseDefaultCommandService
      * @return string
      * @throws EmptyVocabularyException
      */
-    private function getNearestText(int $userId, string $type, string $text): string
+    protected function getNearestText(int $userId, string $type, string $text): string
     {
         $availableTraining = $this->trainingRepository->getNearestAvailableTrainingTime($userId, $type);
         $template          = "У тренуванні `:training` найближче слово для вивчення - `:word`,";
@@ -215,7 +215,7 @@ class TranslateTrainingService extends BaseDefaultCommandService
      * @param int $userId
      * @param string $type
      */
-    private function clearTraining(int $userId, string $type): void
+    protected function clearTraining(int $userId, string $type): void
     {
         $this->cache->removeTrainings($userId, $type);
         $this->cache->removeTrainingsStatus($userId, $type);
@@ -227,7 +227,7 @@ class TranslateTrainingService extends BaseDefaultCommandService
      *
      * @throws SupportTypeException
      */
-    private function saveTextMessage(int $userId, string $text): void
+    protected function saveTextMessage(int $userId, string $text): void
     {
         /** @psalm-suppress TooManyArguments */
         $keyboard = new Keyboard(...BotHelper::getTrainingKeyboard());

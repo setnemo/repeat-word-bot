@@ -20,7 +20,7 @@ use TelegramBot\CommandWrapper\ResponseDirector;
  */
 class AlarmService extends BaseDefaultCommandService
 {
-    private LearnNotificationPersonalRepository $repository;
+    protected LearnNotificationPersonalRepository $repository;
 
     /**
      * {@inheritDoc}
@@ -58,7 +58,7 @@ class AlarmService extends BaseDefaultCommandService
     /**
      * @throws SupportTypeException
      */
-    private function executeAlarmListCommand(): void
+    protected function executeAlarmListCommand(): void
     {
         $items = $this->repository->getMyAlarms($this->getOptions()->getChatId());
         $text  = '';
@@ -87,7 +87,7 @@ class AlarmService extends BaseDefaultCommandService
     /**
      * @throws SupportTypeException
      */
-    private function executeAlarmResetCommand(): void
+    protected function executeAlarmResetCommand(): void
     {
         $this->repository->delNotifications($this->getOptions()->getChatId());
         $this->setResponse(
@@ -109,7 +109,7 @@ class AlarmService extends BaseDefaultCommandService
      * @throws OptimisticLockException
      * @throws SupportTypeException
      */
-    private function executeSetAlarmCommand(): void
+    protected function executeSetAlarmCommand(): void
     {
         $commands = $this->getOptions()->getPayload();
         $commands = array_reverse($commands);

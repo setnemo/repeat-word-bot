@@ -44,7 +44,7 @@ class AlarmValidator implements ValidateCommand
      *
      * @return bool
      */
-    private function isBrokenTime(array $commands): bool
+    protected function isBrokenTime(array $commands): bool
     {
         if (empty($commands[0])) {
             return true;
@@ -70,7 +70,7 @@ class AlarmValidator implements ValidateCommand
     /**
      * @return string
      */
-    private function getErrorText(): string
+    protected function getErrorText(): string
     {
         return AlarmMessage::ERROR_TEXT;
     }

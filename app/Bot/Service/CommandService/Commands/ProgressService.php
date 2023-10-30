@@ -20,7 +20,7 @@ use TelegramBot\CommandWrapper\ResponseDirector;
  */
 class ProgressService extends BaseDefaultCommandService
 {
-    private TrainingRepository $trainingRepository;
+    protected TrainingRepository $trainingRepository;
 
     /**
      * {@inheritDoc}

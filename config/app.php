@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 return [
+    'allowed_update_words' => (string) getenv('ALLOWED_UPDATE_WORDS'),
     'translate_key' => (string) getenv('TRANSLATE_KEY'),
     'translate_key_azure' => (string) getenv('TRANSLATE_KEY_AZURE'),
     'database' => [

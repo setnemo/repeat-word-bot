@@ -20,7 +20,7 @@ use TelegramBot\CommandWrapper\Validator\ValidateCommand;
  */
 class ExportValidator implements ValidateCommand
 {
-    private ExportRepository $exportRepository;
+    protected ExportRepository $exportRepository;
 
     /**
      * ExportValidator constructor.
@@ -66,7 +66,7 @@ class ExportValidator implements ValidateCommand
      * @return ResponseDirector[]
      * @throws SupportTypeException
      */
-    private function createUserErrorResponse(CommandOptions $options, string $text): array
+    protected function createUserErrorResponse(CommandOptions $options, string $text): array
     {
         $data = [
             'chat_id'              => $options->getChatId(),

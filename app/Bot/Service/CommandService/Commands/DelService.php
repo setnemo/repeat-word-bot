@@ -20,7 +20,7 @@ use TelegramBot\CommandWrapper\ResponseDirector;
  */
 class DelService extends BaseDefaultCommandService
 {
-    private TrainingRepository $trainingRepository;
+    protected TrainingRepository $trainingRepository;
 
     /**
      * {@inheritDoc}
@@ -54,7 +54,7 @@ class DelService extends BaseDefaultCommandService
     /**
      * @throws SupportTypeException
      */
-    private function executeDelMyProgressCommand(): void
+    protected function executeDelMyProgressCommand(): void
     {
         $userId = $this->getOptions()->getChatId();
         foreach (BotHelper::getTrainingTypes() as $type) {
@@ -82,7 +82,7 @@ class DelService extends BaseDefaultCommandService
      *
      * @throws SupportTypeException
      */
-    private function executeDelCollectionCommand(int $num): void
+    protected function executeDelCollectionCommand(int $num): void
     {
         $userId = $this->getOptions()->getChatId();
         foreach (BotHelper::getTrainingTypes() as $type) {

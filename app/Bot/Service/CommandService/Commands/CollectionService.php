@@ -24,11 +24,11 @@ use TelegramBot\CommandWrapper\ResponseDirector;
 
 class CollectionService extends BaseDefaultCommandService
 {
-    private CollectionRepository $collectionRepository;
+    protected CollectionRepository $collectionRepository;
 
-    private WordRepository $wordRepository;
+    protected WordRepository $wordRepository;
 
-    private TrainingRepository $trainingRepository;
+    protected TrainingRepository $trainingRepository;
 
     /**
      * {@inheritDoc}
@@ -61,7 +61,7 @@ class CollectionService extends BaseDefaultCommandService
      *
      * @throws SupportTypeException
      */
-    private function executeCollectionCommand(bool $edit = false): void
+    protected function executeCollectionCommand(bool $edit = false): void
     {
         if (false === $edit) {
             $this->executeFirstCollectionCommand(1);
@@ -94,7 +94,7 @@ class CollectionService extends BaseDefaultCommandService
      *
      * @throws SupportTypeException
      */
-    private function executeFirstCollectionCommand(int $id): void
+    protected function executeFirstCollectionCommand(int $id): void
     {
         $chatId = $this->getOptions()->getChatId();
         $this->addStackMessage(
@@ -140,7 +140,7 @@ class CollectionService extends BaseDefaultCommandService
      * @throws OptimisticLockException
      * @throws SupportTypeException
      */
-    private function executeAddCollectionCommand(int $id): string
+    protected function executeAddCollectionCommand(int $id): string
     {
         $userId = $this->getOptions()->getChatId();
         $words  = $this->wordRepository->getWordsByCollectionId($id);
@@ -159,7 +159,7 @@ class CollectionService extends BaseDefaultCommandService
      * @throws OptimisticLockException
      * @throws SupportTypeException
      */
-    private function addNewWords(
+    protected function addNewWords(
         TrainingRepository $trainingRepository,
         WordCollection $words,
         int $userId
@@ -190,7 +190,7 @@ class CollectionService extends BaseDefaultCommandService
      * @return string
      * @throws SupportTypeException
      */
-    private function editCollectionMessage(int $id): string
+    protected function editCollectionMessage(int $id): string
     {
         $userId          = $this->getOptions()->getChatId();
         $rating          = $this->collectionRepository->getCollection(intval($id));
@@ -221,7 +221,7 @@ class CollectionService extends BaseDefaultCommandService
      * @return string
      * @throws SupportTypeException
      */
-    private function executeDelCollectionCommand(int $id): string
+    protected function executeDelCollectionCommand(int $id): string
     {
         $text = "Для видалення слів цієї колекції з вашого прогресу скористайтесь командою `/del collection {$id}`";
         $data = [
@@ -243,7 +243,7 @@ class CollectionService extends BaseDefaultCommandService
      * @return string
      * @throws SupportTypeException
      */
-    private function executeResetCollectionCommand(int $id): string
+    protected function executeResetCollectionCommand(int $id): string
     {
         $text = "Для скидання прогресу за словами цієї колекції скористайтесь командою `/reset collection {$id}`";
         $data = [

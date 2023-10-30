@@ -29,10 +29,10 @@ abstract class BaseDefaultCommandService extends DefaultCommandService
      */
     public function __construct(CommandOptions $options)
     {
-        parent::__construct($options);
         $config      = App::getInstance()->getConfig();
         $this->cache = Cache::getInstance()->init($config);
         Metric::getInstance()->init($config)->increaseMetric('usage');
+        parent::__construct($options);
     }
 
     /**

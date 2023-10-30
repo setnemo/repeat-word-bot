@@ -26,8 +26,8 @@ use TelegramBot\CommandWrapper\ResponseDirector;
  */
 class SettingsVoicesService extends BaseDefaultCommandService
 {
-    private UserVoiceRepository $userVoiceRepository;
-    private UserNotificationRepository $userNotificationRepository;
+    protected UserVoiceRepository $userVoiceRepository;
+    protected UserNotificationRepository $userNotificationRepository;
 
     /**
      * {@inheritDoc}
@@ -64,7 +64,7 @@ class SettingsVoicesService extends BaseDefaultCommandService
 
     /**
      */
-    private function executeSettingsVoicesStartCommand(): void
+    protected function executeSettingsVoicesStartCommand(): void
     {
         $userId = $this->getOptions()->getChatId();
         /** @psalm-suppress TooManyArguments */
@@ -91,7 +91,7 @@ class SettingsVoicesService extends BaseDefaultCommandService
      * @throws TelegramException
      * @throws SupportTypeException
      */
-    private function executeSettingsVoicesExampleCommand($num): void
+    protected function executeSettingsVoicesExampleCommand($num): void
     {
         $userId = $this->getOptions()->getChatId();
 
@@ -119,7 +119,7 @@ class SettingsVoicesService extends BaseDefaultCommandService
      * @throws OptimisticLockException
      * @throws SupportTypeException
      */
-    private function executeSettingsVoicesBackCommand(): void
+    protected function executeSettingsVoicesBackCommand(): void
     {
         $userId   = $this->getOptions()->getChatId();
         $silent   = $this->userNotificationRepository->getOrCreateUserNotification(
@@ -139,7 +139,7 @@ class SettingsVoicesService extends BaseDefaultCommandService
      * @throws OptimisticLockException
      * @throws SupportTypeException
      */
-    private function executeSettingsVoicesSwitcherCommand(int $num, int $switcher): void
+    protected function executeSettingsVoicesSwitcherCommand(int $num, int $switcher): void
     {
         $userId = $this->getOptions()->getChatId();
         $this->userVoiceRepository->updateUserVoice($userId, BotHelper::getVoices()[$num], $switcher);
