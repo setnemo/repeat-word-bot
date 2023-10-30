@@ -8,11 +8,12 @@ use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService;
+use RepeatBot\Bot\Service\CommandService\Commands\WordService;
 use TelegramBot\CommandWrapper\Command\CommandOptions;
 
 /**
  * Class UpdateWordCommand
- * @uses \RepeatBot\Bot\Service\CommandService\Commands\WordService
+ * @uses WordService
  * @package Longman\TelegramBot\Commands\SystemCommand
  */
 class WordCommand extends SystemCommand
@@ -28,10 +29,14 @@ class WordCommand extends SystemCommand
     {
         $textFromInput = BotHelper::getTextFromInput($this->getMessage()->getText(true));
         $explode       = explode(' ', $textFromInput);
+        $first         = array_shift($explode);
         $command       = new CommandService(
             options: new CommandOptions(
                 command: 'word',
-                payload: $explode,
+                payload: [
+                    WordService::CMD  => $first,
+                    WordService::BODY => implode(' ', $explode),
+                ],
                 chatId: $this->getMessage()->getChat()->getId(),
             )
         );

@@ -7,6 +7,7 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
+use Prometheus\Exception\MetricsRegistrationException;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
 use RepeatBot\Core\Metric;
@@ -24,6 +25,7 @@ abstract class BaseDefaultCommandService extends DefaultCommandService
      * BaseCommandService constructor.
      *
      * @param CommandOptions $options
+     * @throws MetricsRegistrationException
      */
     public function __construct(CommandOptions $options)
     {

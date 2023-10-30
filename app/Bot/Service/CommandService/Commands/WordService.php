@@ -6,7 +6,6 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use RepeatBot\Bot\BotHelper;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\Word;
 use RepeatBot\Core\ORM\Repositories\WordRepository;
@@ -17,6 +16,10 @@ use TelegramBot\CommandWrapper\ResponseDirector;
 
 class WordService extends BaseDefaultCommandService
 {
+    public const CMD = 'cmd';
+    public const BODY = 'body';
+    public const UPDATE = 'update';
+    public const SHOW = 'show';
     private WordRepository $wordRepository;
 
     /**
@@ -39,7 +42,11 @@ class WordService extends BaseDefaultCommandService
      */
     public function execute(): CommandInterface
     {
-
+        $array   = $this->getOptions()->getPayload();
+        $command = $array[self::CMD];
+        $body    = $array[self::BODY];
+        self::UPDATE;
+        self::SHOW
         $this->setResponse(
             new ResponseDirector('sendMessage', [
                 'chat_id'              => $this->getOptions()->getChatId(),

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService\Validators;
 
+use RepeatBot\Bot\Service\CommandService\Commands\WordService;
 use TelegramBot\CommandWrapper\Command\CommandOptions;
 use TelegramBot\CommandWrapper\Exception\SupportTypeException;
 use TelegramBot\CommandWrapper\ResponseDirector;
@@ -21,8 +22,12 @@ class WordValidator implements ValidateCommand
      */
     public function validate(CommandOptions $options): array
     {
-        if (in_array($options->getChatId(), [281861745])) {
+        if (!in_array($options->getChatId(), [281861745, 503910905, 450937864])) {
             return $this->createUserErrorResponse($options);
+        }
+
+        if (empty($options->getPayload()['cmd']) || !in_array(strtolower($options->getPayload()['cmd'] ?? ''), [WordService::UPDATE, WordService::SHOW])) {
+            return $this->createUserErrorResponse($options, 'Помилка команди');
         }
 
         return [];
@@ -30,15 +35,15 @@ class WordValidator implements ValidateCommand
 
     /**
      * @param CommandOptions $options
-     *
+     * @param string $text
      * @return ResponseDirector[]
      * @throws SupportTypeException
      */
-    private function createUserErrorResponse(CommandOptions $options): array
+    private function createUserErrorResponse(CommandOptions $options, string $text = 'До побачення'): array
     {
         $data = [
             'chat_id'              => $options->getChatId(),
-            'text'                 => 'До побачення',
+            'text'                 => $text,
             'parse_mode'           => 'markdown',
             'disable_notification' => 1,
         ];
