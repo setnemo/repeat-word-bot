@@ -13,8 +13,15 @@ $config = $app->getConfig();
 $logger = Log::getInstance()->init($config)->getLogger();
 $bot    = Bot::getInstance();
 $bot->init($config, $logger);
-Database::getInstance()->init($config)
+$entityRepository = Database::getInstance()->init($config)
     ->getEntityManager()
-    ->getRepository(LearnNotification::class)
-    ->deleteDeprecatedNotifications();
+    ->getRepository(LearnNotification::class);
 
+while (true) {
+    try {
+        $entityRepository->deleteDeprecatedNotifications();
+        usleep(500000);
+    } catch (\Throwable $e) {
+        $logger->error($e->getMessage(), $e->getTrace());
+    }
+}
