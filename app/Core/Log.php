@@ -50,4 +50,20 @@ final class Log extends Singleton
     {
         return $this->logger;
     }
+
+    /**
+     * @param Config $config
+     * @return Logger
+     */
+    public function getAdminLogger(Config $config): Logger
+    {
+        $logPath = $config->getKey('logger.path');
+        $logName = $config->getKey('logger.name');
+        $logFileName = $config->getKey('logger.filename_admin');
+        $logLevel = 100;
+        $logger = new Logger($logName);
+        $logger->pushHandler(new StreamHandler($logPath . $logFileName, $logLevel));
+
+        return $logger;
+    }
 }

@@ -6,10 +6,12 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Monolog\Logger;
 use RepeatBot\Common\Config;
 use RepeatBot\Core\App;
 use RepeatBot\Core\Cache;
 use RepeatBot\Core\Database;
+use RepeatBot\Core\Log;
 use RepeatBot\Core\Metric;
 use RepeatBot\Core\ORM\Entities\Word;
 use RepeatBot\Core\ORM\Repositories\WordRepository;
@@ -26,6 +28,7 @@ class WordService extends BaseDefaultCommandService
     public const SHOW = 'show';
     protected WordRepository $wordRepository;
     protected Config $config;
+    protected Logger $logger;
 
     /**
      * @inheritDoc
@@ -37,6 +40,7 @@ class WordService extends BaseDefaultCommandService
         /** @psalm-suppress PropertyTypeCoercion */
         $this->config = App::getInstance()->getConfig();
         $this->cache  = Cache::getInstance()->init($this->config);
+        $this->logger = Log::getInstance()->getAdminLogger($this->config);
         Metric::getInstance()->init($this->config)->increaseMetric('update_words');
         parent::__construct($options);
     }
@@ -49,7 +53,12 @@ class WordService extends BaseDefaultCommandService
      */
     public function execute(): CommandInterface
     {
-        $array   = $this->getOptions()->getPayload();
+        $options = $this->getOptions();
+        $this->logger->critical('request', [
+            'payload' => $options->getPayload(),
+            'chat_id' => $options->getChatId(),
+        ]);
+        $array   = $options->getPayload();
         $command = $array[self::CMD];
         $text    = match ($command) {
             static::UPDATE => $this->update(params: (string)$array[self::BODY] ?? ''),
@@ -57,7 +66,7 @@ class WordService extends BaseDefaultCommandService
         };
         $this->setResponse(
             new ResponseDirector('sendMessage', [
-                'chat_id'              => $this->getOptions()->getChatId(),
+                'chat_id'              => $options->getChatId(),
                 'text'                 => $text,
                 'parse_mode'           => 'markdown',
                 'disable_notification' => 1,
