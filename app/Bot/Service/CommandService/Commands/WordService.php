@@ -15,7 +15,7 @@ use TelegramBot\CommandWrapper\Command\CommandOptions;
 use TelegramBot\CommandWrapper\Exception\SupportTypeException;
 use TelegramBot\CommandWrapper\ResponseDirector;
 
-class AdminWordService extends BaseDefaultCommandService
+class WordService extends BaseDefaultCommandService
 {
     private WordRepository $wordRepository;
 

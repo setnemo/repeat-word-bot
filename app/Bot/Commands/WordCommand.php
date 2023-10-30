@@ -12,12 +12,12 @@ use TelegramBot\CommandWrapper\Command\CommandOptions;
 
 /**
  * Class UpdateWordCommand
- * @uses \RepeatBot\Bot\Service\CommandService\Commands\AdminWordService
+ * @uses \RepeatBot\Bot\Service\CommandService\Commands\WordService
  * @package Longman\TelegramBot\Commands\SystemCommand
  */
-class AdminWordCommand extends SystemCommand
+class WordCommand extends SystemCommand
 {
-    protected $usage = '/adm_word';
+    protected $usage = '/word';
 
     /**
      * Command execute method

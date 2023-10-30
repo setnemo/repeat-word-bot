@@ -19,8 +19,8 @@ use RepeatBot\Bot\Service\CommandService\Commands\StartService;
 use RepeatBot\Bot\Service\CommandService\Commands\TimeService;
 use RepeatBot\Bot\Service\CommandService\Commands\TrainingService;
 use RepeatBot\Bot\Service\CommandService\Commands\TranslateTrainingService;
-use RepeatBot\Bot\Service\CommandService\Commands\AdminWordService;
-use RepeatBot\Bot\Service\CommandService\Validators\AdminWordValidator;
+use RepeatBot\Bot\Service\CommandService\Commands\WordService;
+use RepeatBot\Bot\Service\CommandService\Validators\WordValidator;
 use RepeatBot\Bot\Service\CommandService\Validators\AlarmValidator;
 use RepeatBot\Bot\Service\CommandService\Validators\DelProgressValidator;
 use RepeatBot\Bot\Service\CommandService\Validators\ExportValidator;
@@ -53,7 +53,7 @@ class CommandDirector extends \TelegramBot\CommandWrapper\Command\CommandDirecto
             'translate_training' => $this->makeTranslateTrainingCommand($this->getOptions()),
             'start' => $this->makeStartCommand($this->getOptions()),
             'time' => $this->makeTimeCommand($this->getOptions()),
-            'admin_word' => $this->makeAdminWordCommand($this->getOptions()),
+            'word' => $this->makeWordCommand($this->getOptions()),
         };
     }
 
@@ -222,8 +222,8 @@ class CommandDirector extends \TelegramBot\CommandWrapper\Command\CommandDirecto
      *
      * @return CommandInterface
      */
-    private function makeAdminWordCommand(CommandOptions $options): CommandInterface
+    private function makeWordCommand(CommandOptions $options): CommandInterface
     {
-        return (new AdminWordService($options))->validate(new AdminWordValidator());
+        return (new WordService($options))->validate(new WordValidator());
     }
 }

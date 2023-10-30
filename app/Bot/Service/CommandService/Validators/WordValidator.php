@@ -13,7 +13,7 @@ use TelegramBot\CommandWrapper\Validator\ValidateCommand;
  * Class ExportValidator
  * @package RepeatBot\Bot\Service\CommandService\Validators
  */
-class AdminWordValidator implements ValidateCommand
+class WordValidator implements ValidateCommand
 {
     /**
      * {@inheritDoc}
