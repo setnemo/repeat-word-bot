@@ -103,7 +103,7 @@ class WordService extends BaseDefaultCommandService
         $this->wordRepository->updateWord($first, $newTranslate);
 
         return strtr(
-            "Слово `:word`[`:id`]:\n\nOld:\n`:old`\n\nNew:\n`:new` оновлено!",
+            "Слово `:word` \[ `:id` \]:\n\nOld:\n`:old`\n\nNew:\n`:new` оновлено!",
             [
             ':word' => $item->getWord(),
             ':old'  => $item->getTranslate(),
