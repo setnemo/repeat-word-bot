@@ -70,8 +70,8 @@ class SettingsVoicesService extends BaseDefaultCommandService
         /** @psalm-suppress TooManyArguments */
         $keyboard = new InlineKeyboard(
             ...BotHelper::getSettingsVoicesKeyboard(
-            $this->userVoiceRepository->getFormattedVoices($userId)
-        )
+                $this->userVoiceRepository->getFormattedVoices($userId)
+            )
         );
         $data     = [
             'chat_id'      => $userId,
@@ -146,8 +146,8 @@ class SettingsVoicesService extends BaseDefaultCommandService
         /** @psalm-suppress TooManyArguments */
         $keyboard = new InlineKeyboard(
             ...BotHelper::getSettingsVoicesKeyboard(
-            $this->userVoiceRepository->getFormattedVoices($userId)
-        )
+                $this->userVoiceRepository->getFormattedVoices($userId)
+            )
         );
         $data     = [
             'chat_id'              => $userId,

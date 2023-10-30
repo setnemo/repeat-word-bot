@@ -72,20 +72,20 @@ class CollectionService extends BaseDefaultCommandService
                 'add' => $this->executeAddCollectionCommand(intval($commands[2])),
                 'del' => $this->executeDelCollectionCommand(intval($commands[2])),
                 'reset' => $this->executeResetCollectionCommand(intval($commands[2])),
-                default => $this->editCollectionMessage(intval($command))
+            default => $this->editCollectionMessage(intval($command))
             };
 
-            $this->setResponse(
-                new ResponseDirector(
-                    'answerCallbackQuery',
-                    [
+                $this->setResponse(
+                    new ResponseDirector(
+                        'answerCallbackQuery',
+                        [
                         'callback_query_id' => $this->getOptions()->getCallbackQueryId(),
                         'text'              => $text,
                         'show_alert'        => true,
                         'cache_time'        => 3,
-                    ]
-                )
-            );
+                        ]
+                    )
+                );
         }
     }
 

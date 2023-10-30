@@ -145,7 +145,7 @@ class BotHelper
                 'status' => 'second',
                 'repeat' => 24 * 60,
             ],
-        };
+            };
     }
 
     /**
@@ -318,12 +318,12 @@ class BotHelper
         /** @psalm-suppress TooManyArguments */
         $keyboard = new InlineKeyboard(
             ...BotHelper::getSettingsKeyboard(
-            $textSilent,
-            $texPriority,
-            $texVoices,
-            $silent === 1 ? 0 : 1,
-            $priority === 1 ? 0 : 1,
-        )
+                $textSilent,
+                $texPriority,
+                $texVoices,
+                $silent === 1 ? 0 : 1,
+                $priority === 1 ? 0 : 1,
+            )
         );
         return [
             'chat_id'      => $user_id,
@@ -428,9 +428,9 @@ class BotHelper
             foreach ($items as $item) {
                 $status = ucfirst($item['status']);
                 $text   .= BotHelper::getAnswer(
-                        "\[{$type}] {$status} ітерація: ",
-                        (int)$item['counter']
-                    ) . "\n";
+                    "\[{$type}] {$status} ітерація: ",
+                    (int)$item['counter']
+                ) . "\n";
             }
         }
 

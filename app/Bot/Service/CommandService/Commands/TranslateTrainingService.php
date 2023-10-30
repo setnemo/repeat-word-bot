@@ -202,13 +202,13 @@ class TranslateTrainingService extends BaseDefaultCommandService
         $template          .= "яке буде доступне `: date`. Ви завжди можете додати нову колекцію.";
 
         return $text . strtr(
-                $template,
-                [
+            $template,
+            [
                     ':word'     => $availableTraining->getWord()->getWord(),
                     ':training' => $availableTraining->getType(),
                     ':date'     => $availableTraining->getNext()->diffForHumans(),
                 ]
-            );
+        );
     }
 
     /**
