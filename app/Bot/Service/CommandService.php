@@ -29,35 +29,16 @@ class CommandService
         return match ($this->getType()) {
             'query' => $this->makeQueryService($this->getOptions()),
             'generic' => $this->makeGenericService($this->getOptions()),
-        default => $this->makeDefaultService($this->getOptions()),
+            default => $this->makeDefaultService($this->getOptions()),
         };
     }
 
-
     /**
-     * @param CommandInterface $service
-     *
-     * @return ServerResponse
+     * @return string
      */
-    public function executeCommand(CommandInterface $service): ServerResponse
+    public function getType(): string
     {
-        if (!$service->hasResponse()) {
-            $service = $service->execute();
-        }
-
-        return $service->postStackMessages()->getResponseMessage();
-    }
-
-    /**
-     * @param CommandOptions $options
-     *
-     * @return CommandInterface
-     */
-    private function makeDefaultService(CommandOptions $options): CommandInterface
-    {
-        $command = new CommandDirector($options);
-
-        return $command->makeService();
+        return $this->type;
     }
 
     /**
@@ -73,6 +54,14 @@ class CommandService
     }
 
     /**
+     * @return CommandOptions
+     */
+    public function getOptions(): CommandOptions
+    {
+        return $this->options;
+    }
+
+    /**
      * @param CommandOptions $options
      *
      * @return CommandInterface
@@ -85,18 +74,28 @@ class CommandService
     }
 
     /**
-     * @return CommandOptions
+     * @param CommandOptions $options
+     *
+     * @return CommandInterface
      */
-    public function getOptions(): CommandOptions
+    private function makeDefaultService(CommandOptions $options): CommandInterface
     {
-        return $this->options;
+        $command = new CommandDirector($options);
+
+        return $command->makeService();
     }
 
     /**
-     * @return string
+     * @param CommandInterface $service
+     *
+     * @return ServerResponse
      */
-    public function getType(): string
+    public function executeCommand(CommandInterface $service): ServerResponse
     {
-        return $this->type;
+        if (!$service->hasResponse()) {
+            $service = $service->execute();
+        }
+
+        return $service->postStackMessages()->getResponseMessage();
     }
 }

@@ -27,12 +27,14 @@ class CallbackqueryCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        $command = new CommandService(options: new CommandOptions(
+        $command = new CommandService(
+            options: new CommandOptions(
             payload: explode('_', $this->getCallbackQuery()->getData()),
             chatId: $this->getCallbackQuery()->getMessage()->getChat()->getId(),
             messageId: $this->getCallbackQuery()->getMessage()->getMessageId(),
             callbackQueryId: intval($this->getCallbackQuery()->getId())
-        ), type: 'query');
+        ), type: 'query'
+        );
 
         return $command->executeCommand($command->makeService());
     }

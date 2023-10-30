@@ -31,8 +31,8 @@ class GenericMessageDirectorFabric
     public function __construct(CommandOptions $options)
     {
         $this->options = $options;
-        $config = App::getInstance()->getConfig();
-        $this->cache = Cache::getInstance()->init($config);
+        $config        = App::getInstance()->getConfig();
+        $this->cache   = Cache::getInstance()->init($config);
         /** @psalm-suppress PropertyTypeCoercion */
         $this->trainingRepository = Database::getInstance()
             ->getEntityManager()
@@ -45,7 +45,7 @@ class GenericMessageDirectorFabric
     public function getCommandDirector(): CommandDirector
     {
         $userId = $this->getOptions()->getChatId();
-        $text = $this->getOptions()->getText();
+        $text   = $this->getOptions()->getText();
         if ($this->itsStartNewTraining($text)) {
             $cacheCommand = $this->getStrReplaceStartCommand($text);
             $this->cache->setTrainingStatus(
@@ -85,6 +85,34 @@ class GenericMessageDirectorFabric
     }
 
     /**
+     * @return CommandOptions
+     */
+    public function getOptions(): CommandOptions
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param string $text
+     *
+     * @return bool
+     */
+    private function itsStartNewTraining(string $text): bool
+    {
+        return in_array($this->getStrReplaceStartCommand($text), BotHelper::getTrainingTypes());
+    }
+
+    /**
+     * @param string $text
+     *
+     * @return string
+     */
+    private function getStrReplaceStartCommand(string $text): string
+    {
+        return str_replace(' ', '', $text);
+    }
+
+    /**
      * @param string $command
      *
      * @return CommandDirector
@@ -98,17 +126,6 @@ class GenericMessageDirectorFabric
                 chatId: $this->getOptions()->getChatId()
             )
         );
-    }
-
-
-    /**
-     * @param string $text
-     *
-     * @return bool
-     */
-    private function itsStartNewTraining(string $text): bool
-    {
-        return in_array($this->getStrReplaceStartCommand($text), BotHelper::getTrainingTypes());
     }
 
     /**
@@ -146,23 +163,5 @@ class GenericMessageDirectorFabric
     private function isOneYear(string $text): bool
     {
         return '1' === $text;
-    }
-
-    /**
-     * @param string $text
-     *
-     * @return string
-     */
-    private function getStrReplaceStartCommand(string $text): string
-    {
-        return str_replace(' ', '', $text);
-    }
-
-    /**
-     * @return CommandOptions
-     */
-    public function getOptions(): CommandOptions
-    {
-        return $this->options;
     }
 }

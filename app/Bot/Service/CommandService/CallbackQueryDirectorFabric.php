@@ -30,24 +30,17 @@ class CallbackQueryDirectorFabric
 
         return match ($command) {
             'collections' => $this->makeCollectionCommand(),
-            'settings'    => $this->makeSettingsCommand(),
-        default           => $this->makeEmptyCallback(),
+            'settings' => $this->makeSettingsCommand(),
+            default => $this->makeEmptyCallback(),
         };
     }
 
     /**
-     * @return CommandDirector
+     * @return CommandOptions
      */
-    private function makeSettingsCommand(): CommandDirector
+    public function getOptions(): CommandOptions
     {
-        $command = $this->getOptions()->getPayload()[1] ?? '';
-
-        return match ($command) {
-            'voices'   => $this->makeSettingsVoicesCommand(),
-            'silent'   => $this->makeSettingsSilentCommand(),
-            'priority' => $this->makeSettingsPriorityCommand(),
-        default        => $this->makeEmptyCallback(),
-        };
+        return $this->options;
     }
 
     /**
@@ -59,11 +52,36 @@ class CallbackQueryDirectorFabric
     }
 
     /**
+     * @param string $command
+     *
      * @return CommandDirector
      */
-    private function makeEmptyCallback(): CommandDirector
+    private function makeDirector(string $command): CommandDirector
     {
-        return $this->makeDirector('empty');
+        return new CommandDirector(
+            new CommandOptions(
+                command: $command,
+                payload: $this->getOptions()->getPayload(),
+                chatId: $this->getOptions()->getChatId(),
+                messageId: $this->getOptions()->getMessageId(),
+                callbackQueryId: $this->getOptions()->getCallbackQueryId()
+            )
+        );
+    }
+
+    /**
+     * @return CommandDirector
+     */
+    private function makeSettingsCommand(): CommandDirector
+    {
+        $command = $this->getOptions()->getPayload()[1] ?? '';
+
+        return match ($command) {
+            'voices' => $this->makeSettingsVoicesCommand(),
+            'silent' => $this->makeSettingsSilentCommand(),
+            'priority' => $this->makeSettingsPriorityCommand(),
+            default => $this->makeEmptyCallback(),
+        };
     }
 
     /**
@@ -91,28 +109,10 @@ class CallbackQueryDirectorFabric
     }
 
     /**
-     * @param string $command
-     *
      * @return CommandDirector
      */
-    private function makeDirector(string $command): CommandDirector
+    private function makeEmptyCallback(): CommandDirector
     {
-        return new CommandDirector(
-            new CommandOptions(
-                command: $command,
-                payload: $this->getOptions()->getPayload(),
-                chatId: $this->getOptions()->getChatId(),
-                messageId: $this->getOptions()->getMessageId(),
-                callbackQueryId: $this->getOptions()->getCallbackQueryId()
-            )
-        );
-    }
-
-    /**
-     * @return CommandOptions
-     */
-    public function getOptions(): CommandOptions
-    {
-        return $this->options;
+        return $this->makeDirector('empty');
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use RepeatBot\Core\ORM\Repositories\TrainingRepository;
 
 /**
@@ -23,6 +25,8 @@ class OneYearService
 
     /**
      * @param int $id
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function execute(int $id): void
     {

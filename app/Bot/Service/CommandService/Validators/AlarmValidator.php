@@ -22,16 +22,16 @@ class AlarmValidator implements ValidateCommand
         $payload = $options->getPayload();
         if ($payload[0] !== 'list' && $payload[0] !== 'reset') {
             $textToArray = $options->getPayload();
-            $commands = array_reverse($textToArray);
+            $commands    = array_reverse($textToArray);
             if ($this->isBrokenTime($commands)) {
                 return [
                     new ResponseDirector('sendMessage', [
-                        'chat_id' => $options->getChatId(),
-                        'text' => $this->getErrorText(),
-                        'parse_mode' => 'markdown',
+                        'chat_id'                  => $options->getChatId(),
+                        'text'                     => $this->getErrorText(),
+                        'parse_mode'               => 'markdown',
                         'disable_web_page_preview' => true,
-                        'disable_notification' => 1,
-                    ])
+                        'disable_notification'     => 1,
+                    ]),
                 ];
             }
         }

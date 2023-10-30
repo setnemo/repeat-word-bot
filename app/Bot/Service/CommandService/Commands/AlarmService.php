@@ -6,13 +6,13 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use TelegramBot\CommandWrapper\Command\CommandOptions;
-use TelegramBot\CommandWrapper\Command\CommandInterface;
-use TelegramBot\CommandWrapper\Exception\SupportTypeException;
-use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\LearnNotificationPersonal;
 use RepeatBot\Core\ORM\Repositories\LearnNotificationPersonalRepository;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 
 /**
  * Class AlarmService
@@ -61,11 +61,11 @@ class AlarmService extends BaseDefaultCommandService
     private function executeAlarmListCommand(): void
     {
         $items = $this->repository->getMyAlarms($this->getOptions()->getChatId());
-        $text = '';
+        $text  = '';
         /** @var LearnNotificationPersonal $item */
         foreach ($items as $item) {
             $text .= strtr("(:tz) :time\n", [
-                ':tz' => $item->getTimezone(),
+                ':tz'   => $item->getTimezone(),
                 ':time' => $item->getAlarm()->rawFormat('H:i:s'),
             ]);
         }
@@ -74,11 +74,11 @@ class AlarmService extends BaseDefaultCommandService
             new ResponseDirector(
                 'sendMessage',
                 [
-                    'chat_id' => $this->getOptions()->getChatId(),
-                    'text' => empty($text) ? 'Список персональних нагадувань порожній' : $text,
-                    'parse_mode' => 'markdown',
+                    'chat_id'                  => $this->getOptions()->getChatId(),
+                    'text'                     => empty($text) ? 'Список персональних нагадувань порожній' : $text,
+                    'parse_mode'               => 'markdown',
                     'disable_web_page_preview' => true,
-                    'disable_notification' => 1,
+                    'disable_notification'     => 1,
                 ]
             )
         );
@@ -94,11 +94,11 @@ class AlarmService extends BaseDefaultCommandService
             new ResponseDirector(
                 'sendMessage',
                 [
-                    'chat_id' => $this->getOptions()->getChatId(),
-                    'text' => 'Нагадування видалено',
-                    'parse_mode' => 'markdown',
+                    'chat_id'                  => $this->getOptions()->getChatId(),
+                    'text'                     => 'Нагадування видалено',
+                    'parse_mode'               => 'markdown',
                     'disable_web_page_preview' => true,
-                    'disable_notification' => 1,
+                    'disable_notification'     => 1,
                 ]
             )
         );
@@ -113,8 +113,8 @@ class AlarmService extends BaseDefaultCommandService
     {
         $commands = $this->getOptions()->getPayload();
         $commands = array_reverse($commands);
-        $time = $commands[0];
-        $tz = $commands[1] ?? 'FDT';
+        $time     = $commands[0];
+        $tz       = $commands[1] ?? 'FDT';
         $this->repository->createNotification(
             $this->getOptions()->getChatId(),
             "Тренування чекає! Почни прямо зараз /training",
@@ -127,11 +127,11 @@ class AlarmService extends BaseDefaultCommandService
             new ResponseDirector(
                 'sendMessage',
                 [
-                    'chat_id' => $this->getOptions()->getChatId(),
-                    'text' => $text,
-                    'parse_mode' => 'markdown',
+                    'chat_id'                  => $this->getOptions()->getChatId(),
+                    'text'                     => $text,
+                    'parse_mode'               => 'markdown',
                     'disable_web_page_preview' => true,
-                    'disable_notification' => 1,
+                    'disable_notification'     => 1,
                 ]
             )
         );

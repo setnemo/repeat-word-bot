@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService\Commands;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
-use RepeatBot\Core\Log;
-use TelegramBot\CommandWrapper\Command\CommandInterface;
-use TelegramBot\CommandWrapper\Command\CommandOptions;
-use TelegramBot\CommandWrapper\Exception\SupportTypeException;
-use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Bot\Service\GoogleTextToSpeechService;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\Exception\EmptyVocabularyException;
 use RepeatBot\Core\ORM\Entities\Training;
 use RepeatBot\Core\ORM\Entities\UserVoice;
 use RepeatBot\Core\ORM\Repositories\TrainingRepository;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 
 /**
  * Class TranslateTrainingService
@@ -42,6 +43,9 @@ class TranslateTrainingService extends BaseDefaultCommandService
 
     /**
      * {@inheritDoc}
+     * @return CommandInterface
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws SupportTypeException
      * @throws TelegramException
      */
@@ -49,7 +53,7 @@ class TranslateTrainingService extends BaseDefaultCommandService
     {
         $userId = $this->getOptions()->getChatId();
         $answer = '';
-        $type = $this->cache->checkTrainingsStatus($userId);
+        $type   = $this->cache->checkTrainingsStatus($userId);
         if (null !== $type) {
             $trainingId = $this->cache->getTrainings($userId, $type);
             if ($trainingId) {
@@ -73,44 +77,20 @@ class TranslateTrainingService extends BaseDefaultCommandService
     }
 
     /**
-     * @param Training $training
-     * @param string   $text
-     *
-     * @return bool
-     */
-    private function getToEnglishResult(Training $training, string $text): bool
-    {
-        $result = false;
-        foreach (explode('; ', mb_strtolower($training->getWord()->getTranslate())) as $translate) {
-            if ($translate === trim($text)) {
-                $result = true;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return string
-     */
-    private function getFormattedText(): string
-    {
-        return preg_replace('/(ʼ’‘`)/i', "'", mb_strtolower($this->getOptions()->getText()));
-    }
-
-    /**
-     * @param int    $trainingId
+     * @param int $trainingId
      * @param string $type
-     * @param int    $userId
+     * @param int $userId
      *
      * @return string
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     private function getAnswer(int $trainingId, string $type, int $userId): string
     {
-        $training = $this->trainingRepository->getTraining($trainingId);
-        $word = $training->getWord();
-        $text = $this->getFormattedText();
-        $correct = match ($type) {
+        $training    = $this->trainingRepository->getTraining($trainingId);
+        $word        = $training->getWord();
+        $text        = $this->getFormattedText();
+        $correct     = match ($type) {
             'ToEnglish' => $word->getWord(),
             'FromEnglish' => $word->getTranslate(),
         };
@@ -118,7 +98,7 @@ class TranslateTrainingService extends BaseDefaultCommandService
             'ToEnglish' => $word->getTranslate(),
             'FromEnglish' => $word->getWord(),
         };
-        $result = match ($type) {
+        $result      = match ($type) {
             'ToEnglish' => $text === mb_strtolower($word->getWord()),
             'FromEnglish' => $this->getToEnglishResult($training, $text),
         };
@@ -139,9 +119,35 @@ class TranslateTrainingService extends BaseDefaultCommandService
     }
 
     /**
+     * @return string
+     */
+    private function getFormattedText(): string
+    {
+        return preg_replace('/(ʼ’‘`)/i', "'", mb_strtolower($this->getOptions()->getText()));
+    }
+
+    /**
+     * @param Training $training
+     * @param string $text
+     *
+     * @return bool
+     */
+    private function getToEnglishResult(Training $training, string $text): bool
+    {
+        $result = false;
+        foreach (explode('; ', mb_strtolower($training->getWord()->getTranslate())) as $translate) {
+            if ($translate === trim($text)) {
+                $result = true;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * @param string $type
      * @param string $question
-     * @param int    $userId
+     * @param int $userId
      *
      * @throws EmptyVocabularyException
      * @throws TelegramException
@@ -155,12 +161,12 @@ class TranslateTrainingService extends BaseDefaultCommandService
         };
         $priority = $this->cache->getPriority($userId);
         $training = $this->trainingRepository->getRandomTraining($userId, $type, $priority === 1);
-        $word = $training->getWord();
+        $word     = $training->getWord();
         $question .= match ($type) {
             'ToEnglish' => $word->getTranslate(),
             'FromEnglish' => $word->getWord(),
         };
-        $word = $training->getWord();
+        $word     = $training->getWord();
         $this->cache->setTrainingStatusId($userId, $type, $training->getId());
         /** @psalm-suppress TooManyArguments */
         $keyboard = new Keyboard(...BotHelper::getInTrainingKeyboard());
@@ -169,30 +175,20 @@ class TranslateTrainingService extends BaseDefaultCommandService
         $userVoiceRepository = Database::getInstance()
             ->getEntityManager()
             ->getRepository(UserVoice::class);
-        $voice = $userVoiceRepository->getRandomVoice($userId);
-        $uri = GoogleTextToSpeechService::getInstance()->init($voice)->getMp3($word->getWord());
-        $data = [
-            'chat_id' => $userId,
-            'voice' => Request::encodeFile($uri),
-            'caption' => trim($question),
-            'reply_markup' => $keyboard,
+        $voice               = $userVoiceRepository->getRandomVoice($userId);
+        $uri                 = GoogleTextToSpeechService::getInstance()->init($voice)->getMp3($word->getWord());
+        $data                = [
+            'chat_id'              => $userId,
+            'voice'                => Request::encodeFile($uri),
+            'caption'              => trim($question),
+            'reply_markup'         => $keyboard,
             'disable_notification' => 1,
         ];
         $this->setResponse(new ResponseDirector('sendVoice', $data));
     }
 
     /**
-     * @param int    $userId
-     * @param string $type
-     */
-    private function clearTraining(int $userId, string $type): void
-    {
-        $this->cache->removeTrainings($userId, $type);
-        $this->cache->removeTrainingsStatus($userId, $type);
-    }
-
-    /**
-     * @param int    $userId
+     * @param int $userId
      * @param string $type
      * @param string $text
      *
@@ -202,21 +198,31 @@ class TranslateTrainingService extends BaseDefaultCommandService
     private function getNearestText(int $userId, string $type, string $text): string
     {
         $availableTraining = $this->trainingRepository->getNearestAvailableTrainingTime($userId, $type);
-        $template = "У тренуванні `:training` найближче слово для вивчення - `:word`,";
-        $template .= "яке буде доступне `: date`. Ви завжди можете додати нову колекцію.";
+        $template          = "У тренуванні `:training` найближче слово для вивчення - `:word`,";
+        $template          .= "яке буде доступне `: date`. Ви завжди можете додати нову колекцію.";
 
         return $text . strtr(
-            $template,
-            [
-                ':word' => $availableTraining->getWord()->getWord(),
-                ':training' => $availableTraining->getType(),
-                ':date' => $availableTraining->getNext()->diffForHumans()
-            ]
-        );
+                $template,
+                [
+                    ':word'     => $availableTraining->getWord()->getWord(),
+                    ':training' => $availableTraining->getType(),
+                    ':date'     => $availableTraining->getNext()->diffForHumans(),
+                ]
+            );
     }
 
     /**
-     * @param int    $userId
+     * @param int $userId
+     * @param string $type
+     */
+    private function clearTraining(int $userId, string $type): void
+    {
+        $this->cache->removeTrainings($userId, $type);
+        $this->cache->removeTrainingsStatus($userId, $type);
+    }
+
+    /**
+     * @param int $userId
      * @param string $text
      *
      * @throws SupportTypeException
@@ -227,12 +233,12 @@ class TranslateTrainingService extends BaseDefaultCommandService
         $keyboard = new Keyboard(...BotHelper::getTrainingKeyboard());
         $keyboard->setResizeKeyboard(true);
         $data = [
-            'chat_id' => $userId,
-            'text' => $text,
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $userId,
+            'text'                     => $text,
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
+            'reply_markup'             => $keyboard,
+            'disable_notification'     => 1,
         ];
 
         $this->addStackMessage(new ResponseDirector('sendMessage', $data));

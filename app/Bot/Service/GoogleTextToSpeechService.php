@@ -26,13 +26,13 @@ class GoogleTextToSpeechService extends Singleton
     private bool $filesExists = false;
 
     /**
-     * @param string                    $voiceName
-     * @param string                    $language
-     * @param TextToSpeechClient|null   $textToSpeechClient
+     * @param string $voiceName
+     * @param string $language
+     * @param TextToSpeechClient|null $textToSpeechClient
      * @param VoiceSelectionParams|null $voiceSelectionParams
-     * @param AudioConfig|null          $audioConfig
-     * @param SynthesisInput|null       $synthesisInput
-     * @param bool                      $filesExists
+     * @param AudioConfig|null $audioConfig
+     * @param SynthesisInput|null $synthesisInput
+     * @param bool $filesExists
      *
      * @return $this
      */
@@ -55,15 +55,15 @@ class GoogleTextToSpeechService extends Singleton
         }
         if (null === $this->voice) {
             $this->voice = $voiceSelectionParams ?? (new VoiceSelectionParams())
-                    ->setLanguageCode($language)
-                    ->setName($voiceName);
+                ->setLanguageCode($language)
+                ->setName($voiceName);
         }
         if (null === $this->audioConfig) {
             $this->audioConfig = $audioConfig ?? (new AudioConfig())
-                    ->setAudioEncoding(AudioEncoding::MP3)
-                    ->setEffectsProfileId(['telephony-class-application'])
-                    ->setPitch(-4.40)
-                    ->setSpeakingRate(0.89);
+                ->setAudioEncoding(AudioEncoding::MP3)
+                ->setEffectsProfileId(['telephony-class-application'])
+                ->setPitch(-4.40)
+                ->setSpeakingRate(0.89);
         }
         if (null === $this->synthesisInputText) {
             $this->synthesisInputText = $synthesisInput ?? new SynthesisInput();
@@ -89,7 +89,7 @@ class GoogleTextToSpeechService extends Singleton
             null !== $this->synthesisInputText
         ) {
             $this->synthesisInputText->setText($text);
-            $response = $this->client->synthesizeSpeech(
+            $response     = $this->client->synthesizeSpeech(
                 $this->synthesisInputText,
                 $this->voice,
                 $this->audioConfig

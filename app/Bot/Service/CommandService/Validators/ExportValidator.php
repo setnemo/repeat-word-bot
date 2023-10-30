@@ -6,13 +6,13 @@ namespace RepeatBot\Bot\Service\CommandService\Validators;
 
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService\Messages\ExportMessage;
+use RepeatBot\Core\Database;
+use RepeatBot\Core\ORM\Entities\Export;
+use RepeatBot\Core\ORM\Repositories\ExportRepository;
 use TelegramBot\CommandWrapper\Command\CommandOptions;
 use TelegramBot\CommandWrapper\Exception\SupportTypeException;
 use TelegramBot\CommandWrapper\ResponseDirector;
 use TelegramBot\CommandWrapper\Validator\ValidateCommand;
-use RepeatBot\Core\Database;
-use RepeatBot\Core\ORM\Entities\Export;
-use RepeatBot\Core\ORM\Repositories\ExportRepository;
 
 /**
  * Class ExportValidator
@@ -61,7 +61,7 @@ class ExportValidator implements ValidateCommand
 
     /**
      * @param CommandOptions $options
-     * @param string         $text
+     * @param string $text
      *
      * @return ResponseDirector[]
      * @throws SupportTypeException
@@ -69,14 +69,14 @@ class ExportValidator implements ValidateCommand
     private function createUserErrorResponse(CommandOptions $options, string $text): array
     {
         $data = [
-            'chat_id' => $options->getChatId(),
-            'text' => $text,
-            'parse_mode' => 'markdown',
+            'chat_id'              => $options->getChatId(),
+            'text'                 => $text,
+            'parse_mode'           => 'markdown',
             'disable_notification' => 1,
         ];
 
         return [
-            new ResponseDirector('sendMessage', $data)
+            new ResponseDirector('sendMessage', $data),
         ];
     }
 }

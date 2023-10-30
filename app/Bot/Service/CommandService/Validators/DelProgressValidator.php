@@ -33,15 +33,15 @@ class DelProgressValidator implements ValidateCommand
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $data = [
-            'chat_id' => $options->getChatId(),
-            'text' => $this->getErrorText(),
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $options->getChatId(),
+            'text'                     => $this->getErrorText(),
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
+            'reply_markup'             => $keyboard,
+            'disable_notification'     => 1,
         ];
         return [
-            new ResponseDirector('sendMessage', $data)
+            new ResponseDirector('sendMessage', $data),
         ];
     }
 

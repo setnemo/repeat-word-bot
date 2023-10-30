@@ -35,22 +35,22 @@ class CommandDirector extends \TelegramBot\CommandWrapper\Command\CommandDirecto
     public function makeService(): CommandInterface
     {
         return match ($this->getOptions()->getCommand()) {
-            'alarm'              => $this->makeAlarmCommand($this->getOptions()),
-            'collections'        => $this->makeCollectionCommand($this->getOptions()),
-            'empty'              => $this->makeEmptyCommand($this->getOptions()),
-            'settings'           => $this->makeSettingsCommand($this->getOptions()),
-            'settings_voices'    => $this->makeSettingsVoicesCommand($this->getOptions()),
-            'settings_silent'    => $this->makeSettingsSilentCommand($this->getOptions()),
-            'settings_priority'  => $this->makeSettingsPriorityCommand($this->getOptions()),
-            'del'                => $this->makeDelCommand($this->getOptions()),
-            'export'             => $this->makeExportCommand($this->getOptions()),
-            'help'               => $this->makeHelpCommand($this->getOptions()),
-            'progress'           => $this->makeProgressCommand($this->getOptions()),
-            'reset'              => $this->makeResetCommand($this->getOptions()),
-            'training'           => $this->makeTrainingCommand($this->getOptions()),
+            'alarm' => $this->makeAlarmCommand($this->getOptions()),
+            'collections' => $this->makeCollectionCommand($this->getOptions()),
+            'empty' => $this->makeEmptyCommand($this->getOptions()),
+            'settings' => $this->makeSettingsCommand($this->getOptions()),
+            'settings_voices' => $this->makeSettingsVoicesCommand($this->getOptions()),
+            'settings_silent' => $this->makeSettingsSilentCommand($this->getOptions()),
+            'settings_priority' => $this->makeSettingsPriorityCommand($this->getOptions()),
+            'del' => $this->makeDelCommand($this->getOptions()),
+            'export' => $this->makeExportCommand($this->getOptions()),
+            'help' => $this->makeHelpCommand($this->getOptions()),
+            'progress' => $this->makeProgressCommand($this->getOptions()),
+            'reset' => $this->makeResetCommand($this->getOptions()),
+            'training' => $this->makeTrainingCommand($this->getOptions()),
             'translate_training' => $this->makeTranslateTrainingCommand($this->getOptions()),
-            'start'              => $this->makeStartCommand($this->getOptions()),
-            'time'               => $this->makeTimeCommand($this->getOptions()),
+            'start' => $this->makeStartCommand($this->getOptions()),
+            'time' => $this->makeTimeCommand($this->getOptions()),
         };
     }
 

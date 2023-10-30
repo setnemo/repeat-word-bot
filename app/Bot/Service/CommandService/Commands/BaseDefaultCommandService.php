@@ -28,17 +28,9 @@ abstract class BaseDefaultCommandService extends DefaultCommandService
     public function __construct(CommandOptions $options)
     {
         parent::__construct($options);
-        $config = App::getInstance()->getConfig();
+        $config      = App::getInstance()->getConfig();
         $this->cache = Cache::getInstance()->init($config);
         Metric::getInstance()->init($config)->increaseMetric('usage');
-    }
-
-    /**
-     * @return CommandOptions
-     */
-    public function getOptions(): CommandOptions
-    {
-        return $this->options;
     }
 
     /**
@@ -62,6 +54,30 @@ abstract class BaseDefaultCommandService extends DefaultCommandService
     }
 
     /**
+     * @return CommandOptions
+     */
+    public function getOptions(): CommandOptions
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param ResponseDirector $response
+     */
+    protected function setResponse(ResponseDirector $response): void
+    {
+        $this->response = $response;
+    }
+
+    /**
+     * @param ResponseDirector $response
+     */
+    public function addStackMessage(ResponseDirector $response): void
+    {
+        $this->stack[] = $response;
+    }
+
+    /**
      * {@inheritDoc}
      * @throws TelegramException
      */
@@ -82,22 +98,6 @@ abstract class BaseDefaultCommandService extends DefaultCommandService
     public function getResponseMessage(): ServerResponse
     {
         return null === $this->response ? Request::emptyResponse() : $this->response->getResponse();
-    }
-
-    /**
-     * @param ResponseDirector $response
-     */
-    protected function setResponse(ResponseDirector $response): void
-    {
-        $this->response = $response;
-    }
-
-    /**
-     * @param ResponseDirector $response
-     */
-    public function addStackMessage(ResponseDirector $response): void
-    {
-        $this->stack[] = $response;
     }
 
     /**

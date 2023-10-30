@@ -6,20 +6,19 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Exception;
 use Longman\TelegramBot\Entities\InlineKeyboard;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use RepeatBot\Bot\BotHelper;
-use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\UserNotification;
 use RepeatBot\Core\ORM\Entities\UserVoice;
 use RepeatBot\Core\ORM\Repositories\UserNotificationRepository;
 use RepeatBot\Core\ORM\Repositories\UserVoiceRepository;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
 use TelegramBot\CommandWrapper\Exception\SupportTypeException;
 use TelegramBot\CommandWrapper\ResponseDirector;
-use TelegramBot\CommandWrapper\Command\CommandInterface;
 
 /**
  * Class SettingsVoicesService
@@ -69,15 +68,17 @@ class SettingsVoicesService extends BaseDefaultCommandService
     {
         $userId = $this->getOptions()->getChatId();
         /** @psalm-suppress TooManyArguments */
-        $keyboard = new InlineKeyboard(...BotHelper::getSettingsVoicesKeyboard(
+        $keyboard = new InlineKeyboard(
+            ...BotHelper::getSettingsVoicesKeyboard(
             $this->userVoiceRepository->getFormattedVoices($userId)
-        ));
-        $data = [
-            'chat_id' => $userId,
-            'text' => BotHelper::getSettingsText(),
+        )
+        );
+        $data     = [
+            'chat_id'      => $userId,
+            'text'         => BotHelper::getSettingsText(),
             'reply_markup' => $keyboard,
-            'message_id' => $this->getOptions()->getMessageId(),
-            'parse_mode' => 'markdown',
+            'message_id'   => $this->getOptions()->getMessageId(),
+            'parse_mode'   => 'markdown',
 
         ];
 
@@ -94,19 +95,23 @@ class SettingsVoicesService extends BaseDefaultCommandService
     {
         $userId = $this->getOptions()->getChatId();
 
-        $this->addStackMessage(new ResponseDirector('sendVoice', [
-            'chat_id' => $userId,
-            'voice' => Request::encodeFile('/app/resource/example/' . $num . '.mp3'),
-            'caption' => 'Example ' . BotHelper::getVoices()[$num],
-            'disable_notification' => 1,
-        ]));
+        $this->addStackMessage(
+            new ResponseDirector('sendVoice', [
+                'chat_id'              => $userId,
+                'voice'                => Request::encodeFile('/app/resource/example/' . $num . '.mp3'),
+                'caption'              => 'Example ' . BotHelper::getVoices()[$num],
+                'disable_notification' => 1,
+            ])
+        );
 
-        $this->setResponse(new ResponseDirector('answerCallbackQuery', [
-            'callback_query_id' => $this->getOptions()->getCallbackQueryId(),
-            'text' => '',
-            'show_alert' => true,
-            'cache_time' => 3,
-        ]));
+        $this->setResponse(
+            new ResponseDirector('answerCallbackQuery', [
+                'callback_query_id' => $this->getOptions()->getCallbackQueryId(),
+                'text'              => '',
+                'show_alert'        => true,
+                'cache_time'        => 3,
+            ])
+        );
     }
 
     /**
@@ -116,12 +121,12 @@ class SettingsVoicesService extends BaseDefaultCommandService
      */
     private function executeSettingsVoicesBackCommand(): void
     {
-        $userId = $this->getOptions()->getChatId();
-        $silent = $this->userNotificationRepository->getOrCreateUserNotification(
+        $userId   = $this->getOptions()->getChatId();
+        $silent   = $this->userNotificationRepository->getOrCreateUserNotification(
             $userId
         )->getSilent();
         $priority = $this->cache->getPriority($userId);
-        $data = BotHelper::editMainMenuSettings($silent, $priority, $userId, $this->getOptions()->getMessageId());
+        $data     = BotHelper::editMainMenuSettings($silent, $priority, $userId, $this->getOptions()->getMessageId());
 
         $this->setResponse(new ResponseDirector('editMessageText', $data));
     }
@@ -139,24 +144,28 @@ class SettingsVoicesService extends BaseDefaultCommandService
         $userId = $this->getOptions()->getChatId();
         $this->userVoiceRepository->updateUserVoice($userId, BotHelper::getVoices()[$num], $switcher);
         /** @psalm-suppress TooManyArguments */
-        $keyboard = new InlineKeyboard(...BotHelper::getSettingsVoicesKeyboard(
+        $keyboard = new InlineKeyboard(
+            ...BotHelper::getSettingsVoicesKeyboard(
             $this->userVoiceRepository->getFormattedVoices($userId)
-        ));
-        $data = [
-            'chat_id' => $userId,
-            'text' => BotHelper::getSettingsText(),
-            'message_id' => $this->getOptions()->getMessageId(),
-            'parse_mode' => 'markdown',
+        )
+        );
+        $data     = [
+            'chat_id'              => $userId,
+            'text'                 => BotHelper::getSettingsText(),
+            'message_id'           => $this->getOptions()->getMessageId(),
+            'parse_mode'           => 'markdown',
             'disable_notification' => 1,
-            'reply_markup' => $keyboard,
+            'reply_markup'         => $keyboard,
         ];
         $this->addStackMessage(new ResponseDirector('editMessageText', $data));
 
-        $this->setResponse(new ResponseDirector('answerCallbackQuery', [
-            'callback_query_id' => $this->getOptions()->getCallbackQueryId(),
-            'text' => '',
-            'show_alert' => true,
-            'cache_time' => 3,
-        ]));
+        $this->setResponse(
+            new ResponseDirector('answerCallbackQuery', [
+                'callback_query_id' => $this->getOptions()->getCallbackQueryId(),
+                'text'              => '',
+                'show_alert'        => true,
+                'cache_time'        => 3,
+            ])
+        );
     }
 }

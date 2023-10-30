@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot;
 
-use JetBrains\PhpStorm\ArrayShape;
 use Longman\TelegramBot\Entities\InlineKeyboard;
 use RepeatBot\Bot\Service\CommandService\Messages\SettingsMessage;
 use RepeatBot\Core\ORM\Entities\Training;
@@ -33,7 +32,7 @@ class BotHelper
     }
 
     /**
-     * @return \string[][]
+     * @return string[][]
      */
     public static function getDefaultKeyboard(): array
     {
@@ -51,7 +50,7 @@ class BotHelper
     }
 
     /**
-     * @return \string[][]
+     * @return string[][]
      */
     public static function getTrainingKeyboard(): array
     {
@@ -68,15 +67,15 @@ class BotHelper
     {
         return [
             'Колекції слів' => 'collections',
-            'Мій прогрес' => 'progress',
-            'From English' => 'translate_training',
-            'To English' => 'translate_training',
-            'Налаштування' => 'settings',
-            'Тренування' => 'training',
-            'Зупинити' => 'training',
-            'Я не знаю' => 'training',
-            'Довідка' => 'help',
-            'Назад' => 'start',
+            'Мій прогрес'   => 'progress',
+            'From English'  => 'translate_training',
+            'To English'    => 'translate_training',
+            'Налаштування'  => 'settings',
+            'Тренування'    => 'training',
+            'Зупинити'      => 'training',
+            'Я не знаю'     => 'training',
+            'Довідка'       => 'help',
+            'Назад'         => 'start',
         ];
     }
 
@@ -103,13 +102,13 @@ class BotHelper
             'fourth',
             'fifth',
             'sixth',
-            'never'
+            'never',
         ];
     }
 
     /**
      * @param Training $training
-     * @param bool     $never
+     * @param bool $never
      *
      * @return array
      */
@@ -146,36 +145,7 @@ class BotHelper
                 'status' => 'second',
                 'repeat' => 24 * 60,
             ],
-            };
-    }
-
-    /**
-     * @param string $textSilent
-     * @param string $textPriority
-     * @param string $textVoices
-     * @param int    $silent
-     * @param int    $priority
-     *
-     * @return \string[][][]
-     */
-    public static function getSettingsKeyboard(
-        string $textSilent,
-        string $textPriority,
-        string $textVoices,
-        int $silent,
-        int $priority
-    ): array {
-        return [
-            [
-                ['text' => $textSilent, 'callback_data' => "settings_silent_{$silent}"],
-            ],
-            [
-                ['text' => $textPriority, 'callback_data' => "settings_priority_{$priority}"],
-            ],
-            [
-                ['text' => $textVoices, 'callback_data' => "settings_voices_start"],
-            ]
-        ];
+        };
     }
 
     /**
@@ -188,18 +158,18 @@ class BotHelper
         $result = [];
 
         foreach (self::VOICES as $it => $value) {
-            $key =  self::VOICES[$it]['text'];
-            $switcher = $switchers[$key] == 1 ? '✅' : '❌';
+            $key         = self::VOICES[$it]['text'];
+            $switcher    = $switchers[$key] == 1 ? '✅' : '❌';
             $switcherNum = $switchers[$key] == 1 ? 0 : 1;
-            $voiceName = str_replace('-', ' ', str_replace('en-US-', '', $key));
-            $result[] = [
+            $voiceName   = str_replace('-', ' ', str_replace('en-US-', '', $key));
+            $result[]    = [
                 [
-                    'text' => "{$voiceName} {$switcher}",
-                    'callback_data' => "settings_voices_{$it}_{$switcherNum}"
+                    'text'          => "{$voiceName} {$switcher}",
+                    'callback_data' => "settings_voices_{$it}_{$switcherNum}",
                 ],
                 [
-                    'text' => 'Пример',
-                    'callback_data' => "settings_voices_example_{$it}"
+                    'text'          => 'Пример',
+                    'callback_data' => "settings_voices_example_{$it}",
                 ],
             ];
         }
@@ -212,54 +182,32 @@ class BotHelper
     }
 
     /**
-     * @param string $text
-     * @param int    $count
-     *
-     * @return string
-     */
-    public static function getAnswer(string $text, int $count): string
-    {
-        $module = $count > 10 && $count < 15 ? ($count + 5) % 10 : $count % 10;
-        $word = match ($module) {
-            5, 6, 7, 8, 9, 0 => 'слів',
-            2, 3, 4, => 'слова',
-            1 => 'слово',
-        };
-        $text .= strtr(':count :word', [
-            ':count' => $count,
-            ':word' => $word,
-        ]);
-
-        return $text;
-    }
-
-    /**
-     * @param int  $collectionNum
+     * @param int $collectionNum
      * @param bool $exist
      *
      * @return array
      */
     public static function getCollectionPagination(int $collectionNum, bool $exist): array
     {
-        $result = [];
-        $result[] = BotHelper::getPaginationFw($collectionNum);
-        $result[] = BotHelper::getPaginationNums($collectionNum);
+        $result    = [];
+        $result[]  = BotHelper::getPaginationFw($collectionNum);
+        $result[]  = BotHelper::getPaginationNums($collectionNum);
         $addRemove = $exist ?
             [
-                'text' => "🚫 Видалити",
+                'text'          => "🚫 Видалити",
                 'callback_data' => 'collections_del_' . $collectionNum,
             ] :
             [
-                'text' => "✅ Додати",
+                'text'          => "✅ Додати",
                 'callback_data' => 'collections_add_' . $collectionNum,
             ];
-        $progress = $exist ?
+        $progress  = $exist ?
             [
-                'text' => "🔄 Скинути",
+                'text'          => "🔄 Скинути",
                 'callback_data' => 'collections_reset_' . $collectionNum,
             ] :
             [
-                'text' => " ",
+                'text'          => " ",
                 'callback_data' => 'empty',
             ];
 
@@ -274,55 +222,28 @@ class BotHelper
     /**
      * @param int $num
      *
-     * @return \string[][]
-     */
-    private static function getPaginationNums(int $num): array
-    {
-        return [
-            [
-                'text' => $num > 1 ? '   ⏮   ' : '        ',
-                'callback_data' => $num > 1 ? 'collections_' . 1 : 'empty',
-            ],
-            [
-                'text' => $num > 1 ? '   ⏪   ' : '        ',
-                'callback_data' => $num > 1 ? 'collections_' . ($num - 1) : 'empty',
-            ],
-            [
-                'text' => $num < 36 ? '   ⏩   ' : '        ',
-                'callback_data' => $num < 36 ? 'collections_' . ($num + 1) : 'empty',
-            ],
-            [
-                'text' => $num < 36 ? '   ⏭   ' : '        ',
-                'callback_data' => $num < 36 ? 'collections_' . 36 : 'empty',
-            ],
-        ];
-    }
-
-    /**
-     * @param int $num
-     *
      * @return array[]
      */
     private static function getPaginationFw(int $num): array
     {
         return [
             [
-                'text' => $num > 1 ? BotHelper::createEmojiNumber($num - 1) : ' ',
+                'text'          => $num > 1 ? BotHelper::createEmojiNumber($num - 1) : ' ',
                 'callback_data' => $num > 1 ? 'collections_' . ($num - 1) : 'empty',
             ],
             [
-                'text' => BotHelper::createEmojiNumber($num),
+                'text'          => BotHelper::createEmojiNumber($num),
                 'callback_data' => 'collections_' . $num,
             ],
             [
-                'text' => $num < 36 ? BotHelper::createEmojiNumber($num + 1) : ' ',
+                'text'          => $num < 36 ? BotHelper::createEmojiNumber($num + 1) : ' ',
                 'callback_data' => $num < 36 ? 'collections_' . ($num + 1) : 'empty',
             ],
         ];
     }
 
     /**
-     * @param int    $num
+     * @param int $num
      * @param string $text
      *
      * @return string
@@ -353,6 +274,33 @@ class BotHelper
     }
 
     /**
+     * @param int $num
+     *
+     * @return string[][]
+     */
+    private static function getPaginationNums(int $num): array
+    {
+        return [
+            [
+                'text'          => $num > 1 ? '   ⏮   ' : '        ',
+                'callback_data' => $num > 1 ? 'collections_' . 1 : 'empty',
+            ],
+            [
+                'text'          => $num > 1 ? '   ⏪   ' : '        ',
+                'callback_data' => $num > 1 ? 'collections_' . ($num - 1) : 'empty',
+            ],
+            [
+                'text'          => $num < 36 ? '   ⏩   ' : '        ',
+                'callback_data' => $num < 36 ? 'collections_' . ($num + 1) : 'empty',
+            ],
+            [
+                'text'          => $num < 36 ? '   ⏭   ' : '        ',
+                'callback_data' => $num < 36 ? 'collections_' . 36 : 'empty',
+            ],
+        ];
+    }
+
+    /**
      * @param int $silent
      * @param int $priority
      * @param int $user_id
@@ -362,25 +310,56 @@ class BotHelper
      */
     public static function editMainMenuSettings(int $silent, int $priority, int $user_id, int $message_id): array
     {
-        $symbolSilent = $silent === 1 ? '✅' : '❌';
+        $symbolSilent   = $silent === 1 ? '✅' : '❌';
         $symbolPriority = $priority === 1 ? '✅' : '❌';
-        $textSilent = strtr(SettingsMessage::TEXT_SILENT, [':silent' => $symbolSilent]);
-        $texPriority = strtr(SettingsMessage::TEXT_PRIORITY, [':priority' => $symbolPriority]);
-        $texVoices = SettingsMessage::TEXT_CHOICE_VOICE;
+        $textSilent     = strtr(SettingsMessage::TEXT_SILENT, [':silent' => $symbolSilent]);
+        $texPriority    = strtr(SettingsMessage::TEXT_PRIORITY, [':priority' => $symbolPriority]);
+        $texVoices      = SettingsMessage::TEXT_CHOICE_VOICE;
         /** @psalm-suppress TooManyArguments */
-        $keyboard = new InlineKeyboard(...BotHelper::getSettingsKeyboard(
+        $keyboard = new InlineKeyboard(
+            ...BotHelper::getSettingsKeyboard(
             $textSilent,
             $texPriority,
             $texVoices,
             $silent === 1 ? 0 : 1,
             $priority === 1 ? 0 : 1,
-        ));
+        )
+        );
         return [
-            'chat_id' => $user_id,
-            'text' => BotHelper::getSettingsText(),
+            'chat_id'      => $user_id,
+            'text'         => BotHelper::getSettingsText(),
             'reply_markup' => $keyboard,
-            'message_id' => $message_id,
-            'parse_mode' => 'markdown',
+            'message_id'   => $message_id,
+            'parse_mode'   => 'markdown',
+        ];
+    }
+
+    /**
+     * @param string $textSilent
+     * @param string $textPriority
+     * @param string $textVoices
+     * @param int $silent
+     * @param int $priority
+     *
+     * @return string[][][]
+     */
+    public static function getSettingsKeyboard(
+        string $textSilent,
+        string $textPriority,
+        string $textVoices,
+        int $silent,
+        int $priority
+    ): array {
+        return [
+            [
+                ['text' => $textSilent, 'callback_data' => "settings_silent_{$silent}"],
+            ],
+            [
+                ['text' => $textPriority, 'callback_data' => "settings_priority_{$priority}"],
+            ],
+            [
+                ['text' => $textVoices, 'callback_data' => "settings_voices_start"],
+            ],
         ];
     }
 
@@ -403,19 +382,11 @@ class BotHelper
     }
 
     /**
-     * @return array
-     */
-    public static function getTimeZones(): array
-    {
-        return include '/app/config/timezones.php';
-    }
-
-    /**
      * @return string
      */
     public static function getTimeText(): string
     {
-        $text = "Список аббривіатур, що підтримуються, для вибору часового поясу в персональних нагадуваннях:\n\n";
+        $text      = "Список аббривіатур, що підтримуються, для вибору часового поясу в персональних нагадуваннях:\n\n";
         $timezones = BotHelper::getTimeZones();
         foreach ($timezones as $timezone) {
             $text .= strtr("`:abbr:` :text\n", [
@@ -428,6 +399,14 @@ class BotHelper
     }
 
     /**
+     * @return array
+     */
+    public static function getTimeZones(): array
+    {
+        return include '/app/config/timezones.php';
+    }
+
+    /**
      * @param string|null $input
      *
      * @return string
@@ -437,9 +416,8 @@ class BotHelper
         return null === $input ? '' : $input;
     }
 
-
     /**
-     * @param array  $records
+     * @param array $records
      * @param string $text
      *
      * @return string
@@ -449,12 +427,34 @@ class BotHelper
         foreach ($records as $type => $items) {
             foreach ($items as $item) {
                 $status = ucfirst($item['status']);
-                $text .= BotHelper::getAnswer(
-                    "\[{$type}] {$status} ітерація: ",
-                    (int) $item['counter']
-                ) . "\n";
+                $text   .= BotHelper::getAnswer(
+                        "\[{$type}] {$status} ітерація: ",
+                        (int)$item['counter']
+                    ) . "\n";
             }
         }
+
+        return $text;
+    }
+
+    /**
+     * @param string $text
+     * @param int $count
+     *
+     * @return string
+     */
+    public static function getAnswer(string $text, int $count): string
+    {
+        $module = $count > 10 && $count < 15 ? ($count + 5) % 10 : $count % 10;
+        $word   = match ($module) {
+            5, 6, 7, 8, 9, 0 => 'слів',
+            2, 3, 4, => 'слова',
+            1 => 'слово',
+        };
+        $text   .= strtr(':count :word', [
+            ':count' => $count,
+            ':word'  => $word,
+        ]);
 
         return $text;
     }

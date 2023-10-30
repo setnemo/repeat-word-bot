@@ -31,12 +31,12 @@ class StartService extends BaseDefaultCommandService
             new ResponseDirector(
                 'sendMessage',
                 [
-                    'chat_id' => $this->getOptions()->getChatId(),
-                    'text' => StartMessage::WELCOME_TEXT,
-                    'parse_mode' => 'markdown',
+                    'chat_id'                  => $this->getOptions()->getChatId(),
+                    'text'                     => StartMessage::WELCOME_TEXT,
+                    'parse_mode'               => 'markdown',
                     'disable_web_page_preview' => true,
-                    'reply_markup' => $keyboard,
-                    'disable_notification' => 1,
+                    'reply_markup'             => $keyboard,
+                    'disable_notification'     => 1,
                 ]
             )
         );

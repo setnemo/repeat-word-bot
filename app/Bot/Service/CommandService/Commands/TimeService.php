@@ -27,12 +27,12 @@ class TimeService extends BaseDefaultCommandService
         $keyboard->setResizeKeyboard(true);
 
         $data = [
-            'chat_id' => $this->getOptions()->getChatId(),
-            'text' => BotHelper::getTimeText(),
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $this->getOptions()->getChatId(),
+            'text'                     => BotHelper::getTimeText(),
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
+            'reply_markup'             => $keyboard,
+            'disable_notification'     => 1,
         ];
 
         $this->setResponse(new ResponseDirector('sendMessage', $data));

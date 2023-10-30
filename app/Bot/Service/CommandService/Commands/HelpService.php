@@ -25,11 +25,11 @@ class HelpService extends BaseDefaultCommandService
             new ResponseDirector(
                 'sendMessage',
                 [
-                    'chat_id' => $this->getOptions()->getChatId(),
-                    'text' => HelpMessage::HELP_TEXT,
-                    'parse_mode' => 'markdown',
+                    'chat_id'                  => $this->getOptions()->getChatId(),
+                    'text'                     => HelpMessage::HELP_TEXT,
+                    'parse_mode'               => 'markdown',
                     'disable_web_page_preview' => true,
-                    'disable_notification' => 1,
+                    'disable_notification'     => 1,
                 ]
             )
         );

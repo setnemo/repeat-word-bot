@@ -7,15 +7,15 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use RepeatBot\Bot\BotHelper;
-use TelegramBot\CommandWrapper\Command\CommandInterface;
-use TelegramBot\CommandWrapper\Command\CommandOptions;
-use TelegramBot\CommandWrapper\Exception\SupportTypeException;
-use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\UserNotification;
 use RepeatBot\Core\ORM\Entities\UserVoice;
 use RepeatBot\Core\ORM\Repositories\UserNotificationRepository;
 use RepeatBot\Core\ORM\Repositories\UserVoiceRepository;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 
 /**
  * Class SettingsService
@@ -47,12 +47,12 @@ class SettingsService extends BaseDefaultCommandService
      */
     public function execute(): CommandInterface
     {
-        $userId = $this->getOptions()->getChatId();
-        $silent = $this->userNotificationRepository->getOrCreateUserNotification(
+        $userId   = $this->getOptions()->getChatId();
+        $silent   = $this->userNotificationRepository->getOrCreateUserNotification(
             $userId
         )->getSilent();
         $priority = $this->cache->getPriority($userId);
-        $data = BotHelper::editMainMenuSettings($silent, $priority, $userId, $this->getOptions()->getMessageId());
+        $data     = BotHelper::editMainMenuSettings($silent, $priority, $userId, $this->getOptions()->getMessageId());
         $this->setResponse(new ResponseDirector('sendMessage', $data));
 
         return $this;

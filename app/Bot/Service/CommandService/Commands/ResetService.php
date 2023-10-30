@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace RepeatBot\Bot\Service\CommandService\Commands;
 
-use Exception;
 use Longman\TelegramBot\Entities\Keyboard;
 use RepeatBot\Bot\BotHelper;
+use RepeatBot\Core\Database;
+use RepeatBot\Core\ORM\Entities\Training;
+use RepeatBot\Core\ORM\Repositories\TrainingRepository;
 use TelegramBot\CommandWrapper\Command\CommandInterface;
 use TelegramBot\CommandWrapper\Command\CommandOptions;
 use TelegramBot\CommandWrapper\Exception\SupportTypeException;
 use TelegramBot\CommandWrapper\ResponseDirector;
-use RepeatBot\Core\Database;
-use RepeatBot\Core\ORM\Entities\Training;
-use RepeatBot\Core\ORM\Repositories\TrainingRepository;
 
 /**
  * Class ResetService
@@ -67,12 +66,12 @@ class ResetService extends BaseDefaultCommandService
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $data = [
-            'chat_id' => $userId,
-            'text' => 'Ваш прогрес було скинуто.',
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $userId,
+            'text'                     => 'Ваш прогрес було скинуто.',
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
+            'reply_markup'             => $keyboard,
+            'disable_notification'     => 1,
         ];
 
         $this->setResponse(new ResponseDirector('sendMessage', $data));
@@ -95,12 +94,12 @@ class ResetService extends BaseDefaultCommandService
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $data = [
-            'chat_id' => $userId,
-            'text' => "Ваш прогрес по колекції {$num} був скинутий.",
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $userId,
+            'text'                     => "Ваш прогрес по колекції {$num} був скинутий.",
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
+            'reply_markup'             => $keyboard,
+            'disable_notification'     => 1,
         ];
 
         $this->setResponse(new ResponseDirector('sendMessage', $data));

@@ -7,14 +7,14 @@ namespace RepeatBot\Bot\Service\CommandService\Commands;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use RepeatBot\Bot\BotHelper;
-use TelegramBot\CommandWrapper\Command\CommandInterface;
-use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Messages\ExportMessage;
-use TelegramBot\CommandWrapper\Exception\SupportTypeException;
-use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Core\Database;
 use RepeatBot\Core\ORM\Entities\Export;
 use RepeatBot\Core\ORM\Repositories\ExportRepository;
+use TelegramBot\CommandWrapper\Command\CommandInterface;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 
 class ExportService extends BaseDefaultCommandService
 {
@@ -51,12 +51,14 @@ class ExportService extends BaseDefaultCommandService
         ) {
             $this->exportRepository->create($this->getOptions()->getChatId(), $this->getOptions()->getChatId(), $array[0] . '_' . $array[1]);
         }
-        $this->setResponse(new ResponseDirector('sendMessage', [
-            'chat_id' => $this->getOptions()->getChatId(),
-            'text' => ExportMessage::EXPORT_TEXT,
-            'parse_mode' => 'markdown',
-            'disable_notification' => 1,
-        ]));
+        $this->setResponse(
+            new ResponseDirector('sendMessage', [
+                'chat_id'              => $this->getOptions()->getChatId(),
+                'text'                 => ExportMessage::EXPORT_TEXT,
+                'parse_mode'           => 'markdown',
+                'disable_notification' => 1,
+            ])
+        );
 
         return $this;
     }
