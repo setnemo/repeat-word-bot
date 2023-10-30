@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 return [
     'translate_key' => (string) getenv('TRANSLATE_KEY'),
+    'translate_key_azure' => (string) getenv('TRANSLATE_KEY_AZURE'),
     'database' => [
         'host' => getenv('DB_HOST') ?? 'mysql',
         'name' => getenv('DB_NAME') ?? 'test_db',
