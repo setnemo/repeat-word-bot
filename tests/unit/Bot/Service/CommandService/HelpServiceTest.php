@@ -6,9 +6,10 @@ namespace Tests\Unit\Bot\Service\CommandService;
 
 use Codeception\Test\Unit;
 use RepeatBot\Bot\Service\CommandService;
-use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Commands\HelpService;
 use RepeatBot\Bot\Service\CommandService\Messages\HelpMessage;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
 use TelegramBot\CommandWrapper\ResponseDirector;
 use UnitTester;
 
@@ -20,9 +21,13 @@ class HelpServiceTest extends Unit
 {
     protected UnitTester $tester;
 
+    /**
+     * @return void
+     * @throws SupportTypeException
+     */
     public function testAlarmListEmpty(): void
     {
-        $chatId = 42;
+        $chatId  = 42;
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'help',
@@ -40,11 +45,11 @@ class HelpServiceTest extends Unit
         $this->assertInstanceOf(ResponseDirector::class, $error);
         $this->assertEquals('sendMessage', $error->getType());
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => HelpMessage::HELP_TEXT,
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $chatId,
+            'text'                     => HelpMessage::HELP_TEXT,
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'disable_notification' => 1,
+            'disable_notification'     => 1,
         ], $error->getData());
     }
 }

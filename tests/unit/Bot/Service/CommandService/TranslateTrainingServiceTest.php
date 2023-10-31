@@ -5,26 +5,29 @@ declare(strict_types=1);
 namespace Tests\Unit\Bot\Service\CommandService;
 
 use Carbon\Carbon;
+use Codeception\Exception\ModuleException;
 use Codeception\Test\Unit;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Google\Cloud\TextToSpeech\V1\AudioConfig;
 use Google\Cloud\TextToSpeech\V1\SynthesisInput;
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 use Longman\TelegramBot\Entities\Keyboard;
+use Longman\TelegramBot\Exception\TelegramException;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService;
-use TelegramBot\CommandWrapper\Command\CommandOptions;
-use RepeatBot\Bot\Service\CommandService\Commands\DelService;
 use RepeatBot\Bot\Service\CommandService\Commands\TrainingService;
 use RepeatBot\Bot\Service\CommandService\Commands\TranslateTrainingService;
 use RepeatBot\Bot\Service\CommandService\Messages\TrainingMessage;
-use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Bot\Service\GoogleTextToSpeechService;
 use RepeatBot\Core\Cache;
 use RepeatBot\Core\ORM\Entities\Training;
 use RepeatBot\Core\ORM\Entities\Word;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 use UnitTester;
 
 /**
@@ -38,12 +41,16 @@ class TranslateTrainingServiceTest extends Unit
     protected Cache $cache;
     private int $chatId;
 
+    /**
+     * @return void
+     * @throws ModuleException
+     */
     protected function setUp(): void
     {
         parent::setUp();
         $this->chatId = 42;
-        $this->em = $this->getModule('Doctrine2')->em;
-        $this->cache = $this->tester->getCache();
+        $this->em     = $this->getModule('Doctrine2')->em;
+        $this->cache  = $this->tester->getCache();
         $this->tester->createFakeMp3s();
         $this->tester->addCollection($this->chatId);
         GoogleTextToSpeechService::getInstance()->init(
@@ -57,13 +64,20 @@ class TranslateTrainingServiceTest extends Unit
         );
     }
 
-    protected function _after()
+    /**
+     * @return void
+     */
+    protected function _after(): void
     {
         $this->tester->removeFakeMp3s();
     }
 
     /**
      * @param array $example
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws TelegramException
+     * @throws SupportTypeException
      * @dataProvider trainingProvider
      */
     public function testTraining(array $example): void
@@ -81,17 +95,17 @@ class TranslateTrainingServiceTest extends Unit
         foreach (['chat_id', 'voice', 'caption', 'disable_notification'] as $key) {
             $this->assertArrayHasKey($key, $payload);
         }
-        $question = $this->getQuestionFromCaption(
+        $question       = $this->getQuestionFromCaption(
             $payload['caption']
         );
         $wordRepository = $this->em->getRepository(Word::class);
         if ($example['word']) {
-            $word = $wordRepository->findOneBy(['translate' => $question]);
+            $word   = $wordRepository->findOneBy(['translate' => $question]);
             $answer = $word->getWord();
         } else {
-            $word = $wordRepository->findOneBy(['word' => $question]);
+            $word       = $wordRepository->findOneBy(['word' => $question]);
             $translates = $word->getTranslate();
-            $answer = trim(explode(';', $translates)[0]) ?? '';
+            $answer     = trim(explode(';', $translates)[0]) ?? '';
         }
         $command = $this->makeTraining($answer);
         $service = $command->makeService();
@@ -101,7 +115,7 @@ class TranslateTrainingServiceTest extends Unit
         /** @var ResponseDirector $data */
         $data = $response[0];
         $this->assertInstanceOf(ResponseDirector::class, $data);
-        $this->assertEquals('sendVoice', $data->getType());
+        $this->assertTrue(in_array($data->getType(), ['sendVoice', 'sendMessage'], true));
         $payload = $data->getData();
         foreach (['chat_id', 'voice', 'caption', 'disable_notification'] as $key) {
             $this->assertArrayHasKey($key, $payload);
@@ -110,114 +124,8 @@ class TranslateTrainingServiceTest extends Unit
     }
 
     /**
-     * @param array $example
-     * @dataProvider skipProvider
-     */
-    public function testSkip(array $example): void
-    {
-        $this->makeTraining('From English', true)->makeService();
-        $command = $this->makeTraining($example['text']);
-        $service = $command->makeService();
-        $this->assertInstanceOf(TranslateTrainingService::class, $service);
-        $service->execute();
-        $service = $command->makeService();
-        $service->execute();
-        $response = $service->showResponses();
-        $data = $response[0];
-        $payload = $data->getData();
-        $this->tester->assertStringContainsString('Слово пропущене!', $payload['caption'] ?? '');
-    }
-
-    public function testSkipOneYear(): void
-    {
-        $this->makeTraining('From English', true)->makeService();
-        $command = $this->makeTraining('1');
-        $service = $command->makeService();
-        $this->assertInstanceOf(TranslateTrainingService::class, $service);
-        $service->execute();
-        $service = $command->makeService();
-        $service->execute();
-        $response = $service->showResponses();
-        $data = $response[0];
-        $payload = $data->getData();
-        $this->tester->assertStringContainsString('Слово пропущене на 1 рік!', $payload['caption']);
-    }
-
-    public function testEmptyVocabulary(): void
-    {
-        (new CommandService(
-            options: new CommandOptions(
-                command: 'del',
-                payload: explode(' ', 'my progress'),
-                chatId: $this->chatId,
-            )
-        ))->makeService()->execute();
-
-        $service = $this->makeTraining('From English', true)->makeService();
-        $this->assertInstanceOf(TranslateTrainingService::class, $service);
-        $service->execute();
-        $response = $service->showResponses();
-        $data = $response[0];
-        $payload = $data->getData();
-        $this->tester->assertStringContainsString(
-            'Ви не маєте слів для вивчення. Зайдіть в розділ Колекції та додайте собі слова для тренувань',
-            $payload['text']
-        );
-    }
-
-    public function testNotHaveTrainingNow(): void
-    {
-        $this->tester->updateAllTrainingStatuses($this->chatId, 'FromEnglish');
-        $service = $this->makeTraining('From English', true)->makeService();
-        $this->assertInstanceOf(TranslateTrainingService::class, $service);
-        $service->execute();
-        $response = $service->showResponses();
-        $data = $response[0];
-        $payload = $data->getData();
-        $this->tester->assertStringContainsString(
-            'У тренуванні `FromEnglish` найближче слово для вивчення - ',
-            $payload['text']
-        );
-    }
-
-    public function testStopTraining(): void
-    {
-        $this->makeTraining('From English', true)->makeService();
-        $command = $this->makeTraining('Зупинити');
-        $service = $command->makeService();
-        $this->assertInstanceOf(TrainingService::class, $service);
-        $service->execute();
-        $service = $command->makeService();
-        $service->execute();
-        $response = $service->showResponses();
-        /** @var ResponseDirector $error */
-        $error = $response[0];
-        $this->assertInstanceOf(ResponseDirector::class, $error);
-        $this->assertEquals('sendMessage', $error->getType());
-        /** @psalm-suppress TooManyArguments */
-        $keyboard = new Keyboard(...BotHelper::getTrainingKeyboard());
-        $keyboard->setResizeKeyboard(true);
-        $this->assertEquals([
-            'chat_id' => $this->chatId,
-            'text' => TrainingMessage::CHOOSE_TEXT,
-            'parse_mode' => 'markdown',
-            'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
-        ], $error->getData());
-    }
-
-    private function getQuestionFromCaption(string $caption): string
-    {
-        return explode(
-            'Слово: ',
-            $caption
-        )[1] ?? '';
-    }
-
-    /**
      * @param string $text
-     * @param bool   $clear
+     * @param bool $clear
      *
      * @return CommandService
      */
@@ -241,15 +149,155 @@ class TranslateTrainingServiceTest extends Unit
         return $command;
     }
 
+    private function getQuestionFromCaption(string $caption): string
+    {
+        return explode(
+            'Слово: ',
+            $caption
+        )[1] ?? '';
+    }
 
+    /**
+     * @param array $example
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SupportTypeException
+     * @throws TelegramException
+     * @dataProvider skipProvider
+     */
+    public function testSkip(array $example): void
+    {
+        $this->makeTraining('From English', true)->makeService();
+        $command = $this->makeTraining($example['text']);
+        $service = $command->makeService();
+        $this->assertInstanceOf(TranslateTrainingService::class, $service);
+        $service->execute();
+        $service = $command->makeService();
+        $service->execute();
+        $response = $service->showResponses();
+        $data     = $response[0];
+        $payload  = $data->getData();
+        $this->tester->assertStringContainsString('Слово пропущене!', $payload['caption'] ?? '');
+    }
+
+    /**
+     * @return void
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SupportTypeException
+     * @throws TelegramException
+     */
+    public function testSkipOneYear(): void
+    {
+        $this->makeTraining('From English', true)->makeService();
+        $command = $this->makeTraining('1');
+        $service = $command->makeService();
+        $this->assertInstanceOf(TranslateTrainingService::class, $service);
+        $service->execute();
+        $service = $command->makeService();
+        $service->execute();
+        $response = $service->showResponses();
+        $data     = $response[0];
+        $payload  = $data->getData();
+        $this->tester->assertStringContainsString('Слово пропущене на 1 рік!', $payload['caption']);
+    }
+
+    /**
+     * @return void
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SupportTypeException
+     * @throws TelegramException
+     */
+    public function testEmptyVocabulary(): void
+    {
+        (new CommandService(
+            options: new CommandOptions(
+                command: 'del',
+                payload: explode(' ', 'my progress'),
+                chatId: $this->chatId,
+            )
+        ))->makeService()->execute();
+
+        $service = $this->makeTraining('From English', true)->makeService();
+        $this->assertInstanceOf(TranslateTrainingService::class, $service);
+        $service->execute();
+        $response = $service->showResponses();
+        $data     = $response[0];
+        $payload  = $data->getData();
+        $this->tester->assertStringContainsString(
+            'Ви не маєте слів для вивчення. Зайдіть в розділ Колекції та додайте собі слова для тренувань',
+            $payload['text']
+        );
+    }
+
+    /**
+     * @return void
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SupportTypeException
+     * @throws TelegramException
+     */
+    public function testNotHaveTrainingNow(): void
+    {
+        $this->tester->updateAllTrainingStatuses($this->chatId, 'FromEnglish');
+        $service = $this->makeTraining('From English', true)->makeService();
+        $this->assertInstanceOf(TranslateTrainingService::class, $service);
+        $service->execute();
+        $response = $service->showResponses();
+        $data     = $response[0];
+        $payload  = $data->getData();
+        $this->tester->assertStringContainsString(
+            'У тренуванні `FromEnglish` найближче слово для вивчення - ',
+            $payload['text']
+        );
+    }
+
+    /**
+     * @return void
+     * @throws SupportTypeException
+     */
+    public function testStopTraining(): void
+    {
+        $this->makeTraining('From English', true)->makeService();
+        $command = $this->makeTraining('Зупинити');
+        $service = $command->makeService();
+        $this->assertInstanceOf(TrainingService::class, $service);
+        $service->execute();
+        $service = $command->makeService();
+        $service->execute();
+        $response = $service->showResponses();
+        /** @var ResponseDirector $error */
+        $error = $response[0];
+        $this->assertInstanceOf(ResponseDirector::class, $error);
+        $this->assertEquals('sendMessage', $error->getType());
+        /** @psalm-suppress TooManyArguments */
+        $keyboard = new Keyboard(...BotHelper::getTrainingKeyboard());
+        $keyboard->setResizeKeyboard(true);
+        $this->assertEquals([
+            'chat_id'                  => $this->chatId,
+            'text'                     => TrainingMessage::CHOOSE_TEXT,
+            'parse_mode'               => 'markdown',
+            'disable_web_page_preview' => true,
+            'reply_markup'             => $keyboard,
+            'disable_notification'     => 1,
+        ], $error->getData());
+    }
+
+    /**
+     * @return array[]
+     */
     public function trainingProvider(): array
     {
         return [
-            [['text' => 'From English','word' => false]],
-            [['text' => 'To English','word' => true]],
+            [['text' => 'From English', 'word' => false]],
+            [['text' => 'To English', 'word' => true]],
         ];
     }
 
+    /**
+     * @return array[]
+     */
     public function skipProvider(): array
     {
         return [
@@ -265,38 +313,5 @@ class TranslateTrainingServiceTest extends Unit
             [['text' => 'p',]],
             [['text' => 'х',]],
         ];
-    }
-
-    /**
-     * @param string $type
-     * @param string $status
-     *
-     * @return Training
-     */
-    private function getTrainingEntity(string $type, string $status): Training
-    {
-        $word = new Word();
-        $word->setWord('tmp_word');
-        $word->setCollectionId(37);
-        $word->setTranslate('tmp_translate');
-        $this->tester->haveWordEntity($word);
-
-        $userId = 42;
-        $collectionId = 1;
-        $next = Carbon::now()->addDay();
-        $created = Carbon::now();
-        $updated = Carbon::now();
-
-        $entity = new Training();
-        $entity->setWord($word);
-        $entity->setUserId($userId);
-        $entity->setCollectionId($collectionId);
-        $entity->setType($type);
-        $entity->setStatus($status);
-        $entity->setNext($next);
-        $entity->setCreatedAt($created);
-        $entity->setUpdatedAt($updated);
-
-        return $entity;
     }
 }

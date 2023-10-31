@@ -7,6 +7,7 @@ namespace Tests\Unit\Bot\Service\CommandService;
 use Codeception\Test\Unit;
 use RepeatBot\Bot\Service\CommandService;
 use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
 use TelegramBot\CommandWrapper\ResponseDirector;
 use TelegramBot\CommandWrapper\Service\EmptyCallbackService;
 use UnitTester;
@@ -19,12 +20,16 @@ class EmptyCallbackServiceTest extends Unit
 {
     protected UnitTester $tester;
 
+    /**
+     * @return void
+     * @throws SupportTypeException
+     */
     public function testEmptyCallbackCommand(): void
     {
-        $chatId = 1;
-        $messageId = 2;
+        $chatId          = 1;
+        $messageId       = 2;
         $callbackQueryId = 3;
-        $command = new CommandService(
+        $command         = new CommandService(
             options: new CommandOptions(
                 payload: explode('_', 'empty'),
                 chatId: $chatId,

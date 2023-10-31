@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Bot\Service\CommandService;
 
+use Codeception\Exception\ModuleException;
 use Codeception\Test\Unit;
 use Doctrine\ORM\EntityManager;
 use Longman\TelegramBot\Entities\Keyboard;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService;
-use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Commands\DelService;
 use RepeatBot\Bot\Service\CommandService\Messages\DelMessage;
-use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Core\Cache;
 use RepeatBot\Core\ORM\Entities\Training;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 use UnitTester;
 
 /**
@@ -27,16 +29,12 @@ class DelServiceTest extends Unit
     protected EntityManager $em;
     protected Cache $cache;
 
-    protected function _setUp()
-    {
-        parent::_setUp();
-        $this->em = $this->getModule('Doctrine2')->em;
-        $this->cache = $this->tester->getCache();
-    }
-
+    /**
+     * @return void
+     */
     public function testDelValidator(): void
     {
-        $chatId = 42;
+        $chatId  = 42;
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'del',
@@ -56,20 +54,24 @@ class DelServiceTest extends Unit
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => DelMessage::ERROR_TEXT,
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $chatId,
+            'text'                     => DelMessage::ERROR_TEXT,
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
+            'reply_markup'             => $keyboard,
+            'disable_notification'     => 1,
         ], $error->getData());
     }
 
+    /**
+     * @return void
+     * @throws SupportTypeException
+     */
     public function testDelMyProgress(): void
     {
-        $id = 4242;
-        $chatId = 42;
-        $type = 'FromEnglish';
+        $id      = 4242;
+        $chatId  = 42;
+        $type    = 'FromEnglish';
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'del',
@@ -94,26 +96,30 @@ class DelServiceTest extends Unit
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => 'Ваш прогрес був видалений.',
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $chatId,
+            'text'                     => 'Ваш прогрес був видалений.',
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
+            'reply_markup'             => $keyboard,
+            'disable_notification'     => 1,
         ], $error->getData());
 
         $trainingRepository = $this->em->getRepository(Training::class);
-        $trainings = $trainingRepository->findBy(['userId' => $chatId]);
+        $trainings          = $trainingRepository->findBy(['userId' => $chatId]);
         $this->assertEquals([], $trainings);
         $this->assertEquals(null, $this->cache->checkTrainings($chatId));
         $this->assertEquals(null, $this->cache->checkTrainingsStatus($chatId));
     }
 
+    /**
+     * @return void
+     * @throws SupportTypeException
+     */
     public function testDelCollection(): void
     {
-        $id = 4242;
-        $chatId = 42;
-        $type = 'FromEnglish';
+        $id      = 4242;
+        $chatId  = 42;
+        $type    = 'FromEnglish';
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'del',
@@ -138,18 +144,29 @@ class DelServiceTest extends Unit
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => 'Ваш прогрес по колекції 1 був видалений.',
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $chatId,
+            'text'                     => 'Ваш прогрес по колекції 1 був видалений.',
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
+            'reply_markup'             => $keyboard,
+            'disable_notification'     => 1,
         ], $error->getData());
 
         $trainingRepository = $this->em->getRepository(Training::class);
-        $trainings = $trainingRepository->findBy(['userId' => $chatId]);
+        $trainings          = $trainingRepository->findBy(['userId' => $chatId]);
         $this->assertEquals([], $trainings);
         $this->assertEquals(null, $this->cache->checkTrainings($chatId));
         $this->assertEquals(null, $this->cache->checkTrainingsStatus($chatId));
+    }
+
+    /**
+     * @return void
+     * @throws ModuleException
+     */
+    protected function _setUp(): void
+    {
+        parent::_setUp();
+        $this->em    = $this->getModule('Doctrine2')->em;
+        $this->cache = $this->tester->getCache();
     }
 }

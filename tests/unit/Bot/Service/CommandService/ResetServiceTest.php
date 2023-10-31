@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Bot\Service\CommandService;
 
+use Codeception\Exception\ModuleException;
 use Codeception\Test\Unit;
 use Doctrine\ORM\EntityManager;
 use Longman\TelegramBot\Entities\Keyboard;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService;
-use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Commands\ResetService;
 use RepeatBot\Bot\Service\CommandService\Messages\ResetMessage;
-use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Core\Cache;
 use RepeatBot\Core\ORM\Entities\Training;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\ResponseDirector;
 use UnitTester;
 
 /**
@@ -27,16 +28,12 @@ class ResetServiceTest extends Unit
     protected EntityManager $em;
     protected Cache $cache;
 
-    protected function _setUp()
-    {
-        parent::_setUp();
-        $this->em = $this->getModule('Doctrine2')->em;
-        $this->cache = $this->tester->getCache();
-    }
-
+    /**
+     * @return void
+     */
     public function testResetValidator(): void
     {
-        $chatId = 424242;
+        $chatId  = 424242;
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'reset',
@@ -56,20 +53,20 @@ class ResetServiceTest extends Unit
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => ResetMessage::ERROR_TEXT,
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $chatId,
+            'text'                     => ResetMessage::ERROR_TEXT,
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
+            'reply_markup'             => $keyboard,
+            'disable_notification'     => 1,
         ], $error->getData());
     }
 
     public function testResetMyProgress(): void
     {
-        $id = 4242;
-        $chatId = 42;
-        $type = 'FromEnglish';
+        $id      = 4242;
+        $chatId  = 42;
+        $type    = 'FromEnglish';
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'reset',
@@ -81,7 +78,7 @@ class ResetServiceTest extends Unit
         $this->cache->setTrainingStatusId($chatId, $type, $id);
         $this->cache->setTrainingStatus($chatId, $type);
         $trainingRepository = $this->em->getRepository(Training::class);
-        $trainings = $firstTrainings = $trainingRepository->findBy(['userId' => $chatId]);
+        $trainings          = $firstTrainings = $trainingRepository->findBy(['userId' => $chatId]);
         foreach ($trainings as $training) {
             $training->setStatus('never');
             $this->em->persist($training);
@@ -99,12 +96,12 @@ class ResetServiceTest extends Unit
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => 'Ваш прогрес було скинуто.',
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $chatId,
+            'text'                     => 'Ваш прогрес було скинуто.',
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
+            'reply_markup'             => $keyboard,
+            'disable_notification'     => 1,
         ], $error->getData());
 
         $trainingsAfterReset = $trainingRepository->findBy(['userId' => $chatId]);
@@ -115,9 +112,9 @@ class ResetServiceTest extends Unit
 
     public function testResetMyProgressForCollection(): void
     {
-        $id = 4242;
-        $chatId = 42;
-        $type = 'FromEnglish';
+        $id      = 4242;
+        $chatId  = 42;
+        $type    = 'FromEnglish';
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'reset',
@@ -131,7 +128,7 @@ class ResetServiceTest extends Unit
         $this->assertEquals($type, $this->cache->checkTrainings($chatId));
         $this->assertEquals($type, $this->cache->checkTrainingsStatus($chatId));
         $trainingRepository = $this->em->getRepository(Training::class);
-        $trainings = $firstTrainings = $trainingRepository->findBy(['userId' => $chatId]);
+        $trainings          = $firstTrainings = $trainingRepository->findBy(['userId' => $chatId]);
         foreach ($trainings as $training) {
             $training->setStatus('never');
             $this->em->persist($training);
@@ -149,17 +146,28 @@ class ResetServiceTest extends Unit
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => 'Ваш прогрес по колекції 2 був скинутий.',
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $chatId,
+            'text'                     => 'Ваш прогрес по колекції 2 був скинутий.',
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
+            'reply_markup'             => $keyboard,
+            'disable_notification'     => 1,
         ], $error->getData());
 
         $trainingsAfterReset = $trainingRepository->findBy(['userId' => $chatId]);
         $this->assertEquals($firstTrainings, $trainingsAfterReset);
         $this->assertEquals(null, $this->cache->checkTrainings($chatId));
         $this->assertEquals(null, $this->cache->checkTrainingsStatus($chatId));
+    }
+
+    /**
+     * @return void
+     * @throws ModuleException
+     */
+    protected function _setUp(): void
+    {
+        parent::_setUp();
+        $this->em    = $this->getModule('Doctrine2')->em;
+        $this->cache = $this->tester->getCache();
     }
 }

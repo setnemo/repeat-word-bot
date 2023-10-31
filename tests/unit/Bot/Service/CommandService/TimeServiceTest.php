@@ -8,8 +8,9 @@ use Codeception\Test\Unit;
 use Longman\TelegramBot\Entities\Keyboard;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService;
-use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Commands\TimeService;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
 use TelegramBot\CommandWrapper\ResponseDirector;
 use UnitTester;
 
@@ -21,9 +22,13 @@ class TimeServiceTest extends Unit
 {
     protected UnitTester $tester;
 
+    /**
+     * @return void
+     * @throws SupportTypeException
+     */
     public function testWelcome(): void
     {
-        $chatId = 42;
+        $chatId  = 42;
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'time',
@@ -44,12 +49,12 @@ class TimeServiceTest extends Unit
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => BotHelper::getTimeText(),
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $chatId,
+            'text'                     => BotHelper::getTimeText(),
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'reply_markup' => $keyboard,
-            'disable_notification' => 1,
+            'reply_markup'             => $keyboard,
+            'disable_notification'     => 1,
         ], $error->getData());
     }
 }

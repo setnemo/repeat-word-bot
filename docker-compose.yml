@@ -1,7 +1,5 @@
 version: '3'
-
 services:
-
   repeat-nginx:
     build:
       context: .
@@ -48,6 +46,7 @@ services:
     logging:
       options:
         max-size: "10m"
+
 volumes:
   filters:
     driver: local

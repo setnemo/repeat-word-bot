@@ -6,12 +6,15 @@ namespace Tests\Unit\Bot\Service\CommandService;
 
 use Carbon\Carbon;
 use Codeception\Test\Unit;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use RepeatBot\Bot\Service\CommandService;
-use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Commands\AlarmService;
-use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Bot\Service\CommandService\Messages\AlarmMessage;
 use RepeatBot\Core\ORM\Entities\LearnNotificationPersonal;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 use UnitTester;
 
 /**
@@ -22,9 +25,12 @@ class AlarmServiceTest extends Unit
 {
     protected UnitTester $tester;
 
+    /**
+     * @return void
+     */
     public function testAlarmValidator(): void
     {
-        $chatId = 42;
+        $chatId  = 42;
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'alarm',
@@ -42,17 +48,23 @@ class AlarmServiceTest extends Unit
         $this->assertInstanceOf(ResponseDirector::class, $error);
         $this->assertEquals('sendMessage', $error->getType());
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => AlarmMessage::ERROR_TEXT,
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $chatId,
+            'text'                     => AlarmMessage::ERROR_TEXT,
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'disable_notification' => 1,
+            'disable_notification'     => 1,
         ], $error->getData());
     }
 
+    /**
+     * @return void
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SupportTypeException
+     */
     public function testAlarmListEmpty(): void
     {
-        $chatId = 42;
+        $chatId  = 42;
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'alarm',
@@ -71,21 +83,27 @@ class AlarmServiceTest extends Unit
         $this->assertInstanceOf(ResponseDirector::class, $error);
         $this->assertEquals('sendMessage', $error->getType());
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => 'Список персональних нагадувань порожній',
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $chatId,
+            'text'                     => 'Список персональних нагадувань порожній',
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'disable_notification' => 1,
+            'disable_notification'     => 1,
         ], $error->getData());
     }
 
+    /**
+     * @return void
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SupportTypeException
+     */
     public function testAlarmListNonEmpty(): void
     {
-        $chatId = 42;
-        $time = '01:00:00';
-        $alarm = Carbon::createFromFormat('H:m:i', $time);
+        $chatId  = 42;
+        $time    = '01:00:00';
+        $alarm   = Carbon::createFromFormat('H:m:i', $time);
         $message = 'message';
-        $tz = 'FDT';
+        $tz      = 'FDT';
         $created = Carbon::now();
         $updated = Carbon::now();
 
@@ -117,19 +135,25 @@ class AlarmServiceTest extends Unit
         $this->assertInstanceOf(ResponseDirector::class, $responseDirector);
         $this->assertEquals('sendMessage', $responseDirector->getType());
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => "({$tz}) {$time}\n",
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $chatId,
+            'text'                     => "({$tz}) {$time}\n",
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'disable_notification' => 1,
+            'disable_notification'     => 1,
         ], $responseDirector->getData());
     }
 
+    /**
+     * @return void
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SupportTypeException
+     */
     public function testAlarmCreate(): void
     {
         $chatId = 42;
-        $time = '01:00:00';
-        $tz = 'FDT';
+        $time   = '01:00:00';
+        $tz     = 'FDT';
 
         $command = new CommandService(
             options: new CommandOptions(
@@ -149,19 +173,22 @@ class AlarmServiceTest extends Unit
         $this->assertInstanceOf(ResponseDirector::class, $responseDirector);
         $this->assertEquals('sendMessage', $responseDirector->getType());
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => "Нагадування на `{$tz} {$time}` створено! Переглянути свої нагадування /alarm list",
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $chatId,
+            'text'                     => "Нагадування на `{$tz} {$time}` створено! Переглянути свої нагадування /alarm list",
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'disable_notification' => 1,
+            'disable_notification'     => 1,
         ], $responseDirector->getData());
     }
 
+    /**
+     * @return void
+     */
     public function testAlarmCreateBadTime(): void
     {
         $chatId = 42;
-        $time = '27:00:00';
-        $tz = 'FDT';
+        $time   = '27:00:00';
+        $tz     = 'FDT';
 
         $command = new CommandService(
             options: new CommandOptions(
@@ -180,19 +207,22 @@ class AlarmServiceTest extends Unit
         $this->assertInstanceOf(ResponseDirector::class, $responseDirector);
         $this->assertEquals('sendMessage', $responseDirector->getType());
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => AlarmMessage::ERROR_TEXT,
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $chatId,
+            'text'                     => AlarmMessage::ERROR_TEXT,
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'disable_notification' => 1,
+            'disable_notification'     => 1,
         ], $responseDirector->getData());
     }
 
+    /**
+     * @return void
+     */
     public function testAlarmCreateBadTz(): void
     {
         $chatId = 42;
-        $time = '01:01:01';
-        $tz = 'ASS';
+        $time   = '01:01:01';
+        $tz     = 'ASS';
 
         $command = new CommandService(
             options: new CommandOptions(
@@ -211,11 +241,11 @@ class AlarmServiceTest extends Unit
         $this->assertInstanceOf(ResponseDirector::class, $responseDirector);
         $this->assertEquals('sendMessage', $responseDirector->getType());
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => AlarmMessage::ERROR_TEXT,
-            'parse_mode' => 'markdown',
+            'chat_id'                  => $chatId,
+            'text'                     => AlarmMessage::ERROR_TEXT,
+            'parse_mode'               => 'markdown',
             'disable_web_page_preview' => true,
-            'disable_notification' => 1,
+            'disable_notification'     => 1,
         ], $responseDirector->getData());
     }
 }

@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Bot\Service\CommandService;
 
+use Codeception\Exception\ModuleException;
 use Codeception\Test\Unit;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\Keyboard;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService;
-use TelegramBot\CommandWrapper\Command\CommandOptions;
 use RepeatBot\Bot\Service\CommandService\Commands\ExportService;
 use RepeatBot\Bot\Service\CommandService\Messages\ExportMessage;
-use TelegramBot\CommandWrapper\ResponseDirector;
 use RepeatBot\Core\ORM\Entities\Export;
+use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
+use TelegramBot\CommandWrapper\ResponseDirector;
 use UnitTester;
 
 /**
@@ -25,7 +29,11 @@ class ExportServiceTest extends Unit
     protected UnitTester $tester;
     protected EntityManager $em;
 
-    protected function _setUp()
+    /**
+     * @return void
+     * @throws ModuleException
+     */
+    protected function _setUp(): void
     {
         parent::_setUp();
         $this->em = $this->getModule('Doctrine2')->em;
@@ -37,7 +45,7 @@ class ExportServiceTest extends Unit
      */
     public function testExportValidator(array $example): void
     {
-        $chatId = 42;
+        $chatId  = 42;
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'export',
@@ -65,9 +73,9 @@ class ExportServiceTest extends Unit
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => $example['message'],
-            'parse_mode' => 'markdown',
+            'chat_id'              => $chatId,
+            'text'                 => $example['message'],
+            'parse_mode'           => 'markdown',
             'disable_notification' => 1,
         ], $error->getData());
     }
@@ -76,10 +84,13 @@ class ExportServiceTest extends Unit
      * @dataProvider successProvider
      *
      * @param array $example
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SupportTypeException
      */
     public function testExportSuccess(array $example): void
     {
-        $chatId = 42;
+        $chatId  = 42;
         $command = new CommandService(
             options: new CommandOptions(
                 command: 'export',
@@ -99,14 +110,17 @@ class ExportServiceTest extends Unit
         $keyboard = new Keyboard(...BotHelper::getDefaultKeyboard());
         $keyboard->setResizeKeyboard(true);
         $this->assertEquals([
-            'chat_id' => $chatId,
-            'text' => ExportMessage::EXPORT_TEXT,
-            'parse_mode' => 'markdown',
+            'chat_id'              => $chatId,
+            'text'                 => ExportMessage::EXPORT_TEXT,
+            'parse_mode'           => 'markdown',
             'disable_notification' => 1,
         ], $error->getData());
         $this->tester->seeInRepository(Export::class, ['chatId' => $chatId]);
     }
 
+    /**
+     * @return array[]
+     */
     public function errorProvider(): array
     {
         return [
@@ -119,6 +133,9 @@ class ExportServiceTest extends Unit
         ];
     }
 
+    /**
+     * @return array[]
+     */
     public function successProvider(): array
     {
         return [

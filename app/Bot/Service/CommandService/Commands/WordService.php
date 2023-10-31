@@ -60,9 +60,10 @@ class WordService extends BaseDefaultCommandService
         ]);
         $array   = $options->getPayload();
         $command = $array[self::CMD];
+        $body    = $array[self::BODY];
         $text    = match ($command) {
-            static::UPDATE => $this->update(params: (string)$array[self::BODY] ?? ''),
-            default => $this->show(id: intval($array[self::BODY]) ?? 0),
+            static::UPDATE => $this->update(params: (string)$body ?? ''),
+            default => is_numeric($body) ? $this->showById(id: intval($body) ?? 0) : $this->showByWord($body),
         };
         $this->setResponse(
             new ResponseDirector('sendMessage', [
@@ -80,11 +81,22 @@ class WordService extends BaseDefaultCommandService
      * @param int $id
      * @return string
      */
-    protected function show(int $id): string
+    protected function showById(int $id): string
     {
         $item = $this->wordRepository->findOneBy(['id' => $id]);
 
-        return $item ? strtr("`:word`:\n\n`:translate`", [':word' => $item->getWord(), ':translate' => $item->getTranslate()]) : 'Слово не знайдено!';
+        return $item ? strtr("\[:id] `:word`:\n\n`:translate`", [':id' => $item->getId(), ':word' => $item->getWord(), ':translate' => $item->getTranslate()]) : 'Слово не знайдено!';
+    }
+
+    /**
+     * @param string $word
+     * @return string
+     */
+    protected function showByWord(string $word): string
+    {
+        $item = $this->wordRepository->findOneBy(['word' => $word]);
+
+        return $item ? strtr("\[:id] `:word`:\n\n`:translate`", [':id' => $item->getId(), ':word' => $item->getWord(), ':translate' => $item->getTranslate()]) : 'Слово не знайдено!';
     }
 
     /**

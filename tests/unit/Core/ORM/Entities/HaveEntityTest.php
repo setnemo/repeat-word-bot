@@ -35,7 +35,7 @@ final class HaveEntityTest extends Unit
     /**
      * @throws ModuleException
      */
-    protected function _setUp()
+    protected function _setUp(): void
     {
         $this->em = $this->getModule('Doctrine2')->em;
         parent::_setUp();
