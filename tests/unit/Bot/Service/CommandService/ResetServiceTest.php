@@ -7,6 +7,8 @@ namespace Tests\Unit\Bot\Service\CommandService;
 use Codeception\Exception\ModuleException;
 use Codeception\Test\Unit;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Longman\TelegramBot\Entities\Keyboard;
 use RepeatBot\Bot\BotHelper;
 use RepeatBot\Bot\Service\CommandService;
@@ -15,6 +17,7 @@ use RepeatBot\Bot\Service\CommandService\Messages\ResetMessage;
 use RepeatBot\Core\Cache;
 use RepeatBot\Core\ORM\Entities\Training;
 use TelegramBot\CommandWrapper\Command\CommandOptions;
+use TelegramBot\CommandWrapper\Exception\SupportTypeException;
 use TelegramBot\CommandWrapper\ResponseDirector;
 use UnitTester;
 
@@ -27,6 +30,17 @@ class ResetServiceTest extends Unit
     protected UnitTester $tester;
     protected EntityManager $em;
     protected Cache $cache;
+
+    /**
+     * @return void
+     * @throws ModuleException
+     */
+    protected function _setUp(): void
+    {
+        parent::_setUp();
+        $this->em    = $this->getModule('Doctrine2')->em;
+        $this->cache = $this->tester->getCache();
+    }
 
     /**
      * @return void
@@ -62,6 +76,12 @@ class ResetServiceTest extends Unit
         ], $error->getData());
     }
 
+    /**
+     * @return void
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SupportTypeException
+     */
     public function testResetMyProgress(): void
     {
         $id      = 4242;
@@ -110,6 +130,12 @@ class ResetServiceTest extends Unit
         $this->assertEquals(null, $this->cache->checkTrainingsStatus($chatId));
     }
 
+    /**
+     * @return void
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws SupportTypeException
+     */
     public function testResetMyProgressForCollection(): void
     {
         $id      = 4242;
@@ -158,16 +184,5 @@ class ResetServiceTest extends Unit
         $this->assertEquals($firstTrainings, $trainingsAfterReset);
         $this->assertEquals(null, $this->cache->checkTrainings($chatId));
         $this->assertEquals(null, $this->cache->checkTrainingsStatus($chatId));
-    }
-
-    /**
-     * @return void
-     * @throws ModuleException
-     */
-    protected function _setUp(): void
-    {
-        parent::_setUp();
-        $this->em    = $this->getModule('Doctrine2')->em;
-        $this->cache = $this->tester->getCache();
     }
 }

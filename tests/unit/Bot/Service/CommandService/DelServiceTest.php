@@ -31,6 +31,17 @@ class DelServiceTest extends Unit
 
     /**
      * @return void
+     * @throws ModuleException
+     */
+    protected function _setUp(): void
+    {
+        parent::_setUp();
+        $this->em    = $this->getModule('Doctrine2')->em;
+        $this->cache = $this->tester->getCache();
+    }
+
+    /**
+     * @return void
      */
     public function testDelValidator(): void
     {
@@ -157,16 +168,5 @@ class DelServiceTest extends Unit
         $this->assertEquals([], $trainings);
         $this->assertEquals(null, $this->cache->checkTrainings($chatId));
         $this->assertEquals(null, $this->cache->checkTrainingsStatus($chatId));
-    }
-
-    /**
-     * @return void
-     * @throws ModuleException
-     */
-    protected function _setUp(): void
-    {
-        parent::_setUp();
-        $this->em    = $this->getModule('Doctrine2')->em;
-        $this->cache = $this->tester->getCache();
     }
 }

@@ -780,17 +780,6 @@ return [
             ],
     ],
     [
-        'value' => 'Kaliningrad Standard Time',
-        'abbr' => 'KST',
-        'offset' => 3,
-        'isdst' => false,
-        'text' => '(UTC+02:00) Kaliningrad',
-        'utc' =>
-            [
-                'Europe/Kaliningrad',
-            ],
-    ],
-    [
         'value' => 'E. Africa Standard Time',
         'abbr' => 'EAFST',
         'offset' => 3,
@@ -812,34 +801,6 @@ return [
                 'Indian/Antananarivo',
                 'Indian/Comoro',
                 'Indian/Mayotte',
-            ],
-    ],
-    [
-        'value' => 'Moscow Standard Time',
-        'abbr' => 'MSK',
-        'offset' => 3,
-        'isdst' => false,
-        'text' => '(UTC+03:00) Moscow, St. Petersburg, Volgograd, Minsk',
-        'utc' =>
-            [
-                'Europe/Moscow',
-                'Europe/Kirov',
-                'Europe/Simferopol',
-                'Europe/Volgograd',
-                'Europe/Minsk',
-            ],
-    ],
-    [
-        'value' => 'Samara Time',
-        'abbr' => 'SAMT',
-        'offset' => 4,
-        'isdst' => false,
-        'text' => '(UTC+04:00) Samara, Ulyanovsk, Saratov',
-        'utc' =>
-            [
-                'Europe/Astrakhan',
-                'Europe/Samara',
-                'Europe/Ulyanovsk',
             ],
     ],
     [
@@ -889,17 +850,6 @@ return [
             ],
     ],
     [
-        'value' => 'Caucasus Standard Time',
-        'abbr' => 'CST',
-        'offset' => 4,
-        'isdst' => false,
-        'text' => '(UTC+04:00) Yerevan',
-        'utc' =>
-            [
-                'Asia/Yerevan',
-            ],
-    ],
-    [
         'value' => 'Afghanistan Standard Time',
         'abbr' => 'AST',
         'offset' => 4.5,
@@ -929,17 +879,6 @@ return [
                 'Etc/GMT-5',
                 'Indian/Kerguelen',
                 'Indian/Maldives',
-            ],
-    ],
-    [
-        'value' => 'Yekaterinburg Time',
-        'abbr' => 'YEKT',
-        'offset' => 5,
-        'isdst' => false,
-        'text' => '(UTC+05:00) Yekaterinburg',
-        'utc' =>
-            [
-                'Asia/Yekaterinburg',
             ],
     ],
     [
@@ -1025,19 +964,6 @@ return [
             ],
     ],
     [
-        'value' => 'N. Central Asia Standard Time',
-        'abbr' => 'NCAST',
-        'offset' => 7,
-        'isdst' => false,
-        'text' => '(UTC+07:00) Novosibirsk',
-        'utc' =>
-            [
-                'Asia/Novokuznetsk',
-                'Asia/Novosibirsk',
-                'Asia/Omsk',
-            ],
-    ],
-    [
         'value' => 'China Standard Time',
         'abbr' => 'CHST',
         'offset' => 8,
@@ -1048,17 +974,6 @@ return [
                 'Asia/Hong_Kong',
                 'Asia/Macau',
                 'Asia/Shanghai',
-            ],
-    ],
-    [
-        'value' => 'North Asia Standard Time',
-        'abbr' => 'NAST',
-        'offset' => 8,
-        'isdst' => false,
-        'text' => '(UTC+08:00) Krasnoyarsk',
-        'utc' =>
-            [
-                'Asia/Krasnoyarsk',
             ],
     ],
     [
@@ -1111,17 +1026,6 @@ return [
             [
                 'Asia/Choibalsan',
                 'Asia/Ulaanbaatar',
-            ],
-    ],
-    [
-        'value' => 'North Asia East Standard Time',
-        'abbr' => 'NAEST',
-        'offset' => 8,
-        'isdst' => false,
-        'text' => '(UTC+08:00) Irkutsk',
-        'utc' =>
-            [
-                'Asia/Irkutsk',
             ],
     ],
     [
@@ -1227,19 +1131,6 @@ return [
             ],
     ],
     [
-        'value' => 'Yakutsk Standard Time',
-        'abbr' => 'YST',
-        'offset' => 9,
-        'isdst' => false,
-        'text' => '(UTC+09:00) Yakutsk',
-        'utc' =>
-            [
-                'Asia/Chita',
-                'Asia/Khandyga',
-                'Asia/Yakutsk',
-            ],
-    ],
-    [
         'value' => 'Central Pacific Standard Time',
         'abbr' => 'CPST',
         'offset' => 11,
@@ -1254,19 +1145,6 @@ return [
                 'Pacific/Kosrae',
                 'Pacific/Noumea',
                 'Pacific/Ponape',
-            ],
-    ],
-    [
-        'value' => 'Vladivostok Standard Time',
-        'abbr' => 'VST',
-        'offset' => 11,
-        'isdst' => false,
-        'text' => '(UTC+11:00) Vladivostok',
-        'utc' =>
-            [
-                'Asia/Sakhalin',
-                'Asia/Ust-Nera',
-                'Asia/Vladivostok',
             ],
     ],
     [
@@ -1290,20 +1168,6 @@ return [
         'utc' =>
             [
                 'Pacific/Fiji',
-            ],
-    ],
-    [
-        'value' => 'Magadan Standard Time',
-        'abbr' => 'MST',
-        'offset' => 12,
-        'isdst' => false,
-        'text' => '(UTC+12:00) Magadan',
-        'utc' =>
-            [
-                'Asia/Anadyr',
-                'Asia/Kamchatka',
-                'Asia/Magadan',
-                'Asia/Srednekolymsk',
             ],
     ],
     [
