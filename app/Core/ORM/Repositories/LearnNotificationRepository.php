@@ -41,7 +41,7 @@ class LearnNotificationRepository extends EntityRepository
         $this->getEntityManager()->createQueryBuilder()
             ->delete('RepeatBot\Core\ORM\Entities\LearnNotification', 'ln')
             ->where('ln.updatedAt is not null')
-            ->andWhere('ln.updatedAt < ":updated"')
+            ->andWhere('ln.updatedAt < :updated')
             ->setParameter(
                 'updated',
                 Carbon::now(Database::DEFAULT_TZ)->subDays()
