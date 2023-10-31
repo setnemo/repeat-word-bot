@@ -183,6 +183,8 @@ class TranslateTrainingService extends BaseDefaultCommandService
             'caption'              => trim($question),
             'reply_markup'         => $keyboard,
             'disable_notification' => 1,
+            'parse_mode'           => 'markdown',
+
         ];
         $this->setResponse(new ResponseDirector('sendVoice', $data));
     }
