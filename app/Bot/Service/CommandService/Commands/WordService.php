@@ -26,6 +26,7 @@ class WordService extends BaseDefaultCommandService
     public const BODY = 'body';
     public const UPDATE = 'update';
     public const SHOW = 'show';
+    public const SHOW_WORD_TEMPLATE = "`:word`(:id):\n`:translate`\n\nДля копії команди оновлення тисніть на:\n`/word update :id :translate`";
     protected WordRepository $wordRepository;
     protected Config $config;
     protected Logger $logger;
@@ -85,7 +86,10 @@ class WordService extends BaseDefaultCommandService
     {
         $item = $this->wordRepository->findOneBy(['id' => $id]);
 
-        return $item ? strtr("\[:id] `:word`:\n\n`:translate`", [':id' => $item->getId(), ':word' => $item->getWord(), ':translate' => $item->getTranslate()]) : 'Слово не знайдено!';
+        return $item ? strtr(
+            self::SHOW_WORD_TEMPLATE,
+            [':id' => $item->getId(), ':word' => $item->getWord(), ':translate' => $item->getTranslate()]
+        ) : 'Слово не знайдено!';
     }
 
     /**
@@ -96,7 +100,10 @@ class WordService extends BaseDefaultCommandService
     {
         $item = $this->wordRepository->findOneBy(['word' => $word]);
 
-        return $item ? strtr("\[:id] `:word`:\n\n`:translate`", [':id' => $item->getId(), ':word' => $item->getWord(), ':translate' => $item->getTranslate()]) : 'Слово не знайдено!';
+        return $item ? strtr(
+            self::SHOW_WORD_TEMPLATE,
+            [':id' => $item->getId(), ':word' => $item->getWord(), ':translate' => $item->getTranslate()]
+        ) : 'Слово не знайдено!';
     }
 
     /**
