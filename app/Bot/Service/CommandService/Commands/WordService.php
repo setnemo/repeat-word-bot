@@ -27,6 +27,7 @@ class WordService extends BaseDefaultCommandService
     public const UPDATE = 'update';
     public const SHOW = 'show';
     public const SHOW_WORD_TEMPLATE = "`:word`(:id):\n`:translate`\n\nДля копії команди оновлення тисніть на:\n`/word update :id :translate`";
+    public const UPDATED_WORD_TEMPLATE = "Слово `:word`(`:id`):\n\nNew:\n`:new` оновлено!\n\nЩоб повернути попередній переклад:\n`/word update :id :old`";
     protected WordRepository $wordRepository;
     protected Config $config;
     protected Logger $logger;
@@ -132,7 +133,7 @@ class WordService extends BaseDefaultCommandService
         $this->wordRepository->updateWord($first, $newTranslate);
 
         return strtr(
-            "Слово `:word` \[ `:id` ]:\n\nOld:\n`:old`\n\nNew:\n`:new` оновлено!",
+            self::UPDATED_WORD_TEMPLATE,
             [
                 ':word' => $item->getWord(),
                 ':old'  => $translateOld,
